@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+{% block title %}ddlauditbase{% endblock %}
+
+
+
+{% block content %}
+
+ <div class="page-content-wrapper">
+        <div class="page-content">
+
+            <!-- BEGIN PAGE HEADER-->
+            <div class="page-bar">
+                <ul  class="page-breadcrumb">   
+                    <li>
+                        <span class="caption-subject font-yellow-gold bold uppercase">页内导航</span>
+                    </li>
+
+
+
+
+                    <li>
+                        <i class="icon-pencil"></i>
+                        <a href="/ddlaudit/audit">
+
+                        {% ifequal request.path "/ddlaudit/audit" %}
+                        <span class="caption-subject font-green-sharp bold uppercase">语句审核</span>
+                        {% else %}
+                        <span class="title"><strong>语句审核</strong></span>
+                        {% endifequal %}
+                        
+                        </a>
+                    </li>
+
+                    <li>
+                        &nbsp;&nbsp;<i class="icon-magnifier"></i>
+                        <a href="/ddlaudit/checkresult">
+
+                        {% ifequal request.path "/ddlaudit/checkresult" %}
+                        <span class="caption-subject font-green-sharp bold uppercase">审核结果查询</span>
+                        {% else %}
+                        <span class="title"><strong>审核结果查询</strong></span>
+                        {% endifequal %}
+
+                        </a>
+                    </li>
+
+                    <li>
+                        &nbsp;&nbsp;<i class="icon-rocket"></i>
+                        <a href="/ddlaudit/dbause">
+
+                        {% ifequal request.path "/ddlaudit/dbause" %}
+                        <span class="caption-subject font-green-sharp bold uppercase">DBA最终review</span>
+                        {% else %}
+                        <span class="title"><strong>DBA最终review</strong></span>
+                        {% endifequal %}
+
+                        </a>
+                    </li>
+
+                    <li>
+                        &nbsp;&nbsp;<i class="icon-graduation "></i>
+                        <a href="/ddlaudit/structure">
+
+                        {% ifequal request.path "/ddlaudit/structure" %}
+                        <span class="caption-subject font-green-sharp bold uppercase">线上表结构查询</span>
+                        {% else %}
+                        <span class="title"><strong>线上表结构查询</strong></span>
+                        {% endifequal %}
+
+                        </a>
+                    </li>
+
+
+                    <li>
+                        &nbsp;&nbsp;<i class="icon-pie-chart"></i>
+                        <a href="/ddlaudit/report">
+
+                        {% ifequal request.path "/ddlaudit/report" %}
+                        <span class="caption-subject font-green-sharp bold uppercase">报表统计</span>
+                        {% else %}
+                        <span class="title"><strong>报表统计</strong></span>
+                        {% endifequal %}
+
+                        </a>
+                    </li>
+
+                    <li> 
+                        &nbsp;&nbsp;<i class="icon-puzzle"></i>
+                        <a href="/ddlaudit/faq">
+
+                        {% ifequal request.path "/ddlaudit/faq" %}
+                        <span class="caption-subject font-green-sharp bold uppercase">功能说明</span>
+                        {% else %}
+                        <span class="title"><strong>功能说明</strong></span>
+                        {% endifequal %}
+
+                        </a>
+                    </li>
+
+
+                </ul>
+
+
+            </div>
+
+            <!-- END PAGE HEADER-->
+
+
+
+
+
+
+       
+            {%  block subcontent %}   
+            <h3 class="page-title">
+            PAGE-TITLE <small>comments</small>
+            </h3>    
+
+            <div class="clearfix">
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- BEGIN PORTLET-->
+                    subcontent
+                    <!-- END PORTLET-->
+                </div>
+            </div>
+            {% endblock  %}
+
+        </div>
+</div>
+
+
+
+
+
+{% endblock %}

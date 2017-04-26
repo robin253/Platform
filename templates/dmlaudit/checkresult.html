@@ -1,0 +1,410 @@
+
+
+{% extends 'dmlaudit/dmlauditbase.html' %}
+{% load myNewLibrary %}
+
+{% block title %}dmlaudit_checkresult{% endblock %}
+
+
+
+
+ {%  block subcontent %}   
+            <h3 class="page-title">
+            审核结果查询
+            </h3>     
+
+            <div class="clearfix">
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- BEGIN PORTLET-->
+               
+                    <div class="portlet light ">
+                        <div class="portlet-title">
+                            <div class="caption caption-md">
+                                <span class="caption-subject font-red-sunglo bold uppercase">
+                                <i class="icon-speech"></i>
+                                输入查询条件</span>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <div id="context" data-toggle="context" data-target="#context-menu">
+
+
+<!--begin content 1--> 
+<form  action="/dmlaudit/checkresult" class="form-inline" method="POST">
+ {% csrf_token %}
+<div class="form-group"> 
+ <strong><i class="icon-social-dribbble"></i> 根据批次号进行查询</strong> 
+<input type="text" class="form-control input-sm" placeholder="在此输入16位批次号" name='audit_batch'> 
+</div> 
+<input type="submit" name='batchcheck' value="查询"  class="btn btn-success">
+</form>
+<br><br>
+
+ <strong><i class="icon-social-dribbble"></i> 根据多选条件进行查询</strong> <br><br>
+<form  action="/dmlaudit/checkresult" class="form-inline" method="POST">
+ {% csrf_token %}
+<table class="table   table-advance table-hover table-condensed">
+
+<thead>
+
+<tr >
+<td width="12%" >数据库类型</td>
+<td width="20%" >时间区间<br>
+<span class="label label-sm label-default"><i class="icon-info "></i> 如不填选则默认为近2天</span>
+</td>
+<td width="10%" >提交人</td>
+<td width="10%" >审核人</td>
+<td  >执行人</td>
+</tr>
+
+
+
+<tr>
+<td>
+<select name="db_type" class="form-control form-filter input-sm">
+<option value="all" selected="selected">全部</option>
+<option value="oracle">ORACLE</option>
+<option value="mysql" >MySQL</option>                              
+</select>
+<br><br><br><br><br>批次状态
+</td>
+
+
+
+<td>
+<div class="input-group date date-picker margin-bottom-5" data-date-format="dd/mm/yyyy">
+                      <input type="text" class="form-control form-filter input-sm" readonly name="order_date_from" placeholder="From">
+                      <span class="input-group-btn">
+                      <button class="btn btn-sm default" type="button"><i class="fa fa-calendar"></i></button>
+                      </span>
+                    </div>
+                    <div class="input-group date date-picker" data-date-format="dd/mm/yyyy">
+                      <input type="text" class="form-control form-filter input-sm" readonly name="order_date_to" placeholder="To">
+                      <span class="input-group-btn">
+                      <button class="btn btn-sm default" type="button"><i class="fa fa-calendar"></i></button>
+                      </span>
+                    </div>
+<br><br><br>执行状态
+</td>
+
+
+<td>
+<select name="audit_user" class="form-control form-filter input-sm">
+<option value="all" selected="selected">全部人员</option>
+{% for item in list_audit_user %}     
+<option value="{{item.username}} ">{{item.username}} </option>
+{% endfor %}                    
+</select>
+<br><br><br><br><br>提交
+</td>
+
+<td>
+<select name="evaluator" class="form-control form-filter input-sm">
+<option value="all" selected="selected">全部人员</option>
+{% for item in list_executor %}     
+<option value="{{item}}">{{item}} </option>
+{% endfor %}                              
+</select>    
+</td>
+
+
+
+<td>
+<select name="executor" class="form-control form-filter input-sm">
+<option value="all" selected="selected">全部人员</option>
+{% for item in list_executor %}     
+<option value="{{item}}">{{item}} </option>
+{% endfor %}                              
+</select>      
+</td>
+<tr>
+
+
+
+
+<tr >
+<td>
+<select name="batch_status" class="form-control form-filter input-sm">
+<option value="all" selected="selected">全部状态</option>
+<option value="qualified" >    通过</option>
+<option value="semi-qualified">待DBA评估</option>
+<option value="unqualified">   不通过</option>  
+<option value="cancel">        取消</option>  
+</select>      
+</td>
+
+ <td>
+<select name="execute_status" class="form-control form-filter input-sm">
+<option value="all" selected="selected">全部状态</option>
+<option value="init">待执行</option>
+<option value="suc">成功</option>
+<option value="fail">失败</option>  
+<option value="noexe">不可执行</option>  
+</select>     
+</td>
+
+<td>
+<input type="submit" name='optioncheck' value="查询"  class="btn btn-success">
+</td>
+
+
+<td>
+</td>
+
+<td>
+</td>
+
+</tr>
+
+</thead>
+</table>
+</form>
+<br><br>
+ <!--end content 1-->
+                            
+
+
+
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- END PORTLET-->
+
+
+
+                    <!-- BEGIN PORTLET-->
+               
+                    <div class="portlet light ">
+                        <div class="portlet-title">
+                            <div class="caption caption-md">
+                                <span class="caption-subject font-red-sunglo bold uppercase">
+                                <i class="icon-speech"></i>
+                                查询结果</span>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <div id="context" data-toggle="context" data-target="#context-menu">
+
+
+<!--begin content 2-->
+{% if error_batch%}
+ <div class="alert alert-danger">
+ <strong><i class="icon-close"></i> </strong> 无符合条件的批次信息
+</div>
+{% endif %}
+
+
+{% if re_detail%}
+<table class="table table-bordered table-hover table-condensed ">
+                <thead>
+                    <tr>
+                        <th>提交者</th>       <!--batch_info模型 audit_user-->
+                        <th>批次号</th>       <!--batch_info模型 audit_batch--> <!--比index页面多显示的项-->  
+                        <th>应用项目</th>     <!--batch_info模型 app_name--> 
+                        <th>数据库类型</th>   <!--batch_info模型 db_type--> 
+                        <th>SQL编号</th>      <!--detail模型 sqlnum-->
+                        <th>SQL文本</th>      <!--detail模型 sqltext-->
+                        <th>SQL类型</th>      <!--detail模型 sqltype-->
+                        <th>语法</th>         <!--detail模型 grammar-->
+                        <th>语法错误码</th>   <!--detail模型 gra_failreason-->
+                        <th>执行计划详情</th> <!--detail模型 sqlplan-->
+                        <th>预估时长</th>     <!--detail模型 exetime-->  
+                        <th>影响行数</th>     <!--detail模型 rowaffact-->  
+                        <th>语句审核结果</th> <!--detail模型 audit_status--> 
+                        <th>批次审核结果</th>   <!--batch_info模型 batch_status--> 
+                        <th>审核人</th>         <!--batch_info模型 evaluator--> <!--比index页面多显示的--> 
+                        <th>执行状态</th>       <!--batch_info模型 execute_status--> <!--比index页面多显示的-->  
+                        <th>执行人</th>         <!--batch_info模型 executor--> <!--比index页面多显示的-->  
+                        <th>执行失败原因</th>   <!--batch_info模型 exe_failreason--> <!--比index页面多显示的-->  
+                    </tr>
+                </thead>
+
+                 <tbody>
+{%for item in re_detail %}
+<tr> 
+<td>{{ item.audit_batch.audit_user}}</td>
+<td>{{ item.audit_batch.audit_batch}}</td>
+<td>{{ item.audit_batch.app_name}}</td>
+<td>{{ item.audit_batch|displaychoices:'db_type'}}</td>  
+<td>{{ item.sqlnum}}</td>
+<td> {{item.sqltext|limit:50}}
+<!-- 按钮触发模态框 -->
+<button class="btn btn-success btn-xs" data-toggle="modal" data-target="#{{item.audit_batch.audit_batch}}sqltext{{item.sqlnum}}Modal">
+展示sql全文
+</button>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="{{item.audit_batch.audit_batch}}sqltext{{item.sqlnum}}Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+            </div>
+            <div class="modal-body">
+              {{item.sqltext|newline|safe}}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+</td>
+<td>{{ item|displaychoices:'sqltype'}}</td>  
+<td>{{ item.grammar|displaychinese}}</td>
+<td>{{ item.gra_failreason}}</td>
+<td>
+<!-- 按钮触发模态框 -->
+<button class="btn btn-success btn-xs" data-toggle="modal" data-target="#{{item.audit_batch.audit_batch}}sqlplan{{item.sqlnum}}Modal"
+{% ifequal item.audit_status 'unqualified' %}
+disabled="disabled"
+{% else %}
+{% endifequal %} 
+>
+点击展示
+</button>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="{{item.audit_batch.audit_batch}}sqlplan{{item.sqlnum}}Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+            </div>
+            <div class="modal-body">
+            {% for i in item.sqlplan|strtolist %}
+             <p>{{i}}
+             {% endfor %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+</td>
+<td>{{ item.exetime}}</td>
+
+<td
+{% ifequal item.rowaffact 0 %}
+class="warning"
+{% else %}
+{% endifequal %} >
+<strong>{{ item.rowaffact}}</strong>
+</td>
+
+
+<td
+{% ifequal item.audit_status 'qualified' %}
+class="success"
+{% else %}
+{% ifequal item.audit_status 'semi-qualified' %}
+class="warning"
+{% else %}
+class="danger"
+{% endifequal %} 
+{% endifequal %} 
+>{{ item.audit_status|displaychinese}}</td>
+
+
+<td
+{% ifequal item.audit_batch.batch_status 'qualified' %}
+class="success"
+{% else %}
+{% ifequal item.audit_batch.batch_status 'semi-qualified' %}
+class="warning"
+{% else %}
+class="danger"
+{% endifequal %} 
+{% endifequal %} 
+>{{ item.audit_batch.batch_status|displaychinese}}</td>
+
+
+
+
+<td>{{ item.audit_batch.evaluator}}</td>
+
+<td
+{% ifequal item.audit_batch.execute_status 'suc' %}
+class="success"
+{% else %}
+{% ifequal item.audit_batch.execute_status 'init' %}
+{% else %}
+class="danger"
+{% endifequal %} 
+{% endifequal %} 
+>{{ item.audit_batch.execute_status|displaychinese}}</td>
+
+
+
+<td>{{ item.audit_batch.executor}}</td>
+<td 
+{% ifequal item.audit_batch.execute_status 'fail' %}
+class="danger"
+{% endifequal %} 
+>{{ item.audit_batch.exe_failreason|limit:3}}
+
+{% ifequal item.audit_batch.execute_status 'fail' %}
+<!-- 按钮触发模态框 -->
+<button class="btn btn-danger btn-xs" data-toggle="modal" data-target="#{{item.audit_batch.audit_batch}}exe_failreason{{item.sqlnum}}Modal">
+点击查看
+</button>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="{{item.audit_batch.audit_batch}}exe_failreason{{item.sqlnum}}Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+            </div>
+            <div class="modal-body">
+              {{item.audit_batch.exe_failreason}}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+{% endifequal %} 
+</td> 
+
+
+</tr>   {% endfor %}
+           
+                </tbody>
+            </table>
+
+{% endif %}
+
+  <!--end content 2--> 
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- END PORTLET-->
+                </div>
+            </div>
+            {% endblock  %}
+
+
+
+
+
+
+
+

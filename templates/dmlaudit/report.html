@@ -1,0 +1,429 @@
+{% extends 'dmlaudit/dmlauditbase.html' %}
+{% load staticfiles %}
+
+{% block title %}dmlaudit_report{% endblock %}
+
+       
+            {%  block subcontent %}   
+            <h3 class="page-title">
+            报表统计
+            </h3>    
+
+            <div class="clearfix">
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- BEGIN PORTLET-->
+               
+                    <div class="portlet light ">
+                        <div class="portlet-title">
+                            <div class="caption caption-md">
+                                <span class="caption-subject font-red-sunglo bold uppercase">
+                                <i class="icon-speech"></i>
+                                统计条件选择</span>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <div id="context" data-toggle="context" data-target="#context-menu">
+ 
+
+
+
+<form class="form-inline" role="form" action="/dmlaudit/report" method="POST" enctype="multipart/form-data"><!--表单-->
+ {% csrf_token %}
+<table class="table  table-advance table-hover table-condensed">
+                <thead>
+                <tr >
+
+                  <td width="12%">
+                    数据库类型<br><br>
+                    <select name="db_type" class="form-control form-filter input-sm">
+                                             <option value="oracle" selected="selected">ORACLE</option>
+                                             <option value="mysql" >MySQL</option>                              
+                    </select>
+                  </td>
+                  <td width="20%">
+                     时间区间<br>
+                     <span class="label label-sm label-default"><i class="icon-info "></i> 如不填选则默认为近7天</span><br>
+                    <div class="input-group date date-picker margin-bottom-5" data-date-format="dd/mm/yyyy">
+                      <input type="text" class="form-control form-filter input-sm" readonly name="order_date_from" placeholder="From">
+                      <span class="input-group-btn">
+                      <button class="btn btn-sm default" type="button"><i class="fa fa-calendar"></i></button>
+                      </span>
+                    </div>
+                    <div class="input-group date date-picker" data-date-format="dd/mm/yyyy">
+                      <input type="text" class="form-control form-filter input-sm" readonly name="order_date_to" placeholder="To">
+                      <span class="input-group-btn">
+                      <button class="btn btn-sm default" type="button"><i class="fa fa-calendar"></i></button>
+                      </span>
+                    </div>
+                    <br>
+                    
+                  </td>
+                  <td> 
+                  提交<br><br>
+                  <button type="submit" class="btn btn-success">查询</button>
+                  </td>
+                </tr>
+                </thead>
+                </table>
+ </form>
+
+
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- END PORTLET-->
+
+
+
+
+                    <!-- BEGIN PORTLET-->
+                    <div class="portlet light ">
+                        <div class="portlet-title">
+                            <div class="caption caption-md">
+                                <!--span class="caption-subject bold uppercase"> 
+                                <span class="caption-subject font-green-sharp bold uppercase"-->
+                                <span class="caption-subject font-red-sunglo bold uppercase">
+                                <i class="icon-speech"></i>
+                                统计结果展示</span>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <div id="context" data-toggle="context" data-target="#context-menu">
+
+
+{% if return_flag %}
+<table class="table table-bordered table-hover table-condensed">
+                    <thead>
+                    <tr>
+                      <th>
+                         数据库类型
+                      </th>
+                      <th>
+                         受理的总批次数
+                      </th>
+                      <th>
+                         评审不通过<br>
+                         或取消的批次数
+                      </th>
+                      <th>
+                         评审通过的批次数
+                         <table>
+                         <thead>
+                         <th> <span class="label  label-danger">执行失败</span>&nbsp;</th>
+                         <th> <span class="label  label-success">执行成功</span>&nbsp;</th>
+                         <th> <span class="label  label-warning">待执行</span></th>
+                         </thead>
+                         </table>
+                      </th>
+                      <th>
+                         评估中的批次数
+                      </th>
+                      <th>
+                         时间区间
+                      </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                              <td>
+                         {{db_type}}
+                      </td>
+                      <td>
+                         {{sta_all_num}}
+                      </td>
+                      <td>
+                         {{sta_noqual_num}}
+                      </td>
+                      <td>
+                          共计： {{sta_qual_num}}
+                         <table>
+                         <thead>
+
+                         <th> 
+                         <span class="label  label-danger">
+                         {{sta_qual_fail}}&nbsp;</span>
+                         </th>
+
+                         <th> 
+                         <span class="label  label-success">
+                         {{sta_qual_suc}}&nbsp;</span>
+                         </th>
+
+                         <th> 
+                         <span class="label  label-warning">
+                         {{sta_qual_init}}&nbsp;</span>  
+                         </th>
+
+                         </thead>
+                         </table>
+                      </td>
+                      <td>
+                         {{sta_semiqual_num}}
+                      </td>
+                      <td>
+                         {{timerange}}
+                      </td>
+                    </tr>
+
+</tbody>
+</table>
+{% else %}
+
+<div class="alert alert-info">
+ <strong><i class="icon-info "></i> </strong> 无符合条件的批次信息
+</div>
+
+
+{% endif %}
+
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- END PORTLET-->
+
+
+
+
+{% if return_flag %}
+                    <!-- BEGIN PORTLET-->
+                    <div class="portlet light">
+                        <div class="portlet-title tabbable-line">
+
+                            <ul class="nav nav-tabs pull-left">
+                                <li class="active">
+                                    <a href="#tab_1_1" data-toggle="tab">
+                                    应用项目top10统计图 </a>
+                                </li>
+                                <li>
+                                    <a href="#tab_1_2" data-toggle="tab">
+                                    DBA执行量top10统计图 </a>
+                                </li>
+                                <li>
+                                    <a href="#tab_1_3" data-toggle="tab">
+                                    订正申请人top10统计图 </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="portlet-body">
+                            <!--BEGIN TABS-->
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="tab_1_1">
+                                    <div  style="height: 337px;" data-always-visible="1" data-rail-visible1="0" data-handle-color="#D7DCE2">
+                                        <ul class="feeds">
+
+                                            <li>
+                                                <div class="col1">
+                                                    <div class="cont">
+                                                        <div class="cont-col1">
+                                                            
+                                                        </div>
+                                                        <div class="cont-col2">
+                                                            <div class="desc">
+                                                                
+                          <!--begin pic1-->                       
+
+        <table id='myTable1'>
+            <caption>
+                应用项目top10统计图</caption>
+            <thead>
+                <tr>
+                    <th>
+                    </th>
+
+                    {% for appitem in sta_exec_app_num %}
+                      <th>
+                        {{appitem.app_name}}
+                       </th>  
+                     {% endfor %}
+                    <th>
+                        其他
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>
+                        {{sta_exec_app_all_num}}
+                    </th>
+                     {% for appitem in sta_exec_app_num %}
+                      <td>
+                        {{appitem.total}}
+                      </td>  
+                     {% endfor %}
+                     <td>
+                       {{sta_other_ev_app_num}}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+ <!--end pic1-->
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                           
+
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="tab_1_2">
+                                    <div  style="height: 337px;" data-always-visible="1" data-rail-visible1="0" data-handle-color="#D7DCE2">
+                                        <ul class="feeds">
+                                            <li>
+                                                <div class="col1">
+                                                    <div class="cont">
+                                                        <div class="cont-col1">
+                                                            
+                                                        </div>
+                                                        <div class="cont-col2">
+                                                            <div class="desc">
+                                                                
+
+                                <!--begin pic2-->
+
+<!--div style="width: 250px; margin: 0 auto;"-->
+        <table id='myTable2'>
+            <caption>
+                DBA执行量top10统计图</caption>
+            <thead>
+                <tr>
+                    <th>
+                    </th>
+
+                    {% for evatoritem in sta_evaluator_num %}
+                      <th>
+                        {{evatoritem.executor}}
+                       </th>  
+                     {% endfor %}
+                    <th>
+                        其他
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>
+                        {{sta_exec_all_num}}
+                    </th>
+                     {% for evaitem in sta_evaluator_num %}
+                      <td>
+                        {{evaitem.total}}
+                      </td>  
+                     {% endfor %}
+                     <td>
+                       {{sta_other_evaluator_num}}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+<!--/div-->
+                        <!--end pic2-->
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+            
+        
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                 
+                                 <div class="tab-pane " id="tab_1_3">
+                                    <div  style="height: 337px;" data-always-visible="1" data-rail-visible1="0" data-handle-color="#D7DCE2">
+                                        <ul class="feeds">
+
+                                            <li>
+                                                <div class="col1">
+                                                    <div class="cont">
+                                                        <div class="cont-col1">
+                                                           
+                                                        </div>
+                                                        <div class="cont-col2">
+                                                            <div class="desc">
+                                                                          
+         
+                       <!--begin pic3-->
+
+        <table id='myTable3'>
+            <caption>
+                订正申请人top10统计图</caption>
+            <thead>
+                <tr>
+                    <th>
+                    </th>
+
+                    {% for evatoritem in sta_10user_info %}
+                      <th>
+                        {{evatoritem.audit_user}}
+                       </th>  
+                     {% endfor %}
+                    <th>
+                        其他
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>
+                        {{sta_alluser_num}}
+                    </th>
+                     {% for evaitem in sta_10user_info %}
+                      <td>
+                        {{evaitem.total}}
+                      </td>  
+                     {% endfor %}
+                     <td>
+                       {{sta_otheruser_num}}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+                        <!--end pic3-->  
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                           
+
+                                        </ul>
+                                    </div>
+                                </div>
+                              
+
+                            </div>
+                            <!--END TABS-->
+                        </div>
+                    </div>
+                    <!-- END PORTLET-->
+
+{% endif %}
+
+
+
+                </div>
+            </div>
+
+
+
+
+
+
+            {% endblock  %}
+

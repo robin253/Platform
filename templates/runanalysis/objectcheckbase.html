@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load myNewLibrary %}
+{% block title %}objectcheckbase{% endblock %}
+
+
+
+{% block content %}
+
+ <div class="page-content-wrapper">
+        <div class="page-content">
+
+            <!-- BEGIN PAGE HEADER-->
+            <div class="page-bar">
+                <ul  class="page-breadcrumb">   
+                    <li>
+                        <span class="caption-subject font-yellow-gold bold uppercase">页内导航</span>
+                    </li>
+                    <li>
+                        &nbsp;&nbsp;<i class="icon-badge"></i>
+                        <a href="/runanalysis/objectcheck">
+
+                        {% ifequal request.path "/runanalysis/objectcheck" %}
+                        <span class="caption-subject font-green-sharp bold uppercase">对象检查</span>
+                        {% else %}
+                        <span class="title"><strong>对象检查</strong></span>
+                        {% endifequal %}
+                        
+                        </a>
+                    </li>
+                    <li>
+                        &nbsp;&nbsp;<i class="icon-magic-wand"></i>
+                        <a href="/runanalysis/objectcheck/index">
+
+                        {% ifequal request.path "/runanalysis/objectcheck/index" %}
+                        <span class="caption-subject font-green-sharp bold uppercase">索引治理</span>
+                        {% else %}
+                        <span class="title"><strong>索引治理</strong></span>
+                        {% endifequal %}
+                        
+                        </a>
+                    </li>
+                </ul>
+
+
+            </div>
+
+            <!-- END PAGE HEADER-->
+
+
+
+
+
+
+       
+            {%  block subcontent %}   
+            <h3 class="page-title">
+            PAGE-TITLE <small>comments</small>
+            </h3>    
+
+            <div class="clearfix">
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- BEGIN PORTLET-->
+                    subcontent
+                    <!-- END PORTLET-->
+                </div>
+            </div>
+            {% endblock  %}
+
+        </div>
+</div>
+
+
+
+
+
+{% endblock %}

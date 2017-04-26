@@ -1,0 +1,220 @@
+{% extends 'dmlaudit/dmlauditbase.html' %}
+{% load staticfiles %}
+
+{% block title %}dmlaudit_errorcheck{% endblock %}
+
+
+
+{%  block subcontent %}
+ <h3 class="page-title">
+            报错白皮书
+            </h3>    
+
+            <div class="clearfix">
+            </div>
+            <div class="row">
+                <div class="col-md-12  col-sm-12">
+                    <!-- BEGIN PORTLET-->
+                    <div class="portlet light">
+                        <div class="portlet-title tabbable-line">
+
+                            <ul class="nav nav-tabs pull-left">
+                                <li class="active">
+                                    <a href="#tab_1_1" data-toggle="tab">
+                                    ORA错误 </a>
+                                </li>
+                                <li>
+                                    <a href="#tab_1_2" data-toggle="tab">
+                                    MYSQL错误 </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="portlet-body">
+                            <!--BEGIN TABS-->
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="tab_1_1">
+                                    <div class="scroller" style="height: 337px;" data-always-visible="1" data-rail-visible1="0" data-handle-color="#D7DCE2">
+                                        <ul class="feeds">
+
+
+                                            <li>
+                                                <div class="col1">
+                                                    <div class="cont">
+                                                        <div class="cont-col1">
+                                                            <div class="label label-sm label-success">
+                                                                <i class="icon-graduation "></i>
+                                                            </div>
+                                                        </div>
+                                                        <div class="cont-col2">
+                                                            <div class="desc">
+                                                                ORA-00001 unique constraint (...) violated     违反（...）字段的唯一约束条件   
+                                                               <div class="label label-info">
+                                                                 唯一性字段上出现重复数据导致</div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+
+                                            <li>
+                                                <div class="col1">
+                                                    <div class="cont">
+                                                        <div class="cont-col1">
+                                                            <div class="label label-sm label-success">
+                                                                <i class="icon-graduation "></i>
+                                                            </div>
+                                                        </div>
+                                                        <div class="cont-col2">
+                                                            <div class="desc">
+                                                                ORA-00903 invalid table name   无效表名 
+                                                                <div class="label label-info">
+                                                                 表名前后有引号或者逗号等符号导致</div> 
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+
+
+                                              <li>
+                                                <div class="col1">
+                                                    <div class="cont">
+                                                        <div class="cont-col1">
+                                                            <div class="label label-sm label-success">
+                                                                <i class="icon-graduation "></i>
+                                                            </div>
+                                                        </div>
+                                                        <div class="cont-col2">
+                                                            <div class="desc">
+                                                                ORA-00904 invalid identifier 标识符无效  
+                                                                <div class="label label-info">
+                                                                 大部分情况下是由于引用了不存在的列名导致</div>         
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+
+                                              <li>
+                                                <div class="col1">
+                                                    <div class="cont">
+                                                        <div class="cont-col1">
+                                                            <div class="label label-sm label-success">
+                                                                <i class="icon-graduation "></i>
+                                                            </div>
+                                                        </div>
+                                                        <div class="cont-col2">
+                                                            <div class="desc">
+                                                                ORA-00942 table or view does not exist 表或视图不存在
+                                                                  <div class="label label-info">
+                                                                 数据库中没有相应表导致</div>  
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+
+                                              <li>
+                                                <div class="col1">
+                                                    <div class="cont">
+                                                        <div class="cont-col1">
+                                                            <div class="label label-sm label-success">
+                                                                <i class="icon-graduation "></i>
+                                                            </div>
+                                                        </div>
+                                                        <div class="cont-col2">
+                                                            <div class="desc">
+                                                                ORA-01008 not all variables bound 并非所有变量都已绑定
+                                                                 <div class="label label-info">
+                                                                 使用了绑定变量导致，数据订正语句中不允许使用绑定变量</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+
+                                                                                          <li>
+                                                <div class="col1">
+                                                    <div class="cont">
+                                                        <div class="cont-col1">
+                                                            <div class="label label-sm label-success">
+                                                                <i class="icon-graduation "></i>
+                                                            </div>
+                                                        </div>
+                                                        <div class="cont-col2">
+                                                            <div class="desc">
+                                                                ORA-01722  invalid number 无效数字 
+                                                                <div class="label label-info">
+                                                                 对number类型的字段赋予了字符串型的数据导致</div> 
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                           
+
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="tab_1_2">
+                                    <div class="scroller" style="height: 337px;" data-always-visible="1" data-rail-visible1="0" data-handle-color="#D7DCE2">
+                                        <ul class="feeds">
+                                            <li>
+                                                <div class="col1">
+                                                    <div class="cont">
+                                                        <div class="cont-col1">
+                                                            <div class="label label-sm label-success">
+                                                                 <i class="icon-graduation "></i>
+                                                            </div>
+                                                        </div>
+                                                        <div class="cont-col2">
+                                                            <div class="desc">
+                                                                1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+            
+        
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--END TABS-->
+                        </div>
+                    </div>
+                    <!-- END PORTLET-->
+                </div>
+            </div>
+
+{% endblock  %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

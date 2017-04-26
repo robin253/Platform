@@ -1,0 +1,142 @@
+{% extends 'dmlaudit/dmlauditbase.html' %}
+{% load staticfiles %}
+
+{% block title %}dmlaudit_backup{% endblock %}
+
+
+
+
+            {%  block subcontent %}   
+            <h3 class="page-title">
+            备份文件 <small>源数据文本备份</small>
+            </h3>     
+
+            <div class="clearfix">
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- BEGIN PORTLET-->
+               
+                    <div class="portlet light ">
+                        <div class="portlet-title">
+                            <div class="caption caption-md">
+                                <span class="caption-subject font-red-sunglo bold uppercase">
+                                <i class="icon-speech"></i>
+                                文件列表</span>
+                                <span class="caption-helper">保留7天</span>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <div id="context" data-toggle="context" data-target="#context-menu">
+
+
+
+               
+
+<table class="table table-hover ">
+<thead>
+                    <tr >
+                        <th width="20%">文件名 </th>     
+                        <th width="40%"> 点击下载</th>   
+                    </tr>
+</thead>
+<tbody>
+
+{%for item in list_showfilename %}
+<tr> 
+
+<td>
+<i class="icon-magnet "></i> &nbsp;{{item}}.zip
+</td>
+<td>
+<form  action="/dmlaudit/backup/download" method="POST" >
+ {% csrf_token %} 
+<input type="hidden" name="downloadfilename" value="{{item}}">  
+<button class="btn btn-success btn-xs" type="submit">点击下载</button>
+</form>
+</td>
+
+</tr>
+{% endfor %}
+
+</tbody>
+</table>
+
+                                <!-- 如果当前是第一页，就不显示【上一页】链接 -->
+                                {% ifnotequal curPage 1 %}                
+                                <a href="?curPage={{ curPage }}&&allPage={{ allPage }}&&pageType=pageUp">  
+                                <label > 上一页 </label>   
+                                </a>  
+                                {% endifnotequal %} 
+                                <label >第{{ curPage }}/{{ allPage }}页</label>
+                                <!-- 如果当前是最后一页，就不显示【下一页】链接 -->  
+                                {% ifnotequal curPage allPage %}  
+                                <a href="?curPage={{ curPage }}&&allPage={{ allPage }}&&pageType=pageDown">  
+                                <label >下一页</label>     
+                                </a>  
+                                {% endifnotequal %} 
+
+
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- END PORTLET-->
+                </div>
+            </div>
+            {% endblock  %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

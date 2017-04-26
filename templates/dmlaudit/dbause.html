@@ -1,0 +1,517 @@
+{% extends 'dmlaudit/dmlauditbase.html' %}
+{% load myNewLibrary %}
+<!--
+{% load %}只允许导入注册app目录下的模板库
+这样做是为了保证你的模板库可以不被其它Django程序使用
+-->
+{% block title %}dmlaudit_dbause{% endblock %}
+
+
+            {%  block subcontent %}   
+            <h3 class="page-title">
+            评估或执行语句 <small>dba使用</small>
+            <span class="badge badge-success">{{todealnum}}</span>
+            </h3>     
+
+            <div class="clearfix">
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+
+                    <!-- BEGIN PORTLET-->
+                    <div class="portlet light ">
+                        <div class="portlet-title">
+                            <div class="caption caption-md">
+
+                                <span class="caption-subject font-red-sunglo bold uppercase">
+                                <i class="icon-speech"></i> 
+                                待DBA评估或执行的批次</span>
+
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <div id="context" data-toggle="context" data-target="#context-menu">
+
+<!--begin content 1-->
+
+
+{% if re_evaluate %}<!--大判断 -->
+<table class="table  table-bordered table-hover table-condensed">
+                <thead>
+                    <tr>
+                        <th>提交者</th>       <!--audit_user-->
+                        <th>批次号</th>       <!--audit_batch-->
+                        <th>应用项目</th>     <!--app_name-->
+                        <th>数据库类型</th>   <!--db_type-->
+                        <th>SQL全文本</th>    <!--allsqltext-->
+                        <th>SQL语句数量</th>    <!--sqlamount-->
+                        <th>批次审核结果</th> <!--batch_status-->
+                        <th>审核人</th>       <!--evaluator-->
+                        <th>执行状态</th>     <!--execute_status-->
+                        <!--th>执行人</th>       executor-->
+                        <!--th>执行失败原因</th> exe_failreason-->
+                    </tr>
+                </thead>
+                 <tbody>
+{%for item in re_evaluate %}<tr> 
+<td>{{ item.audit_user}}</td>
+<td>{{ item.audit_batch }}</td>
+<td>{{ item.app_name}}</td>
+<td>{{ item|displaychoices:'db_type'}}</td>  
+
+<td> {{item.allsqltext|limit:50}}
+<!-- 按钮触发模态框 -->
+<button class="btn btn-success btn-xs" data-toggle="modal" data-target="#allsqltext{{item.audit_batch}}Modal">
+展示全文
+</button>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="allsqltext{{item.audit_batch}}Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+            </div>
+            <div class="modal-body">
+              {{item.allsqltext|newline|safe}}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+</td>
+<td>{{ item.sqlamount }}</td>  
+<td
+{% ifequal item.batch_status 'qualified' %}
+class="success"
+{% else %}
+{% ifequal item.batch_status 'semi-qualified' %}
+class="warning"
+{% else %}
+class="danger"
+{% endifequal %} 
+{% endifequal %} 
+>{{ item.batch_status|displaychinese}}
+{% ifequal item.batch_status 'semi-qualified' %}
+<button class="btn btn-warning btn-xs" data-toggle="modal" data-target="#{{item.audit_batch}}auditModal">
+点此评估
+</button>
+<!-- begin Modal -->
+
+<div class="modal fade bs-modal-sm" id="{{item.audit_batch}}auditModal"  tabindex="-1"  aria-hidden="true">
+                                <div class="modal-dialog modal-sm">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                                            <h4 class="modal-title">请选择最终审核结果</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                        <!--begin body-->
+                                <span> <strong>
+                                请综合评估该批次所有sql的影响行数、<br>
+                                执行计划、执行时间后选择最终审核结果</strong>
+                                </span><br><br>
+
+                   
+                        <form  action="/dmlaudit/dbause/changestatus"  method="POST" id="{{item.audit_batch}}">
+                               {% csrf_token %}
+                           <input type="hidden" name="audit_batch" value="{{item.audit_batch}}">  
+                    <select  name='batch_status' class="form-control input-md">  <!--input-large-->
+                         <option value="qualified">通过</option>
+                         <option value="unqualified" >不通过</option>
+                    </select>
+                      <!--end body-->
+                                        </div>
+                                        <div class="modal-footer">                                
+                                            <button type="submit" class="btn btn-primary">提交</button>
+                                              </form>  
+                                              <button type="button" class="btn default" data-dismiss="modal">取消</button>
+                                        </div>
+                                    </div>
+                                    <!-- /.modal-content -->
+                                </div>
+                                <!-- /.modal-dialog -->
+                            </div>
+
+<!-- end Modal -->
+{% else %}
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;
+<button class="btn btn-danger btn-xs" data-toggle="modal" data-target="#{{item.audit_batch}}auditModal">
+取消该批次
+</button>
+<!-- begin Modal -->
+
+<div class="modal fade bs-modal-sm" id="{{item.audit_batch}}auditModal"  tabindex="-1"  aria-hidden="true">
+                                <div class="modal-dialog modal-sm">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                                            <!--h4 class="modal-title">确定要取消该批次执行吗</h4-->
+                                        </div>
+                                        <div class="modal-body">
+                                        <!--begin body-->
+                         <h4 class="modal-title">确定要取消该批次数据订正吗</h4>
+                        <form  action="/dmlaudit/dbause/changestatus"  method="POST" id="{{item.audit_batch}}">
+                               {% csrf_token %}
+                           <input type="hidden" name="audit_batch" value="{{item.audit_batch}}"> 
+                           <input type="hidden" name="batch_status" value="cancel">   
+                      <!--end body-->
+                                        </div>
+                                        <div class="modal-footer">                                
+                                            <button type="submit" class="btn btn-primary">确定</button>
+                                              </form>  
+                                              <button type="button" class="btn default" data-dismiss="modal">取消</button>
+                                        </div>
+                                    </div>
+                                    <!-- /.modal-content -->
+                                </div>
+                                <!-- /.modal-dialog -->
+                            </div>
+
+<!-- end Modal -->
+
+
+
+{% endifequal %} 
+</td>
+
+
+
+<td>{{ item.evaluator}}</td>
+
+<td > <span id="{{item.audit_batch}}show">{{ item.execute_status|displaychinese}}</span>
+{% ifequal item.batch_status 'qualified' %}
+<!-- 使用ajax来处理 -->
+<button id="{{item.audit_batch}}" class="btn  btn-danger btn-xs"  onclick="Executebatch.call(this)">
+点击执行
+</button>
+{% endifequal %} 
+</td>
+
+<!--td>{{ item.executor}}</td>
+<td
+{% ifequal item.execute_status 'suc' %}
+class="success"
+{% else %}
+{% ifequal item.execute_status 'init' %}
+{% else %}
+class="danger"
+{% endifequal %} 
+{% endifequal %} 
+>{{ item.exe_failreason}}</td--> 
+</tr>{% endfor %}
+ </tbody>
+</table>
+{% else %}<!--大判断else -->
+
+<div class="alert alert-info">
+ <strong><i class="icon-info "></i> </strong> 暂无需处理的数据订正
+</div>
+
+
+{% endif %}<!--结束大判断 -->
+<!--end content 1-->
+
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END PORTLET-->
+
+
+
+
+                    <!-- BEGIN PORTLET-->
+                    <div class="portlet light ">
+                        <div class="portlet-title">
+                            <div class="caption caption-md">
+                                <span class="caption-subject font-green-sharp bold uppercase">
+                                <i class="icon-speech"></i> 执行成功的批次如下</span>
+                                <span class="caption-helper">最近10条</span>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <div id="context" data-toggle="context" data-target="#context-menu">
+
+
+
+<!--begin content 2-->
+
+{% if re_suc %}<!--大判断 -->
+<table class="table table-bordered table-hover table-condensed">
+                <thead>
+                    <tr>
+                        <th>提交者</th>       <!--audit_user-->
+                        <th>批次号</th>       <!--audit_batch-->
+                        <th>应用项目</th>     <!--app_name-->
+                        <th>数据库类型</th>   <!--db_type-->
+                        <th>SQL全文本</th>    <!--allsqltext-->
+                        <th>SQL语句数量</th>    <!--sqlamount-->
+                        <th>批次审核结果</th> <!--batch_status-->
+                        <th>审核人</th>       <!--evaluator-->
+                        <th>执行状态</th>     <!--execute_status-->
+                        <th>执行人</th>       <!--executor-->
+                    </tr>
+                </thead>
+                 <tbody>
+{%for item in re_suc %}<tr> 
+<td>{{ item.audit_user}}</td>
+<td>{{ item.audit_batch }}</td>
+<td>{{ item.app_name}}</td>
+<td>{{ item|displaychoices:'db_type'}}</td>  
+<td> {{item.allsqltext|limit:50}}
+<!-- 按钮触发模态框 -->
+<button class="btn btn-success btn-xs" data-toggle="modal" data-target="#allsqltext{{item.audit_batch}}Modal">
+展示全文
+</button>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="allsqltext{{item.audit_batch}}Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+            </div>
+            <div class="modal-body">
+              {{item.allsqltext|newline|safe}}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+</td>
+<td>{{ item.sqlamount }}</td>  
+<td class="success">{{ item.batch_status|displaychinese}}</td>
+<td>{{ item.evaluator}}</td>
+<td class="success">{{ item.execute_status|displaychinese}}</td>
+<td>{{ item.executor}}</td>
+</tr>{% endfor %}
+ </tbody>
+</table>
+{% else %}<!--大判断else -->
+
+<div class="alert alert-info">
+ <strong><i class="icon-info "></i> </strong> 目前无相关批次信息
+</div>
+
+
+{% endif %}<!--结束大判断 -->
+<!--end content 2-->
+
+
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END PORTLET-->
+
+
+
+                    <!-- BEGIN PORTLET-->
+                    <div class="portlet light ">
+                        <div class="portlet-title">
+                            <div class="caption caption-md">
+                                <span class="caption-subject font-red-sunglo bold uppercase">
+                                <i class="icon-speech"></i> 执行失败的批次如下</span>
+                                <span class="caption-helper">最近10条</span>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <div id="context" data-toggle="context" data-target="#context-menu">
+
+
+
+
+<!--begin content 3-->
+{% if re_fail %} <!--大判断 -->
+<table class="table table-bordered table-hover table-condensed">
+                <thead>
+                    <tr>
+                        <th>提交者</th>       <!--audit_user-->
+                        <th>批次号</th>       <!--audit_batch-->
+                        <th>应用项目</th>     <!--app_name-->
+                        <th>数据库类型</th>   <!--db_type-->
+                        <th>SQL全文本</th>    <!--allsqltext-->
+                        <th>SQL语句数量</th>    <!--sqlamount-->
+                        <th>批次审核结果</th> <!--batch_status-->
+                        <th>审核人</th>       <!--evaluator-->
+                        <th>执行状态</th>     <!--execute_status-->
+                        <th>执行人</th>       <!--executor-->
+                        <th>执行失败原因</th> <!--exe_failreason-->
+                    </tr>
+                </thead>
+                 <tbody>
+{%for item in re_fail %}<tr> 
+<td>{{ item.audit_user}}</td>
+<td>{{ item.audit_batch }}</td>
+<td>{{ item.app_name}}</td>
+<td>{{ item|displaychoices:'db_type'}}</td>  
+<td> {{item.allsqltext|limit:50}}
+<!-- 按钮触发模态框 -->
+<button class="btn btn-success btn-xs" data-toggle="modal" data-target="#allsqltext{{item.audit_batch}}Modal">
+展示全文
+</button>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="allsqltext{{item.audit_batch}}Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+            </div>
+            <div class="modal-body">
+              {{item.allsqltext|newline|safe}}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+</td>
+<td>{{ item.sqlamount }}</td>  
+<td class="success">{{ item.batch_status|displaychinese}}</td>
+<td>{{ item.evaluator}}</td>
+<td class="danger">{{ item.execute_status|displaychinese}}</td>
+<td>{{ item.executor}}</td>
+<td class="danger">{{ item.exe_failreason|limit:3}}
+
+<!-- 按钮触发模态框 -->
+<button class="btn btn-danger btn-xs" data-toggle="modal" data-target="#exe_failreason{{item.audit_batch}}Modal">
+点击查看
+</button>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="exe_failreason{{item.audit_batch}}Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+            </div>
+            <div class="modal-body">
+              {{item.exe_failreason}}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+</td> 
+
+</tr>{% endfor %}
+ </tbody>
+</table>
+{% else %}<!--大判断else -->
+
+<div class="alert alert-info">
+ <strong><i class="icon-info "></i> </strong> 目前无相关批次信息
+</div>
+
+{% endif %}<!--结束大判断 -->
+<!--end content 3-->
+
+
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END PORTLET-->
+
+
+
+
+                </div>
+            </div>
+
+
+<!--执行语句所用的ajax-->
+<script> 
+function Executebatch()
+{
+batch = $(this).attr('id');
+
+//alert("确定要执行"+batch+"批次数据订正吗？");
+var juge=window.confirm("确定要执行"+batch+"批次数据订正吗?");
+
+if(juge)
+{
+//$(this).text("已执行");  //不要修改按钮的文字了 容易产生误解 置灰就可以了 
+$(this).attr("disabled", true); 
+
+
+var batchshow=batch+"show";
+x=document.getElementById(batchshow); //查找元素
+
+$.ajax({
+  type: 'GET',
+  url: "/dmlaudit/dbause/execute",
+  data: {'batch':batch},
+  async: true,   //flase同步 页面会hang住等待 体验不好
+  contentType: "application/json",
+  beforeSend:function(){
+x.innerHTML="执行中";    //改变内容
+  },
+  success: function(ret){
+            var info;
+            info=ret;
+            x.innerHTML=info;
+             },
+ error: function(){
+            x.innerHTML="后端处理失败,请联系平台管理员";
+             }
+});
+
+
+
+}
+  else
+{}
+} 
+</script>
+
+
+
+            {% endblock  %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,542 @@
+{% load staticfiles %}
+{% load myNewLibrary %}
+<!DOCTYPE html>
+
+
+<html lang="en" class="no-js">
+<!-- BEGIN HEAD -->
+<head>
+<meta charset="utf-8">
+<title>{% block title %}base page{% endblock %}</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta content="width=device-width, initial-scale=1" name="viewport">
+<meta content="" name="description">
+<meta content="" name="author">
+<!-- BEGIN GLOBAL MANDATORY STYLES -->
+<link href={% static "assets/global/plugins/font-awesome/css/font-awesome.min.css"%} rel="stylesheet" type="text/css"/>
+<link href={% static "assets/global/plugins/simple-line-icons/simple-line-icons.min.css"%} rel="stylesheet" type="text/css"/>
+<link href={% static "assets/global/plugins/bootstrap/css/bootstrap.min.css"%} rel="stylesheet" type="text/css"/>
+<link href={% static "assets/global/plugins/uniform/css/uniform.default.css"%} rel="stylesheet" type="text/css"/>
+<link href={% static "assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css"%} rel="stylesheet" type="text/css"/>
+<!-- END GLOBAL MANDATORY STYLES -->
+
+<!-- BEGIN PAGE LEVEL PLUGIN STYLES -->
+<link href={% static "assets/global/plugins/bootstrap-daterangepicker/daterangepicker-bs3.css"%} rel="stylesheet" type="text/css"/>
+<link href={% static "assets/global/plugins/fullcalendar/fullcalendar.min.css"%} rel="stylesheet" type="text/css"/>
+<!-- END PAGE LEVEL PLUGIN STYLES -->
+
+<!-- BEGIN PAGE STYLES -->
+<link href={% static "assets/admin/pages/css/tasks.css"%}  rel="stylesheet" type="text/css"/>
+<!-- END PAGE STYLES -->
+
+
+<!-- BEGIN THEME STYLES -->
+<link href={% static "assets/global/css/components.css"%}  rel="stylesheet" type="text/css"/>
+<link href={% static "assets/global/css/plugins.css" %} rel="stylesheet" type="text/css"/>
+<link href={% static "assets/admin/layout/css/layout.css"%} rel="stylesheet" type="text/css">
+<link href={% static "assets/admin/layout/css/themes/darkblue.css"%} rel="stylesheet" type="text/css"/>
+<link href={% static "assets/admin/layout/css/custom.css"%} rel="stylesheet" type="text/css"/>
+
+<!-- END THEME STYLES -->
+
+
+
+
+</head>
+<!-- END HEAD -->
+<!-- BEGIN BODY -->
+<!-- DOC: Apply "page-header-menu-fixed" class to set the mega menu fixed  -->
+<!-- DOC: Apply "page-header-top-fixed" class to set the top menu fixed  -->
+<body class="page-header-fixed page-quick-sidebar-over-content page-sidebar-closed-hide-logo page-container-bg-solid">
+
+
+
+
+
+<!-- BEGIN HEADER -->
+<div class="page-header -i navbar navbar-fixed-top">
+    <!-- BEGIN HEADER INNER -->
+    <div class="page-header-inner">
+        <!-- BEGIN LOGO -->
+        <div class="page-logo">   
+            <div class="menu-toggler sidebar-toggler hide">
+            </div>
+        </div>
+        <!-- END LOGO -->
+        <!-- BEGIN RESPONSIVE MENU TOGGLER -->
+        <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse">
+        </a>
+        <!-- END RESPONSIVE MENU TOGGLER -->
+        <!-- BEGIN TOP NAVIGATION MENU -->
+        <div class="top-menu">
+            <ul class="nav navbar-nav pull-right">
+                <!-- BEGIN NOTIFICATION DROPDOWN -->
+                <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
+                <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar">
+                    <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                    <i class="icon-bell"></i>
+                    <span class="badge badge-default">
+                    3 </span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li class="external">
+                            <h3><span class="bold">3</span> notifications</h3>
+                        </li>
+                        <li>
+                            <ul class="dropdown-menu-list scroller" style="height: 250px;" data-handle-color="#637283">
+                                <li>
+                                    <a href="javascript:;">
+                                    <span class="time">just now</span>
+                                    <span class="details">
+                                    <span class="label label-sm label-icon label-success">
+                                    <i class="fa fa-plus"></i>
+                                    </span>
+                                    New user registered. </span>
+                                    </a>
+                                </li>  
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <!-- END NOTIFICATION DROPDOWN -->
+                <!-- BEGIN TODO DROPDOWN -->
+                <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
+                <li class="dropdown dropdown-extended dropdown-tasks" id="header_task_bar">
+                    <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                    <i class="icon-calendar"></i>
+                    <span class="badge badge-default">
+                    7 </span>
+                    </a>
+                    <ul class="dropdown-menu extended tasks">
+                        <li class="external">
+                            <h3>You have <span class="bold">7</span> tasks</h3>
+                        </li>
+                        <li>
+                            <ul class="dropdown-menu-list scroller" style="height: 275px;" data-handle-color="#637283">
+                                <li>
+                                    <a href="javascript:;">
+                                    <span class="task">
+                                    <span class="desc">New release v1.2 </span>
+                                    <span class="percent">30%</span>
+                                    </span>
+                                    <span class="progress">
+                                    <span style="width: 40%;" class="progress-bar progress-bar-success" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"><span class="sr-only">40% Complete</span></span>
+                                    </span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <!-- END TODO DROPDOWN -->
+                <!-- BEGIN USER LOGIN DROPDOWN -->
+                <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
+                <li class="dropdown dropdown-user">
+                    <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                    <span class="username username-hide-on-mobile">
+                     {{request.user.username}} </span>
+                    <i class="fa fa-angle-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-default">
+                        <li>
+                            <a href="/usercontrol/changepasswd">
+                            <i class="icon-lock"></i> 修改密码</a>
+                        </li>
+                        <li>
+                        <li class="divider">
+                        </li>
+                        <li>
+                            <a href="/usercontrol/userlogout">
+                            <i class="icon-key"></i> 退出登陆</a>
+                        </li>
+                    </ul>
+                </li>
+                <li  >
+                    <h3 style="color:white">   甜橙DBA自动化运维平台</h3>               
+                </li>
+
+                <!-- END USER LOGIN DROPDOWN -->
+
+            </ul>
+
+        </div>
+        <!-- END TOP NAVIGATION MENU -->
+
+    </div>
+    <!-- END HEADER INNER -->
+    
+</div>
+<!-- END HEADER -->
+<div class="clearfix">
+</div>
+<!-- BEGIN CONTAINER -->
+<div class="page-container">
+    <!-- BEGIN SIDEBAR -->
+    <div class="page-sidebar-wrapper">
+        <!-- DOC: Set data-auto-scroll="false" to disable the sidebar from auto scrolling/focusing -->
+        <!-- DOC: Change data-auto-speed="200" to adjust the sub menu slide up/down speed -->
+        <div class="page-sidebar navbar-collapse collapse">
+            <!-- BEGIN SIDEBAR MENU -->
+            <!-- DOC: Apply "page-sidebar-menu-light" class right after "page-sidebar-menu" to enable light sidebar menu style(without borders) -->
+            <!-- DOC: Apply "page-sidebar-menu-hover-submenu" class right after "page-sidebar-menu" to enable hoverable(hover vs accordion) sub menu mode -->
+            <!-- DOC: Apply "page-sidebar-menu-closed" class right after "page-sidebar-menu" to collapse("page-sidebar-closed" class must be applied to the body element) the sidebar sub menu mode -->
+            <!-- DOC: Set data-auto-scroll="false" to disable the sidebar from auto scrolling/focusing -->
+            <!-- DOC: Set data-keep-expand="true" to keep the submenues expanded -->
+            <!-- DOC: Set data-auto-speed="200" to adjust the sub menu slide up/down speed -->
+            <ul class="page-sidebar-menu " data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200">
+                <!-- DOC: To remove the sidebar toggler from the sidebar you just need to completely remove the below "sidebar-toggler-wrapper" LI element -->
+                <li class="sidebar-toggler-wrapper">
+                    <!-- BEGIN SIDEBAR TOGGLER BUTTON -->
+                    <div class="sidebar-toggler">
+                    </div>
+                    <!-- END SIDEBAR TOGGLER BUTTON -->
+                </li>
+                <li class="heading">
+                    <h3 class="uppercase">配置管理</h3>
+                </li>
+                
+                <li>
+                    <a href="#">
+                    <i class="icon-basket"></i>
+                    <span class="title">资产管理</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#">
+                    <i class="icon-cloud-download "></i>
+                    <span class="title">资源生成</span>
+                    </a>
+                </li>
+
+                
+                <li class="heading">
+                    <h3 class="uppercase">数据库审核</h3>
+                </li>
+                <li {% ifequal request.path|limit:10 "/ddlaudit/" %}class="start active open"{% endifequal %}>
+                    <a href="/ddlaudit/audit">
+                    <i class="icon-fire"></i>
+                    <span class="title">DDL审核&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <i class="icon-star "></i>
+                    </span>
+                    {% ifequal request.path|limit:10 "/ddlaudit/" %} <span class="selected"></span>
+                    {% endifequal %}
+                    </a> 
+                </li>
+                <li {% ifequal request.path|limit:10 "/dmlaudit/" %}class="start active open"{% endifequal %}>
+                    <a href="/dmlaudit/audit">
+                    <i class="icon-social-dribbble "></i>
+                    <span class="title">DML审核&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <i class="icon-star "></i>
+                    <!--span class="badge badge-roundless badge-danger">online</span-->
+                    </span>        
+                    {% ifequal request.path|limit:10 "/dmlaudit/" %} <span class="selected"></span>
+                    {% endifequal %}
+                    </a> 
+                </li>
+                <li>
+                    <a href="javascript:;">
+                    <i class="icon-key"></i>
+                    <span class="title">SQL代码审核</span>
+                    </a> 
+                </li>
+                
+                <li class="heading">
+                    <h3 class="uppercase"  >日常运维</h3>
+                </li>
+                <li {% ifequal request.path|limit:13 "/runanalysis/" %}class="start active open"
+                    {% endifequal %}>
+                    <a href="javascript:;">
+                    <i class="icon-graph"></i>
+                    <span class="title">运行分析&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <i class="icon-star "></i>
+                    </span>
+                    <span class="arrow "></span>
+                    {% ifequal request.path|limit:13 "/runanalysis/" %} <span class="selected"></span>
+                    {% endifequal %}
+
+
+                    </a>
+                    <ul class="sub-menu">
+                        <li {% ifequal request.path|limit:24 "/runanalysis/statreport/" %}class=" active"{% endifequal %}>
+                            <a href="/runanalysis/statreport/awr">
+                            <i class="icon-screen-desktop "></i>&nbsp;&nbsp;生成状态报告<br>
+                            </a>
+                        </li>
+                        <li {% ifequal request.path|limit:24 "/runanalysis/objectcheck" %}class=" active"{% endifequal %}>
+                            <a href="/runanalysis/objectcheck">
+                            <i class="icon-badge  "></i>&nbsp;&nbsp;对象治理<br> 
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+
+
+                <li {% ifequal request.path "/datatransfer/transfer" %}class="start active open"
+                    {% else %}
+                    {% ifequal request.path "/datatransfer/logicalbackup" %}class="start active open"
+                    {% else %} 
+                    {% ifequal request.path "/datatransfer/history" %}class="start active open"
+                    {% else %} 
+                    {% endifequal %}
+                    {% endifequal %}
+                    {% endifequal %}>
+                    <a href="javascript:;">
+                    <i class="icon-refresh "></i>
+                    <span class="title">数据搬运</span>
+                    <span class="arrow "></span>
+
+                    {% ifequal request.path "/datatransfer/transfer" %}<span class="selected"></span>
+                    {% else %}
+                    {% ifequal request.path "/datatransfer/logicalbackup" %}<span class="selected"></span>
+                    {% else %} 
+                    {% ifequal request.path "/datatransfer/history" %}<span class="selected"></span>
+                    {% else %} 
+                    {% endifequal %}
+                    {% endifequal %}
+                    {% endifequal %}
+                    </a>
+                    <ul class="sub-menu">
+                        <li {% ifequal request.path "/datatransfer/transfer" %}class=" active"{% endifequal %}>
+                            <a href="{% url "datatransfer_transfer" %}">
+                            <i class=" icon-crop "></i>&nbsp;&nbsp;数据迁移<br>
+                            </a>
+                        </li>
+                        <li {% ifequal request.path "/datatransfer/logicalbackup" %}class=" active"{% endifequal %}>
+                            <a href="{% url "datatransfer_logicalbackup" %}" >
+                            <i class=" icon-drawer  "></i>&nbsp;&nbsp;逻辑备份<br>
+                            </a>
+                        </li>
+                        <li {% ifequal request.path "/datatransfer/history" %}class=" active"{% endifequal %}>
+                            <a href="{% url "datatransfer_history" %}" >
+                            <i class="icon-energy  "></i>&nbsp;&nbsp;历史数据治理<br>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="javascript:;">
+                    <i class="icon-docs "></i>
+                    <span class="title">日志分析</span>
+                    <span class="arrow "></span>
+                    </a>
+                    <ul class="sub-menu">
+                        <li>
+                            <a href="form_controls_md.html">
+                            <i class="icon-doc "></i>&nbsp;&nbsp;日志速查<br>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="form_controls.html">
+                            <i class="icon-bag  "></i>&nbsp;&nbsp;日志挖掘<br>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+
+                
+                <li {% ifequal request.path|limit:13 "/performance/" %}class="start active open"{% endifequal %}>
+                    <a href="/performance/sqlinefficient">
+                    <i class="icon-wrench"></i>
+                    <span class="title">性能分析&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <i class="icon-star "></i>
+                    </span>
+                    {% ifequal request.path|limit:13 "/performance/" %} <span class="selected"></span>
+                    {% endifequal %}
+                    </a> 
+                </li>
+
+                
+                <li class="heading">
+                    <h3 class="uppercase">平台配置</h3>
+                </li>
+                <li>
+                    <a href="javascript:;">
+                    <i class="icon-settings"></i>
+                    <span class="title">参数配置</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/usercontrol/changepasswd">
+                    <i class="icon-users"></i>
+                    <span class="title">用户管理</span>
+                    </a>
+                </li>
+            </ul>
+            <!-- END SIDEBAR MENU -->
+        </div>
+    </div>
+    <!-- END SIDEBAR -->
+    <!-- BEGIN CONTENT -->
+    {% block content %}
+    <div class="page-content-wrapper">
+        <div class="page-content">
+
+            <!-- BEGIN PAGE HEADER-->
+            <div class="page-bar">
+                <ul class="page-breadcrumb">
+                    <li>
+                        <span>页内导航</span>
+                    </li>
+                    <li>
+                        <a href="#">page1</a>
+                    </li>
+                    <li>
+                        <a href="#">page2</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- END PAGE HEADER-->
+            <h3 class="page-title">
+            PAGE-TITLE <small>comments</small>
+            </h3>
+            
+            <div class="clearfix">
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-sm-6">
+                    <!-- BEGIN PORTLET-->
+                    content1
+                    <!-- END PORTLET-->
+                </div>
+                <div class="col-md-6 col-sm-6">
+                    <!-- BEGIN PORTLET-->
+                    content2
+                    <!-- END PORTLET-->
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+    <!-- END CONTENT -->
+    
+</div>
+<!-- END CONTAINER -->
+<!-- BEGIN FOOTER -->
+<div class="page-footer">
+    <div class="page-footer-inner">
+         2017 &copy; Orange DBA
+    </div>
+    <div class="scroll-to-top">
+        <i class="icon-arrow-up"></i>
+    </div>
+</div>
+<!-- END FOOTER -->
+
+
+
+
+<!-- BEGIN CORE PLUGINS -->
+<script src={% static "assets/global/plugins/jquery.min.js" %} type="text/javascript"></script>
+<script src={% static "assets/global/plugins/jquery-migrate.min.js"%} type="text/javascript"></script>
+<script src={% static "assets/global/plugins/jquery-ui/jquery-ui.min.js"%} type="text/javascript"></script>
+<script src={% static "assets/global/plugins/bootstrap/js/bootstrap.min.js"%} type="text/javascript"></script>
+<script src={% static "assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js"%} type="text/javascript"></script>
+<script src={% static "assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js"%} type="text/javascript"></script>
+<script src={% static "assets/global/plugins/jquery.blockui.min.js"%} type="text/javascript"></script>
+<script src={% static "assets/global/plugins/jquery.cokie.min.js"%} type="text/javascript"></script>
+<script src={% static "assets/global/plugins/uniform/jquery.uniform.min.js"%} type="text/javascript"></script>
+<script src={% static "assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js"%} type="text/javascript"></script>
+<!-- END CORE PLUGINS -->
+
+
+<!-- BEGIN PAGE LEVEL PLUGINS -->
+<script src={% static "assets/global/plugins/jquery.sparkline.min.js"%} type="text/javascript"></script>
+<!-- END PAGE LEVEL PLUGINS -->
+
+
+
+<!-- BEGIN PAGE LEVEL SCRIPTS -->
+<script src={% static "assets/global/scripts/metronic.js"%} type="text/javascript"></script>
+<script src={% static "assets/admin/layout/scripts/layout.js"%} type="text/javascript"></script>
+<script src={% static "assets/admin/layout/scripts/quick-sidebar.js"%} type="text/javascript"></script>
+<script src={% static "assets/admin/pages/scripts/tasks.js"%} type="text/javascript"></script>
+<!-- END PAGE LEVEL SCRIPTS -->
+
+<!--BEGIN 日期插件 -->
+<script src={% static "assets/global/plugins/select2/select2.min.js"%} type="text/javascript"></script>
+<script src={% static "assets/global/plugins/datatables/media/js/jquery.dataTables.min.js"%} type="text/javascript" ></script>
+<script src={% static "assets/global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.js"%} type="text/javascript" ></script>
+<script src={% static "assets/global/scripts/datatable.js"%}></script>
+<script src={% static "assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js"%} type="text/javascript" ></script>
+<script src={% static "assets/admin/pages/scripts/ecommerce-products.js"%}></script>
+<script src={% static "assets/admin/pages/scripts/ecommerce-orders.js"%} ></script>
+<!--END 日期插件 -->
+
+
+<!--BEGIN 报表饼图-->
+<script src={% static "assets/piejs/jsapi.js" %}></script>
+<script src={% static "assets/piejs/corechart.js" %}></script>
+<script src={% static "assets/piejs/jquery.gvChart-1.0.1.min.js" %}></script>
+<script src={% static "assets/piejs/jquery.ba-resize.min.js" %}></script>
+ <!--END 报表饼图-->
+
+<script>
+jQuery(document).ready(function() {    
+   Metronic.init(); // init metronic core componets
+   Layout.init(); // init layout
+   // Demo.init(); // init demo features 
+   // Index.init(); // init index page
+   Tasks.initDashboardWidget(); // init tash dashboard widget 
+   EcommerceOrders.init();// 日期选项插件 
+});
+</script>
+
+
+<!--BEGIN 报表饼图-->
+ <script type="text/javascript">
+        gvChartInit();
+        $(document).ready(function () {
+            $('#myTable1').gvChart({
+                chartType: 'PieChart',
+                gvSettings: {
+                    vAxis: { title: 'No of players' },
+                    hAxis: { title: 'Month' },
+                    width: 600,
+                    height: 350
+                }
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        gvChartInit();
+        $(document).ready(function () {
+            $('#myTable2').gvChart({
+                chartType: 'PieChart',
+                gvSettings: {
+                    vAxis: { title: 'No of players' },
+                    hAxis: { title: 'Month' },
+                    width: 600,
+                    height: 350
+                }
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        gvChartInit();
+        $(document).ready(function () {
+            $('#myTable3').gvChart({
+                chartType: 'PieChart',
+                gvSettings: {
+                    vAxis: { title: 'No of players' },
+                    hAxis: { title: 'Month' },
+                    width: 600,
+                    height: 350
+                }
+            });
+        });
+    </script>
+
+
+
+ <!--END 报表饼图-->
+
+
+
+
+</body>
+<!-- END BODY -->
+</html>

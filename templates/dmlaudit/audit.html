@@ -1,0 +1,417 @@
+
+{% extends 'dmlaudit/dmlauditbase.html' %}
+{% load myNewLibrary %}
+{% load staticfiles %}
+{% block title %}dmlaudit_audit{% endblock %}
+
+{%  block subcontent %}   
+            <h3 class="page-title">
+            语句审核 <small>仅限DML</small>
+            </h3>     
+
+            <div class="clearfix">
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- BEGIN PORTLET-->
+               
+                    <div class="portlet light ">
+                        <div class="portlet-title">
+                            <div class="caption caption-md">
+                                <!--span class="caption-subject bold uppercase"> 提交信息</span-->
+                                <span class="caption-subject font-red-sunglo bold uppercase">
+                                <i class="icon-speech"></i>
+                                提交信息</span>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <div id="context" data-toggle="context" data-target="#context-menu">
+
+  <div class="widget">  <!--信息提交框-->
+  <div class="widget-content">    
+
+  <form class="form-inline" role="form" action="/dmlaudit/audit" method="POST" enctype="multipart/form-data">
+  {% csrf_token %}
+
+  <div class="form-group">
+  <strong><i class="icon-social-dribbble"></i> 请选择数据库类型</strong> 
+  <input name="db_type" type="radio"  value="oracle" onclick="getdatabase()"  
+  {% ifequal db_type "oracle" %}checked="checked"{% endifequal %}>
+  <img src={% static "images/ORACLE.png" %}  class="img-rounded"  alt="ORACLE">
+  <input name="db_type" type="radio" disabled="disabled" value="redis">
+  <img src={% static "images/redis.png" %}  class="img-rounded"  alt="redis">
+  <input name="db_type" type="radio"  value="mysql" onclick="getdatabase()"
+  {% ifequal db_type "mysql" %}checked="checked"{% endifequal %}>
+  <img src={% static "images/MySQL.png" %}  class="img-rounded" alt="MySQL">
+  {% if db_type %}
+  <span class="label label-default"><i class="icon-info "></i> 点击前级选项来初始后级选项内容</span>
+  {% endif %}
+  </div><br><br>
+
+  <div class="form-group">
+  <strong><i class="icon-social-dribbble"></i> 请选择数据库</strong>
+  {% if db_name %}
+  <select id='db_name' name='db_name'class="input-md form-control" onclick="initSchemas()"  >
+  <option value="{{db_name}}" selected="selected" >{{db_name}}</option>
+  </select>
+  {% else %}
+  <select id='db_name' name='db_name'class="input-md form-control" onchange="initSchemas()"  >
+  <option value="" selected="selected">请选择</option>
+  </select>
+  {% endif %}
+  </div>
+
+  <div class="form-group">
+  <strong ><i class="icon-social-dribbble"></i> 请选择schema</strong>
+  {% if skema %}
+  <select id = 'skema' name='skema'class="input-md form-control" onclick="initApps()"  >
+  <option value="{{skema}}" selected="selected"  >{{skema}}</option>
+  </select>
+  {% else %}
+  <select id = 'skema' name='skema'class="input-md form-control" onchange="initApps()"  >
+  <option value="" selected="selected">请选择</option>
+  </select>
+  {% endif %}
+  </div>
+
+  <div class="form-group">
+  <strong ><i class="icon-social-dribbble"></i> 请选择应用项目</strong>
+  <select id = 'app_name' name='app_name'class="input-md form-control"   >
+  {% if app_name %}
+  <option value="{{app_name}}" selected="selected">{{app_name}}</option>
+  {% else %}
+  <option value="" selected="selected">请选择</option>
+  {% endif %}
+  </select>
+  </div><br><br>
+
+  <div class="form-group">
+  <strong><i class="icon-social-dribbble"></i> 请输入需要审核的脚本</strong>
+  <br>
+  {% if allsqltext %}
+  <textarea rows="8" cols="80" name="allsqltext">{{allsqltext}}</textarea>
+  {% else %}
+  <textarea rows="8" cols="80" name="allsqltext"></textarea>
+  {% endif %}
+  </div><br><br>
+
+  <div class="form-group">
+  <strong ><i class="icon-social-dribbble"></i> 或者上传需审核的文件</strong>
+  <input type="file"  class="btn-default" name="filesqltext" >
+  </div>&nbsp;&nbsp;&nbsp;&nbsp;
+  <button type="submit" class="btn btn-success" >提交</button>
+
+  </form>
+
+  </div> 
+  </div> <!--信息提交框结束-->
+
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END PORTLET-->
+
+
+
+                    <!-- BEGIN PORTLET-->
+               
+                    <div class="portlet light ">
+                        <div class="portlet-title">
+                            <div class="caption caption-md">
+                                <span class="caption-subject font-red-sunglo bold uppercase">
+                                <i class="icon-speech"></i>
+                                审核结果</span>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <div id="context" data-toggle="context" data-target="#context-menu">
+
+
+
+<!--审核结果-->
+{% if  errmsg %}
+<div class="alert alert-danger" >
+<i class="icon-close"></i> {{errmsg}}</div> 
+{% endif %}
+
+
+
+
+
+
+
+{% if  list_auditresult %} 
+<!-- BEGIN -->
+{% ifequal batch_status 'unqualified' %}
+<!--不通过-->
+<h3  class="font-red-haze">
+<strong>批次号  ：{{audit_batch}}</strong><br>
+<strong>语句条数：{{sqlamount}}</strong><br>
+<strong>审核结果：不通过</strong>
+<span class="label label-sm label-default"><i class="icon-info "></i> 请修改语法错误的语句后再次提交</span>
+</h3>
+{% else %}
+{% ifequal batch_status 'semi-qualified' %}
+<!--待评估-->
+<h3  class="font-yellow-gold">
+<strong>批次号  ：{{audit_batch}}</strong><br>
+<strong>语句条数：{{sqlamount}}</strong><br>
+<strong>审核结果：待DBA评估</strong>
+<span class="label label-sm label-default"><i class="icon-info "></i> 系统将微信通知DBA进一步评估</span>
+ </h3>
+{% else %}
+<!--通过-->
+<h3  class="font-green-sharp">
+<strong>批次号  ：{{audit_batch}}</strong><br>
+<strong>语句条数：{{sqlamount}}</strong><br>
+<strong>审核结果：通过</strong>
+<span class="label label-sm label-default"><i class="icon-info "></i> 系统将微信通知DBA执行</span>
+ </h3>
+{% endifequal %} 
+{% endifequal %}
+<!-- END -->
+
+
+<table class="table table-condensed table-bordered  table-hover">
+                <thead>
+                    <tr>
+                        <th><strong>提交者</strong></th>
+                        <th><strong>应用项目</strong></th>
+                        <th><strong>数据库类型</strong></th>
+                        <th><strong>SQL编号</strong></th>
+                        <th><strong>SQL文本</strong></th>
+                        <th><strong>SQL类型</strong></th>
+                        <th><strong>语法</strong></th>
+                        <th><strong>语法错误码</strong></th>
+                        <th><strong>执行计划详情</strong></th>
+                        <th><strong>预估时长</strong></th>
+                        <th><strong>影响行数</strong></th>
+                        <th><strong>语句审核结果</strong></th>
+                        <th><strong>批次审核结果</strong></th>
+                    </tr>
+                </thead>
+
+<tbody>
+{%for item in list_auditresult %}
+<tr> 
+<td>{{ audit_user}}</td>
+<td>{{ app_name}}</td>
+<td>{{ db_type}}</td>  
+<td>{{ item.sqlnum}}</td>
+<td> {{item.sqltext|limit:50}}
+<!-- 按钮触发模态框 -->
+<button class="btn btn-success btn-xs" data-toggle="modal" data-target="#sqltext{{item.sqlnum}}Modal">
+展示sql全文
+</button>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="sqltext{{item.sqlnum}}Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+            </div>
+            <div class="modal-body">
+              {{item.sqltext|newline|safe}}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+</td>
+<td>{{ item.sqltype}}</td>  
+<td>{{ item.grammar|displaychinese}}</td>
+<td>{{ item.gra_failreason}}</td>
+<td>
+<!-- 按钮触发模态框 -->
+<button class="btn btn-success btn-xs" data-toggle="modal" data-target="#sqlplan{{item.sqlnum}}Modal"
+
+{% ifequal item.audit_status 'unqualified' %}
+disabled="disabled"
+{% else %}
+{% endifequal %} 
+>
+点击展示
+</button>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="sqlplan{{item.sqlnum}}Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+            </div>
+            <div class="modal-body">
+            {% for i in item.sqlplan %}
+             <p>{{i}}
+             {% endfor %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+</td>
+<td>{{ item.exetime}}</td>
+<td
+{% ifequal item.rowaffact 0 %}
+class="warning"
+{% else %}
+{% endifequal %} >
+<strong>{{ item.rowaffact}}</strong>
+</td>
+
+<td
+{% ifequal item.audit_status 'qualified' %}
+class="success"
+{% else %}
+{% ifequal item.audit_status 'semi-qualified' %}
+class="warning"
+{% else %}
+class="danger"
+{% endifequal %} 
+{% endifequal %} 
+>{{ item.audit_status|displaychinese}}</td>
+
+
+<td
+{% ifequal batch_status 'qualified' %}
+class="success"
+{% else %}
+{% ifequal batch_status 'semi-qualified' %}
+class="warning"
+{% else %}
+class="danger"
+{% endifequal %} 
+{% endifequal %} 
+>{{ batch_status|displaychinese}}</td>
+
+
+
+</tr>
+{% endfor %}
+</tbody>
+</table>
+{% endif %}
+
+
+<!--审核结果结束-->
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END PORTLET-->
+
+                </div>
+            </div>
+
+
+
+<!--表单联动-->
+<script>
+//根据db_type获取db_name
+   function getdatabase(){ 
+    var html;  
+    var db_type = $("input[name='db_type']:checked").val(); 
+    $.ajax({  
+        type: "GET",  
+        async: true,  
+        url: "/cmdb/getdatabase",  
+        data: {'db_type':db_type}, 
+        dataType: "json",  
+        success: function(data) {  
+                var obj=eval(data);
+                    for (var i=0;i<obj.length;i++ )
+                    {
+                       html+="  <option  value="+obj[i].db_name+">"+obj[i].db_name+"</option>"
+                    }
+                        x=document.getElementById('db_name'); 
+                        x.innerHTML=html;
+                        initSchemas();
+        
+        }  
+
+    });  
+  };
+//根据db_name获取skema
+function initSchemas() {  
+    var html;  
+    var db_name = document.getElementById('db_name').value;
+    $.ajax({  
+        type: "GET",  
+        async: true,  
+        url: "/cmdb/getschema",  
+        data: {'db_name':db_name}, 
+        dataType: "json",  
+        success: function(data) {  
+                 var obj=eval(data);
+                    for (var i=0;i<obj.length;i++ )
+                    {
+                       html+="  <option value="+obj[i].skema+">"+obj[i].skema+"</option>"
+                    }
+                     y=document.getElementById('skema'); 
+                     y.innerHTML=html; 
+                     initApps();
+                
+ 
+        }  
+
+    });  
+};
+
+// 根据db_name skema获取app_name  
+function initApps() {  
+    var db_name = document.getElementById('db_name').value;
+    var skema = document.getElementById('skema').value;
+    var html;  
+    $.ajax({  
+        type: "GET",  
+        async: true,  
+        url: "/cmdb/getapp",   
+        data: {'db_name':db_name,
+               'skema':skema}, 
+        dataType: "json",  
+        success: function(data) {  
+                var obj=eval(data);
+                    for (var i=0;i<obj.length;i++ )
+                    {
+                       html+="  <option value="+obj[i].app_name+">"+obj[i].app_name+"</option>"
+                    }
+                     z=document.getElementById('app_name'); 
+                     z.innerHTML=html; 
+            
+        }  
+    });  
+};
+</script>
+
+
+
+            {% endblock  %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

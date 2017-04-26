@@ -1,0 +1,84 @@
+{% extends 'performance/performancebase.html' %}
+
+{% block title %}performance_sqlanalysis{% endblock %}
+
+
+
+    {% block subcontent %}
+            <h3 class="page-title">
+            SQL分析 <small>相关对象 & 执行计划 </small>
+            </h3>    
+
+           <div class="clearfix">
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- BEGIN PORTLET-->
+               
+                    <div class="portlet light ">
+                        <div class="portlet-title">
+                            <div class="caption caption-md">
+                                <!--span class="caption-subject bold uppercase"> 提交信息</span-->
+                                <span class="caption-subject font-red-sunglo bold uppercase">
+                                <i class="icon-speech"></i>
+                                提交信息</span>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <div id="context" data-toggle="context" data-target="#context-menu">
+
+
+
+<!--信息提交框-->
+
+content1
+
+<!--信息提交框结束-->
+
+
+
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END PORTLET-->
+
+
+
+                    <!-- BEGIN PORTLET-->
+               
+                    <div class="portlet light ">
+                        <div class="portlet-title">
+                            <div class="caption caption-md">
+                                <span class="caption-subject font-red-sunglo bold uppercase">
+                                <i class="icon-speech"></i>
+                                审核结果</span>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <div id="context" data-toggle="context" data-target="#context-menu">
+
+
+
+<!--审核结果-->
+content2
+
+<!--审核结果结束-->
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END PORTLET-->
+
+                </div>
+            </div>
+
+
+
+
+
+            {% endblock  %}

@@ -1,0 +1,347 @@
+
+{% extends 'ddlaudit/ddlauditbase.html' %}
+{% load myNewLibrary %}
+{% load staticfiles %}
+{% block title %}ddlaudit_audit{% endblock %}
+
+
+
+            {%  block subcontent %}   
+            <h3 class="page-title">
+            语句审核 <small>DDL语句</small>
+            </h3>    
+
+            <div class="clearfix">
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- BEGIN PORTLET-->
+               
+                    <div class="portlet light ">
+                        <div class="portlet-title">
+                            <div class="caption caption-md">
+                                <!--span class="caption-subject bold uppercase"> 提交信息</span-->
+                                <span class="caption-subject font-red-sunglo bold uppercase">
+                                <i class="icon-speech"></i>
+                                提交信息</span>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <div id="context" data-toggle="context" data-target="#context-menu">
+
+
+
+<div class="widget">  <!--信息提交框-->
+  <div class="widget-content">    
+
+  <form class="form-inline" role="form" action="/ddlaudit/audit" method="POST" enctype="multipart/form-data">
+  {% csrf_token %}
+
+  <div class="form-group">
+  <strong><i class="icon-fire "></i> 请选择数据库类型</strong> 
+  <input name="db_type" type="radio"  value="oracle" onclick="getdatabase()"  
+  {% ifequal db_type "oracle" %}checked="checked"{% endifequal %}>
+  <img src={% static "images/ORACLE.png" %}  class="img-rounded"  alt="ORACLE">
+
+  <input name="db_type" type="radio"  value="mysql" disabled="disabled"
+  {% ifequal db_type "mysql" %}checked="checked"{% endifequal %}>
+  <img src={% static "images/MySQL.png" %}  class="img-rounded" alt="MySQL">
+
+  </div><br><br>
+
+  <div class="form-group">
+  <strong><i class="icon-fire"></i> 请选择数据库&nbsp;&nbsp;</strong>
+  {% if db_name %}
+  <select id='db_name' name='db_name'class="input-md form-control" onclick="initSchemas()"  >
+  <option value="{{db_name}}" selected="selected" >{{db_name}}</option>
+  </select>
+  {% else %}
+  <select id='db_name' name='db_name'class="input-md form-control" onchange="initSchemas()"  >
+  <option value="" selected="selected">请选择</option>
+  </select>
+  {% endif %}
+  </div>&nbsp;&nbsp;&nbsp;&nbsp;
+
+  <div class="form-group">
+  <strong ><i class="icon-fire"></i> 请选择schema</strong>
+  {% if skema %}
+  <select id = 'skema' name='skema'class="input-md form-control" onclick="initApps()"  >
+  <option value="{{skema}}" selected="selected"  >{{skema}}</option>
+  </select>
+  {% else %}
+  <select id = 'skema' name='skema'class="input-md form-control" onchange="initApps()"  >
+  <option value="" selected="selected">请选择</option>
+  </select>
+  {% endif %}
+  </div><br><br>
+
+  <div class="form-group">
+  <strong ><i class="icon-fire"></i> 请选择应用项目</strong>
+  <select id = 'app_name' name='app_name'class="input-md form-control"   >
+  {% if app_name %}
+  <option value="{{app_name}}" selected="selected">{{app_name}}</option>
+  {% else %}
+  <option value="" selected="selected">请选择</option>
+  {% endif %}
+  </select>
+  </div>&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+<strong ><i class="icon-fire"></i> 准生产上线日期</strong>
+<div class="input-group date date-picker margin-bottom-5" data-date-format="dd/mm/yyyy">
+<input type="text" class="form-control form-filter input-md" readonly name="date" placeholder="日期">
+<span class="input-group-btn">
+<button class="btn btn-md default" type="button"><i class="fa fa-calendar"></i></button>
+</span>
+</div>&nbsp;&nbsp;<span class="label label-md label-default"><i class="icon-info "></i> 如不填选则默认为T+2</span>
+
+<br><br>
+  <div class="form-group">
+  <strong><i class="icon-fire"></i> 请输入需要审核的脚本</strong>
+  <br>
+  {% if allsqltext %}
+  <textarea rows="8" cols="80" name="allsqltext">{{allsqltext}}</textarea>
+  {% else %}
+  <textarea rows="8" cols="80" name="allsqltext"></textarea>
+  {% endif %}
+  </div><br><br>
+
+  <div class="form-group">
+  <strong ><i class="icon-fire"></i> 或者上传需审核的文件</strong>
+  <input type="file"  class="btn-default" name="filesqltext" >
+  </div>&nbsp;&nbsp;&nbsp;&nbsp;
+  <button type="submit" class="btn btn-success" >提交</button>
+
+  </form>
+
+  </div> 
+  </div> <!--信息提交框结束-->
+
+
+
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END PORTLET-->
+
+
+
+                    <!-- BEGIN PORTLET-->
+               
+                    <div class="portlet light ">
+                        <div class="portlet-title">
+                            <div class="caption caption-md">
+                                <span class="caption-subject font-red-sunglo bold uppercase">
+                                <i class="icon-speech"></i>
+                                审核结果</span>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <div id="context" data-toggle="context" data-target="#context-menu">
+
+
+
+<!--审核结果-->
+{% if  errmsg %}
+<div class="alert alert-danger" >
+<i class="icon-close"></i> {{errmsg}}</div> 
+{% endif %}
+
+{% if result %}
+
+
+<table class="table table-condensed table-bordered  table-hover">
+<thead>
+                    <tr >
+                        <th width="40%">语句 </th>     
+                        <th width="5%"> 语句类型</th>   
+                        <th width="5%"> 状态</th> 
+                        <th> 审核结果</th> 
+                    </tr>
+</thead>
+<tbody>
+
+{%for item in result %}
+<tr> 
+
+<td>
+{{item.content|limit:50}}
+
+{% ifequal item.type 'N/A' %}
+{% else %}
+<!-- 按钮触发模态框 -->
+<button class="btn btn-success btn-xs" data-toggle="modal" data-target="#sqltext{{item.sqlnum}}Modal">
+展示全文
+</button>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="sqltext{{item.sqlnum}}Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+            </div>
+            <div class="modal-body">
+              {{item.content}}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+{% endifequal %} 
+
+</td>
+
+<td>
+{{item.type}}
+</td>
+<td  
+{% ifequal item.status 0 %}
+class="success"
+{% else %}
+{% ifequal item.status 1 %}
+class="warning"
+{% else %}
+{% ifequal item.status 2 %}
+class="danger"
+{% else %}
+{% endifequal %} 
+{% endifequal %} 
+{% endifequal %} 
+>
+{{item.status|ddldisplaychinese}}
+</td>
+
+<td>
+{% for i in item.results %}
+ {{i}}<br>
+ {% endfor %}
+
+</td>
+
+</tr>
+{% endfor %}
+
+</tbody>
+</table>
+{% endif %}
+<!--审核结果结束-->
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END PORTLET-->
+
+                </div>
+            </div>
+
+
+
+<!--表单联动-->
+<script>
+//根据db_type获取db_name
+   function getdatabase(){ 
+    var html;  
+    var db_type = $("input[name='db_type']:checked").val(); 
+    $.ajax({  
+        type: "GET",  
+        async: true,  
+        url: "/cmdb/getdatabase",  
+        data: {'db_type':db_type}, 
+        dataType: "json",  
+        success: function(data) {  
+                var obj=eval(data);
+                    for (var i=0;i<obj.length;i++ )
+                    {
+                       html+="  <option  value="+obj[i].db_name+">"+obj[i].db_name+"</option>"
+                    }
+                        x=document.getElementById('db_name'); 
+                        x.innerHTML=html;
+                        initSchemas();
+        
+        }  
+
+    });  
+  };
+//根据db_name获取skema
+function initSchemas() {  
+    var html;  
+    var db_name = document.getElementById('db_name').value;
+    $.ajax({  
+        type: "GET",  
+        async: true,  
+        url: "/cmdb/getschema",  
+        data: {'db_name':db_name}, 
+        dataType: "json",  
+        success: function(data) {  
+                 var obj=eval(data);
+                    for (var i=0;i<obj.length;i++ )
+                    {
+                       html+="  <option value="+obj[i].skema+">"+obj[i].skema+"</option>"
+                    }
+                     y=document.getElementById('skema'); 
+                     y.innerHTML=html; 
+                     initApps();
+                
+ 
+        }  
+
+    });  
+};
+
+// 根据db_name skema获取app_name  
+function initApps() {  
+    var db_name = document.getElementById('db_name').value;
+    var skema = document.getElementById('skema').value;
+    var html;  
+    $.ajax({  
+        type: "GET",  
+        async: true,  
+        url: "/cmdb/getapp",   
+        data: {'db_name':db_name,
+               'skema':skema}, 
+        dataType: "json",  
+        success: function(data) {  
+                var obj=eval(data);
+                    for (var i=0;i<obj.length;i++ )
+                    {
+                       html+="  <option value="+obj[i].app_name+">"+obj[i].app_name+"</option>"
+                    }
+                     z=document.getElementById('app_name'); 
+                     z.innerHTML=html; 
+            
+        }  
+    });  
+};
+</script>
+
+
+
+            {% endblock  %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

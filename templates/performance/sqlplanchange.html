@@ -1,0 +1,170 @@
+{% extends 'performance/performancebase.html' %}
+{% load myNewLibrary %}
+<!--
+{% load %}只允许导入注册app目录下的模板库
+这样做是为了保证你的模板库可以不被其它Django程序使用
+-->
+{% block title %}performance_sqlplanchange{% endblock %}
+
+
+
+    {% block subcontent %}
+            <h3 class="page-title">
+            执行计划突变 <small>及时处理</small>
+            </h3>    
+
+
+         <div class="clearfix">
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- BEGIN PORTLET-->
+               
+                    <div class="portlet light ">
+                        <div class="portlet-title">
+                            <div class="caption caption-md">
+                                <!--span class="caption-subject bold uppercase"> 提交信息</span-->
+                                <span class="caption-subject font-red-sunglo bold uppercase">
+                                <i class="icon-speech"></i>
+                                提交信息</span>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <div id="context" data-toggle="context" data-target="#context-menu">
+
+
+
+<!--信息提交框-->
+
+
+<form class="form-inline" role="form" action="/performance/sqlplanchange" method="POST" enctype="multipart/form-data">
+ {% csrf_token %}
+请选择数据库&nbsp;
+<select name="db_name" class="form-control form-filter input-sm">
+{% for i in list_db_name %}
+<option value="{{i}}">{{i}}</option>   
+{% endfor %}                            
+</select>
+请选择用户
+<select name="skema" class="form-control form-filter input-sm">
+{% for i in list_skema %}
+<option value="{{i}}">{{i}}</option>   
+{% endfor %}                            
+</select>
+
+<input type="submit" name='refresh' value="发起收集并查询"  class="btn btn-success">
+<input type="submit" name='check' value="查询历史收集信息"  class="btn btn-success">
+
+<!--信息提交框结束-->
+
+
+
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END PORTLET-->
+
+
+
+                    <!-- BEGIN PORTLET-->
+               
+                    <div class="portlet light ">
+                        <div class="portlet-title">
+                            <div class="caption caption-md">
+                                <span class="caption-subject font-red-sunglo bold uppercase">
+                                <i class="icon-speech"></i>
+                                审核结果</span>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <div id="context" data-toggle="context" data-target="#context-menu">
+
+
+
+<!--审核结果-->
+<table class="table table-bordered table-hover table-condensed">
+              <thead>
+              <tr>
+                <th >
+                     INST_ID
+                  </th>
+                  <th >
+                     SQL_ID
+                  </th>
+                  <th >
+                     SQL_TEXT
+                  </th>
+                  <th >
+                     PLAN_HASH_VALUE
+                  </th>
+                  <th >
+                     FIRST_LOAD_TIME
+                  </th>
+                  <th >
+                     LAST_ACTIVE_TIME
+                  </th>
+                  <th>
+                     EXECUTIONS
+                  </th>
+                  <th>
+                     AVG_TIME_MS
+                  </th>
+                  <th>
+                     BEST_AVG_TIME_MS
+                  </th>
+                  <th>
+                     CHANGE_RATE
+                  </th>
+              </tr>
+              </thead>
+              <tbody>
+
+              {%for item in list_planchange%} 
+              <tr>
+                <td>{{item.INST_ID}}</td>
+                <td>{{item.SQL_ID}}</td>
+                <td>{{item.SQL_TEXT}}</td>
+                <td>{{item.PLAN_HASH_VALUE}}</td>
+                <td>{{item.FIRST_LOAD_TIME}}</td>
+                <td>{{item.LAST_ACTIVE_TIME}}</td>
+                <td>{{item.EXECUTIONS}}</td>
+                <td>{{item.AVG_TIME_MS}}</td>
+                <td>{{item.BEST_AVG_TIME_MS}}</td>
+                <td>{{item.CHANGE_RATE}}</td>
+              </tr>
+              {% endfor %}
+              </tr>
+              </tbody>
+              </table>
+
+<!--审核结果结束-->
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END PORTLET-->
+
+                </div>
+            </div>
+
+
+
+
+
+            {% endblock  %}
+
+
+
+
+
+
+
+
+
+
+

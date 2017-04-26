@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block title %}usercontrolbase{% endblock %}
+
+
+
+{% block content %}
+
+ <div class="page-content-wrapper">
+        <div class="page-content">
+
+            <!-- BEGIN PAGE HEADER-->
+            <div class="page-bar">
+                <ul  class="page-breadcrumb">   
+                    <li>
+                        <span class="caption-subject font-yellow-gold bold uppercase">页内导航</span>
+                    </li>
+                    <li>
+                        <i class="icon-lock"></i>
+                        <a href="/usercontrol/changepasswd">
+
+                        {% ifequal request.path "/usercontrol/changepasswd" %}
+                        <span class="caption-subject font-green-sharp bold uppercase">修改密码</span>
+                        {% else %}
+                        <span class="title"><strong>修改密码</strong></span>
+                        {% endifequal %}
+                        
+                        </a>
+                    </li>
+
+                    <li>
+                        <i class="icon-credit-card "></i>
+                        <a href="#">
+
+                        <span class="title"><strong>其他(预留)</strong></span>
+                        
+                        </a>
+                    </li>
+
+                </ul>
+
+
+            </div>
+
+            <!-- END PAGE HEADER-->
+
+
+
+
+
+
+       
+            {%  block subcontent %}   
+            <h3 class="page-title">
+            PAGE-TITLE <small>comments</small>
+            </h3>    
+
+            <div class="clearfix">
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- BEGIN PORTLET-->
+                    subcontent
+                    <!-- END PORTLET-->
+                </div>
+            </div>
+            {% endblock  %}
+
+        </div>
+</div>
+
+
+
+
+
+{% endblock %}

@@ -1,0 +1,361 @@
+{% extends 'runanalysis/objectcheckbase.html' %}
+{% load myNewLibrary %}
+{% load staticfiles %}
+{% block title %}runanalysis_objectcheck{% endblock %}
+
+
+
+            {%  block subcontent %}   
+            <h3 class="page-title">
+            对象检查 
+            </h3>     
+
+            <div class="clearfix">
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-sm-6">
+                    <!-- BEGIN PORTLET-->
+                    <div class="portlet light ">
+                        <div class="portlet-title">
+                            <div class="caption caption-md">
+                                <span class="caption-subject font-red-sunglo bold uppercase">
+                                <i class="icon-speech"></i>
+                                提交信息</span>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <div id="context" data-toggle="context" data-target="#context-menu">
+
+
+
+  <form class="form-inline" role="form" action="/runanalysis/objectcheck" method="POST" enctype="multipart/form-data">
+  {% csrf_token %}
+
+  <div class="form-group">
+  <strong><i class="icon-social-dribbble"></i> 数据库类型</strong> 
+  <input name="db_type" type="radio"  value="oracle" onclick="getdatabase()"  
+  {% ifequal db_type "oracle" %}checked="checked"{% endifequal %}>
+  <img src={% static "images/ORACLE.png" %}  class="img-rounded"  alt="ORACLE">
+
+  <input name="db_type" type="radio"  value="mysql" disabled="disabled" 
+    {% ifequal db_type "mysql" %}checked="checked"{% endifequal %}>
+  <img src={% static "images/MySQL.png" %}  class="img-rounded" alt="MySQL">
+  </div><br><br>
+
+  <div class="form-group">
+  <strong><i class="icon-social-dribbble"></i> 数据库</strong>
+  <select id='db_name' name='db_name'class="input-md form-control" onchange="initSchemas()"  >
+  <option value="" selected="selected">请选择</option>
+  </select>
+  </div> &nbsp;&nbsp;
+
+  <div class="form-group">
+  <strong ><i class="icon-social-dribbble"></i> schema</strong>
+  <select id = 'skema' name='skema'class="input-md form-control">
+  <option value="" selected="selected">请选择</option>
+  </select>
+  </div><br><br>
+
+
+  <div class="form-group">
+  <strong ><i class="icon-social-dribbble"></i> 要检查的对象类型</strong><br><br>
+  &nbsp;&nbsp;&nbsp;表<input name='tables' type='checkbox' value="tables" checked="checked">
+  &nbsp;（是否检查标准列<input name='standardcolcheck' type='checkbox' value="standardcolcheck" > 
+  是否检查表空间<input name='tablespacecheck' type='checkbox' value="tablespacecheck" > ）
+  <br>
+  索引<input name='indexes' type='checkbox' value="indexes" checked="checked">
+  &nbsp;&nbsp;&nbsp;&nbsp;序列 <input name='sequences' type='checkbox' value="sequences" checked="checked">
+  &nbsp;&nbsp;&nbsp;&nbsp;注释<input name='comments' type='checkbox' value="comments" checked="checked">
+  </div>
+  <br><br><button type="submit" class="btn btn-success" >提交</button>
+  </form>
+<br><br>
+
+{% if errflag %}
+ <div class="alert alert-danger">
+<i class="icon-close"></i>  {{returninfo}}</div> 
+{% endif %}
+
+
+
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- END PORTLET-->
+                </div>
+                <div class="col-md-6 col-sm-6">
+                    <!-- BEGIN PORTLET-->
+                    <div class="portlet light ">
+                        <div class="portlet-title">
+                            <div class="caption caption-md">
+                                <span class="caption-subject font-red-sunglo bold uppercase">
+                                <i class="icon-speech"></i>
+                                下载对象报告文件</span>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <div id="context" data-toggle="context" data-target="#context-menu">
+
+
+
+<form class="form-inline" role="form" action="/runanalysis/objectcheck" method="POST" enctype="multipart/form-data">
+  {% csrf_token %}
+
+  <div class="form-group">
+  <strong><i class="icon-social-dribbble"></i> 数据库类型</strong> 
+  <input name="db_type_check" type="radio"  value="oracle" onclick="getdatabase_check()"  
+  {% ifequal db_type "oracle" %}checked="checked"{% endifequal %}>
+  <img src={% static "images/ORACLE.png" %}  class="img-rounded"  alt="ORACLE">
+
+  <input name="db_type_check" type="radio"  value="mysql" disabled="disabled" 
+    {% ifequal db_type "mysql" %}checked="checked"{% endifequal %}>
+  <img src={% static "images/MySQL.png" %}  class="img-rounded" alt="MySQL">
+  </div><br><br>
+
+  <div class="form-group">
+  <strong><i class="icon-social-dribbble"></i> 数据库</strong>
+  <select id='db_name_check' name='db_name_check'class="input-md form-control" onchange="initSchemas_check()"  >
+  <option value="" selected="selected">请选择</option>
+  </select>
+  </div> &nbsp;&nbsp;
+
+  <div class="form-group">
+  <strong ><i class="icon-social-dribbble"></i> schema</strong>
+  <select id = 'skema_check' name='skema_check'class="input-md form-control">
+  <option value="" selected="selected">请选择</option>
+  </select>
+  </div><br><br>
+  <input type="hidden" name="check" >  
+  <button type="submit" class="btn btn-success" >查询历史文件</button>
+  </form><br><br>
+
+
+
+
+
+{% if checkreturninfo %}
+{% if checkerrflag %}
+ <div class="alert alert-danger">
+<i class="icon-close"></i>  {{checkreturninfo}}</div> 
+{% else %}
+
+<table class="table table-hover table-condensed">
+<thead>
+                    <tr >
+                        <th width="60%">文件名 </th>     
+                        <th > 下载</th>   
+                    </tr>
+</thead>
+<tbody>
+
+{%for item in checkreturninfo %}
+<tr> 
+
+<td>
+<i class="icon-magnet "></i> &nbsp;{{item}}
+</td>
+<td>
+<form  action="/runanalysis/objectcheck/download" method="POST" >
+ {% csrf_token %} 
+<input type="hidden" name="downloadfilename" value="{{item}}">  
+<button class="btn btn-success btn-xs" type="submit">点击下载</button>
+</form>
+</td>
+
+</tr>
+{% endfor %}
+
+</tbody>
+</table>
+
+{% endif %}
+{% endif %}
+
+
+
+
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END PORTLET-->
+                </div>
+
+
+                <div class="col-md-12">
+
+                    <!-- BEGIN PORTLET-->
+                    <div class="portlet light ">
+                        <div class="portlet-title">
+                            <div class="caption caption-md">
+                                <span class="caption-subject font-red-sunglo bold uppercase">
+                                <i class="icon-speech"></i>
+                                检查结果</span>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <div id="context" data-toggle="context" data-target="#context-menu">
+
+{% if list_returninfo %}
+<div class="alert alert-success">
+<form  action="/runanalysis/objectcheck/download" method="POST" >
+ {% csrf_token %} 
+ 报告已保存为文本文件 <input type="hidden" name="downloadfilename" value="{{filename}}">  
+<button class="btn btn-success btn-xs" type="submit">点击下载</button>
+</form>
+</div>
+{% endif %}
+
+
+
+<table class="table  table-bordered table-hover table-condensed">
+<thead>
+                    <tr>
+                        <th>对象</th>     
+                        <th>类型</th>     
+                        <th>问题描述</th>    
+                    </tr>
+</thead>
+<tbody>
+{%for item in list_returninfo %}
+<tr> 
+<td>{{item.object}}</td>
+<td>{{item.object_type}}</td>
+<td>{{item.problem|newline|safe}}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END PORTLET-->
+                </div>
+
+            </div>
+
+
+
+
+
+
+<!--表单联动-->
+<script>
+//根据db_type获取db_name
+   function getdatabase(){ 
+    var html;  
+    var db_type = $("input[name='db_type']:checked").val(); 
+    $.ajax({  
+        type: "GET",  
+        async: true,  
+        url: "/cmdb/getdatabase",  
+        data: {'db_type':db_type}, 
+        dataType: "json",  
+        success: function(data) {  
+                var obj=eval(data);
+                    for (var i=0;i<obj.length;i++ )
+                    {
+                       html+="  <option  value="+obj[i].db_name+">"+obj[i].db_name+"</option>"
+                    }
+                        x=document.getElementById('db_name'); 
+                        x.innerHTML=html;
+                        initSchemas();
+        
+        }  
+
+    });  
+  };
+//根据db_name获取skema
+function initSchemas() {  
+    var html;  
+    var db_name = document.getElementById('db_name').value;
+    $.ajax({  
+        type: "GET",  
+        async: true,  
+        url: "/cmdb/getschema",  
+        data: {'db_name':db_name}, 
+        dataType: "json",  
+        success: function(data) {  
+                 var obj=eval(data);
+                    for (var i=0;i<obj.length;i++ )
+                    {
+                       html+="  <option value="+obj[i].skema+">"+obj[i].skema+"</option>"
+                    }
+                     y=document.getElementById('skema'); 
+                     y.innerHTML=html; 
+                
+ 
+        }  
+
+    });  
+};
+
+
+
+</script>
+
+
+
+
+<!--表单联动check-->
+<script>
+//根据db_type获取db_name
+   function getdatabase_check(){ 
+    var html;  
+    var db_type = $("input[name='db_type_check']:checked").val(); 
+    $.ajax({  
+        type: "GET",  
+        async: true,  
+        url: "/cmdb/getdatabase",  
+        data: {'db_type':db_type}, 
+        dataType: "json",  
+        success: function(data) {  
+                var obj=eval(data);
+                    for (var i=0;i<obj.length;i++ )
+                    {
+                       html+="  <option  value="+obj[i].db_name+">"+obj[i].db_name+"</option>"
+                    }
+                        x=document.getElementById('db_name_check'); 
+                        x.innerHTML=html;
+                        initSchemas_check();
+        
+        }  
+
+    });  
+  };
+//根据db_name获取skema
+function initSchemas_check() {  
+    var html;  
+    var db_name = document.getElementById('db_name_check').value;
+    $.ajax({  
+        type: "GET",  
+        async: true,  
+        url: "/cmdb/getschema",  
+        data: {'db_name':db_name}, 
+        dataType: "json",  
+        success: function(data) {  
+                 var obj=eval(data);
+                    for (var i=0;i<obj.length;i++ )
+                    {
+                       html+="  <option value="+obj[i].skema+">"+obj[i].skema+"</option>"
+                    }
+                     y=document.getElementById('skema_check'); 
+                     y.innerHTML=html; 
+                
+ 
+        }  
+
+    });  
+};
+
+</script>
+
+            {% endblock  %}

@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% block title %}performancebase{% endblock %}
+
+
+
+{% block content %}
+
+ <div class="page-content-wrapper">
+        <div class="page-content">
+
+            <!-- BEGIN PAGE HEADER-->
+            <div class="page-bar">
+                <ul  class="page-breadcrumb">   
+                    <li>
+                        <span class="caption-subject font-yellow-gold bold uppercase">页内导航</span>
+                    </li>
+
+
+
+                    <li>
+                        <i class="icon-pencil"></i>
+                        <a href="/performance/sqlinefficient">
+
+                        {% ifequal request.path "/performance/sqlinefficient" %}
+                        <span class="caption-subject font-green-sharp bold uppercase">低效SQL</span>
+                        {% else %}
+                        <span class="title"><strong>低效SQL</strong></span>
+                        {% endifequal %}
+                        
+                        </a>
+                    </li>
+
+                    <li>
+                        &nbsp;&nbsp;<i class="icon-magnifier"></i>
+                        <a href="/performance/sqlanalysis">
+
+                        {% ifequal request.path "/performance/sqlanalysis" %}
+                        <span class="caption-subject font-green-sharp bold uppercase">SQL分析</span>
+                        {% else %}
+                        <span class="title"><strong>SQL分析</strong></span>
+                        {% endifequal %}
+
+                        </a>
+                    </li>
+
+                    <li>
+                        &nbsp;&nbsp;<i class="icon-magnifier"></i>
+                        <a href="/performance/sqlplanchange">
+
+                        {% ifequal request.path "/performance/sqlplanchange" %}
+                        <span class="caption-subject font-green-sharp bold uppercase">执行计划突变</span>
+                        {% else %}
+                        <span class="title"><strong>执行计划突变</strong></span>
+                        {% endifequal %}
+
+                        </a>
+                    </li>
+
+            
+
+
+                </ul>
+
+
+            </div>
+
+            <!-- END PAGE HEADER-->
+
+
+
+
+
+
+       
+            {%  block subcontent %}   
+            <h3 class="page-title">
+            PAGE-TITLE <small>comments</small>
+            </h3>    
+
+            <div class="clearfix">
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- BEGIN PORTLET-->
+                    subcontent
+                    <!-- END PORTLET-->
+                </div>
+            </div>
+            {% endblock  %}
+
+        </div>
+</div>
+
+
+
+
+
+{% endblock %}

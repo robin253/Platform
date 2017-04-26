@@ -1,0 +1,336 @@
+
+{% extends 'dmlaudit/dmlauditbase.html' %}
+{% load staticfiles %}
+
+{% block title %}dmlaudit_faq{% endblock %}
+
+
+{%  block subcontent %}
+            <h3 class="page-title">
+            功能说明<small>  faqs</small>
+            </h3>    
+
+            <div class="clearfix">
+            </div>
+            <div class="row">
+                <div class="col-md-12  col-sm-12">
+                    <!-- BEGIN PORTLET-->
+                                           <div class="portlet light">
+                        <div class="portlet-title tabbable-line">
+
+                            <ul class="nav nav-tabs pull-left">
+                                <li class="active">
+                                    <a href="#tab_1_1" data-toggle="tab">
+                                    使用流程说明 </a>
+                                </li>
+                                <li>
+                                    <a href="#tab_1_2" data-toggle="tab">
+                                    审核结果说明 </a>
+                                </li>
+                                <li>
+                                    <a href="#tab_1_3" data-toggle="tab">
+                                    权限说明 </a>
+                                </li>
+                                <li>
+                                    <a href="#tab_1_4" data-toggle="tab">
+                                    关注微信公众号 </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="portlet-body">
+                            <!--BEGIN TABS-->
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="tab_1_1">
+                                    <div >
+                                        <ul class="feeds">
+                                            <li>
+                                                <div class="col1">
+                                                    <div class="cont">
+                                                        <div class="cont-col1">
+                                                            <div class="label label-sm label-success">
+                                                                <i class="fa fa-bullhorn"></i>
+                                                            </div>
+                                                        </div>
+                                                        <div class="cont-col2">
+                                                            <div class="desc">
+                                                                 平台将自动审核申请人提交的数据订正语句，审核结果若为《不通过》，请修正相关语法错误后再次提交
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="col1">
+                                                    <div class="cont">
+                                                        <div class="cont-col1">
+                                                            <div class="label label-sm label-success">
+                                                                <i class="fa fa-bullhorn"></i>
+                                                            </div>
+                                                        </div>
+                                                        <div class="cont-col2">
+                                                            <div class="desc">
+                                                                审核结果为《通过》时，平台将推送消息给DBA，DBA会执行该批次语句
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="col1">
+                                                    <div class="cont">
+                                                        <div class="cont-col1">
+                                                            <div class="label label-sm label-success">
+                                                                <i class="fa fa-bullhorn"></i>
+                                                            </div>
+                                                        </div>
+                                                        <div class="cont-col2">
+                                                            <div class="desc">
+                                                                审核结果为《待DBA评估》时，平台也将推送消息给DBA，DBA会进一步评估语句，最终决定审核是否通过，平台会将审核结果推送给申请人
+                                                                <br>
+                                                                <!--span class="label label-sm label-danger">
+                                                                 审核结果说明详见第二页 </span-->
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="col1">
+                                                    <div class="cont">
+                                                        <div class="cont-col1">
+                                                            <div class="label label-sm label-danger">
+                                                                <i class="fa fa-slack "></i>
+                                                            </div>
+                                                        </div>
+                                                        <div class="cont-col2">
+                                                            <div class="desc">
+                                                                 只有审核结果为《通过》的批次可以被执行，执行后可能有两种状态：《执行成功》和《执行失败》，平台会将执行结果推送给申请人
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+
+                                            <li>
+                                                <div class="col1">
+                                                    <div class="cont">
+                                                        <div class="cont-col1">
+                                                            <div class="label label-sm label-danger">
+                                                                <i class="fa fa-slack "></i>
+                                                            </div>
+                                                        </div>
+                                                        <div class="cont-col2">
+                                                            <div class="desc">
+                                                                 对于《不通过》和《执行失败》的情况，申请人应及时和DBA进行线下沟通，并根据实际情况商讨解决方案
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+
+                                            <li>
+                                                <div class="col1">
+                                                    <div class="cont">
+                                                        <div class="cont-col1">
+                                                            <div class="label label-sm label-info">
+                                                                <i class="fa fa-send "></i>
+                                                            </div>
+                                                        </div>
+                                                        <div class="cont-col2">
+                                                            <div class="desc">
+                                                                详见流程图<br>
+                                                                 <img src={% static "images/dmlauditprocess.jpg" %}  class="img-rounded" alt="dmlauditprocess">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+
+
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="tab_1_2">
+                                    <!--div class="scroller" style="height: 337px;" data-always-visible="1" data-rail-visible1="0" data-handle-color="#D7DCE2"-->
+                                     <div >
+                                        <ul class="feeds">
+                                            <li>
+                                                <div class="col1">
+                                                    <div class="cont">
+                                                        <div class="cont-col1">
+                                                            <div class="label label-sm label-success">
+                                                                <i class="fa fa-share"></i>
+                                                            </div>
+                                                        </div>
+                                                        <div class="cont-col2">
+                                                            <div class="desc">
+                                                                《通过》———— 提交的语句语法正确、预估执行时间和影响行数都低于阀值
+                                                                <span class="label label-sm label-success">
+                                                                待执行</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+
+
+                                            <li>
+                                                <div class="col1">
+                                                    <div class="cont">
+                                                        <div class="cont-col1">
+                                                            <div class="label label-sm label-danger">
+                                                                <i class="fa fa-bolt"></i>
+                                                            </div>
+                                                        </div>
+                                                        <div class="cont-col2">
+                                                            <div class="desc">
+                                                           《不通过》———— 
+                                                            提交语句有语法错误或对象信息错误（如表不存在，列名不存在等)
+                                                            <span class="label label-sm label-danger">
+                                                                不可执行</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+
+
+                                             <li>
+                                                <div class="col1">
+                                                    <div class="cont">
+                                                        <div class="cont-col1">
+                                                            <div class="label label-sm label-info">
+                                                                <i class="fa fa-bell-o"></i>
+                                                            </div>
+                                                        </div>
+                                                        <div class="cont-col2">
+                                                            <div class="desc">
+                                                                 《待DBA评估》———— 
+                                                                 提交的语句语法正确、但执行时间或影响行数大于阀值，
+                                                                 DBA会进一步进行评估并最终判断是否通过
+                                                                 <span class="label label-sm label-info">
+                                                                 待执行 </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+            
+                                
+        
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div class="tab-pane" id="tab_1_3">
+                                    <div  >
+                                        <ul class="feeds">
+                                            <li>
+                                                <div class="col1">
+                                                    <div class="cont">
+                                                        <!--div class="cont-col1">
+                                                            test
+                                                        </div-->
+                                                        <div class="cont-col2">
+                                                            <div class="desc">
+ <!--展示权限表-->                                                               
+<table class="table table-striped table-bordered table-advance table-hover">
+                                <thead>
+                                <tr>
+                                    <th >权限名</th>
+                                    <th >访问页面</th>
+                                    <th> DBA用户权限</th>
+                                    <th> 非DBA用户权限</th>
+                                </tr>
+                                </thead>
+                 <tbody>
+                 
+
+<tr> <td ><strong>dmlaudit_access</strong> </td>      <td >语句审核</td><td ><span class="label  label-success"><i class="icon-check"></i></span></td><td ><span class="label  label-success"><i class="icon-check"></i></span></td></tr>
+<tr> <td ><strong>dmlcheckresult_access</strong></td> <td >查看审核结果</td><td ><span class="label  label-success"><i class="icon-check"></i></span></td><td ><span class="label  label-success"><i class="icon-check"></i></span></td></tr>
+<tr> <td ><strong>dmldbause_access</strong> </td>     <td >评估或执行语句</td><td ><span class="label  label-success"><i class="icon-check"></i></span></td><td ><span class="label  label-danger"><i class="icon-close"></i></span></td></tr>
+<tr> <td ><strong>dmlbackup_access</strong> </td>     <td >备份文件</td><td ><span class="label  label-success"><i class="icon-check"></i></span></td><td >
+ <span class="label  label-danger"><i class="icon-close"></i></span>
+</td></tr>
+
+<tr> <td ><strong>dmlreport_access</strong> </td>     <td >报表统计</td><td ><span class="label  label-success"><i class="icon-check"></i></span></td><td ><span class="label  label-danger"><i class="icon-close"></i></span></td></tr>
+
+<tr> <td >            </td>       <td >功能说明</td><td ><span class="label  label-success"><i class="icon-check"></i></span></td><td ><span class="label  label-success"><i class="icon-check"></i></span></td></tr>
+
+<tr> <td >           </td>       <td >报错白皮书</td><td ><span class="label  label-success"><i class="icon-check"></i></span></td><td ><span class="label  label-success"><i class="icon-check"></i></span></td></tr>
+
+
+
+
+
+                </tbody>
+</table>
+ <!--展示权限表-->        
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+
+                                        </ul>
+                                    </div>
+                                </div>
+
+
+
+
+
+
+                                <div class="tab-pane active" id="tab_1_4">
+                                    <div >
+                                        <ul class="feeds">
+                                            <li>
+                                                <div class="col1">
+                                                    <div class="cont">
+                                                        <div class="cont-col1">
+                                                            <div class="label label-sm label-success">
+                                                                <i class="fa fa-bullhorn"></i>
+                                                            </div>
+                                                        </div>
+                                                        <div class="cont-col2">
+                                                            <div class="desc">
+                                                                 将你的微信号告知系统管理员(徐力佳)
+                                                                 并关注如下公众号<br>
+                                                                 <img src={% static "images/wechatqrcode.jpg" %}  class="img-rounded" alt="wechatqrcode">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                    
+
+
+                                        </ul>
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+                            <!--END TABS-->
+                        </div>
+                    </div>
+                    <!-- END PORTLET-->
+                </div>
+            </div>
+{% endblock  %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

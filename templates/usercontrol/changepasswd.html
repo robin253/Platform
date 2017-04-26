@@ -1,0 +1,131 @@
+{% extends 'usercontrol/usercontrolbase.html' %}
+
+{% block title %}usercontrol_changepasswd{% endblock %}
+
+
+
+
+            {%  block subcontent %}   
+            <h3 class="page-title">
+            修改密码 
+            </h3>     
+
+            <div class="clearfix">
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- BEGIN PORTLET-->
+               
+                    <div class="portlet light ">
+                        <div class="portlet-title">
+                            <div class="caption caption-md">
+                                <span class="caption-subject font-red-sunglo bold uppercase">
+                                <i class="icon-speech"></i>
+                                信息输入</span>
+                                <span class="caption-helper">长度需大于8位</span>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <div id="context" data-toggle="context" data-target="#context-menu">
+
+
+
+                        
+ <form class="form-inline" role="form" action="/usercontrol/changepasswd" method="POST" enctype="multipart/form-data">
+ {% csrf_token %}
+        <div class="form-group">
+            <strong><i class="icon-social-dribbble"></i> &nbsp;&nbsp;原始密码 </strong>
+            <input class="form-control" placeholder="输入当前密码" type="password" name="passwd"/>
+              <span class="label label-default"><i class="icon-info "></i> 忘记密码请联系DBA</span>
+        </div><br><br>
+        <div class="form-group">
+            <strong><i class="icon-social-dribbble"></i> &nbsp;&nbsp;更新密码  </strong>
+            <input class="form-control" placeholder="输入新密码" type="password" name="new_passwd"/>
+        </div><br><br>
+        <div class="form-group">
+            <strong> <i class="icon-social-dribbble"></i> &nbsp;&nbsp;确认更新</strong>
+            <input class="form-control" placeholder="确认新密码" type="password" name="new_passwd2"/>
+        </div>
+        <br><br><br>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type="submit" class="btn btn-success" >提交</button>
+</form>
+<br>
+<br>
+<br>
+{% if sucinfo %}
+ <div class="alert alert-success">
+<i class="icon-check "></i>  {{sucinfo}}</div> 
+{% endif %}
+
+
+{% if failinfo %}
+ <div class="alert alert-danger">
+<i class="icon-close"></i>  {{failinfo}}</div> 
+{% endif %}
+
+
+
+
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- END PORTLET-->
+                </div>
+            </div>
+            {% endblock  %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

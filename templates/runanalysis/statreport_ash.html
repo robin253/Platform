@@ -1,0 +1,165 @@
+{% extends 'runanalysis/statreportbase.html' %}
+
+{% block title %}runanalysis_statreport_ash{% endblock %}
+
+
+
+            {%  block subcontent %}   
+            <h3 class="page-title">
+            生成ASH报告 
+            </h3>     
+
+            <div class="clearfix">
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-sm-6">
+                    <!-- BEGIN PORTLET-->
+                    <div class="portlet light ">
+                        <div class="portlet-title">
+                            <div class="caption caption-md">
+                                <span class="caption-subject font-red-sunglo bold uppercase">
+                                <i class="icon-speech"></i>
+                                提交信息</span><span class="caption-helper"> 数字单位为分钟</span>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <div id="context" data-toggle="context" data-target="#context-menu">
+
+
+
+<form class="form-inline" role="form" action="/runanalysis/statreport/ash" method="POST" enctype="multipart/form-data"><!--表单-->
+ {% csrf_token %}
+<table class="table  table-advance table-hover table-condensed">
+                <thead>
+                <tr >
+
+                  <td width="12%">
+                    数据库<br><br>
+                    <select name="db_name" class="form-control form-filter input-sm">
+                    {% for i in list_db_name %}
+                    <option value="{{i}}">{{i}}</option>   
+                    {% endfor %}                            
+                    </select>
+                  </td>
+                  <td width="20%">
+                     距离当前时间<br><br>
+                    <select name="minutebefore" class="form-control form-filter input-sm">
+                      {% for i in list_minute %}
+                      <option value="{{i}}">{{i}}</option>   
+                      {% endfor %}  
+                    </select><br>
+
+                  </td>
+
+
+                  <td width="12%">
+                      报告时长<br><br>
+                      <select name="duration" class="form-control form-filter input-sm">
+                      {% for i in list_minute %}
+                      <option value="{{i}}">{{i}}</option>   
+                      {% endfor %}  
+                      </select><br><br>
+
+                  </td>
+
+                  <td width="12%"> 
+                      选择节点<br><br>
+                      <select name="instance_number" class="form-control form-filter input-sm">
+                      <option value="1">1节点</option>   
+                      <option value="2">2节点</option>   
+                      </select>
+                  </td>
+
+                  <td> 
+                  提交<br><br>
+                  <button type="submit" class="btn btn-success">生成</button>
+                  </td>
+
+
+                </tr>
+                </thead>
+                </table>
+ </form>
+{% if returninfo %}
+{% if errflag %}
+ <div class="alert alert-danger">
+<i class="icon-close"></i>  {{returninfo}}</div> 
+{% else %}
+ <div class="alert alert-success">
+<i class="icon-check"></i>  {{returninfo}}</div> 
+{% endif %}
+{% endif %}
+
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- END PORTLET-->
+                </div>
+                <div class="col-md-6 col-sm-6">
+                    <!-- BEGIN PORTLET-->
+                    <div class="portlet light ">
+                        <div class="portlet-title">
+                            <div class="caption caption-md">
+                                <span class="caption-subject font-red-sunglo bold uppercase">
+                                <i class="icon-speech"></i>
+                                下载报告</span>
+                                <span class="caption-helper">最近10份报告</span>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <div id="context" data-toggle="context" data-target="#context-menu">
+
+
+
+<table class="table table-hover ">
+<thead>
+                    <tr >
+                        <th width="60%"> 报告名 </th>     
+                        <th width="40%"> 点击下载</th>   
+                    </tr>
+</thead>
+<tbody>
+
+{%for item in list_showfile %}
+<tr> 
+
+<td>
+<i class="icon-magnet "></i> &nbsp;{{item}}
+</td>
+<td>
+<form  action="/runanalysis/statreport/download" method="POST" >
+ {% csrf_token %} 
+<input type="hidden" name="filename" value="{{item}}">  
+<button class="btn btn-success btn-xs" type="submit">点击下载</button>
+ {% if  forloop.first%}<span class="badge badge-roundless badge-danger"> LATEST</span>{% endif %}
+</form>
+</td>
+
+</tr>
+{% endfor %}
+
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END PORTLET-->
+                </div>
+
+
+                <div class="col-md-12">
+                    
+                </div>
+            </div>
+            {% endblock  %}
