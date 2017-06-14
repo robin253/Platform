@@ -85,6 +85,7 @@ def audit(request):
     month=release_date.split('/')[1]
     year=release_date.split('/')[2]
     release_date=year+month+day
+    print release_date
 
 
 
@@ -123,7 +124,8 @@ def audit(request):
             
     # 记录到数据模型 T_DDLAUDIT_BATCH_INFO 中    
     model_batch_info_insert=models.T_DDLAUDIT_BATCH_INFO(audit_user=audit_user,audit_batch=audit_batch,app_name=app_name,\
-    db_type=db_type,allsqltext=allsqltext,sqlamount=sqlamount,batch_status='start',execute_status='wait')
+    db_type=db_type,allsqltext=allsqltext,sqlamount=sqlamount,batch_status='start',execute_status='wait',\
+    release_date=release_date)
     model_batch_info_insert.save()
 
     i=1

@@ -26,12 +26,19 @@ def dbause_changestatus(request):
 
     evaluator=request.user.username
     re_modify=models.T_DMLAUDIT_BATCH_INFO.objects.get(audit_batch=audit_batch)#单行查询
-    re_modify.batch_status = batch_status
+    #修改数据
     re_modify.evaluator=evaluator
-    if batch_status=='unqualified' or batch_status=='cancel':
+    if batch_status=="qualified":
+        re_modify.batch_status = batch_status
+
+    if batch_status=="unqualified":
+        re_modify.batch_status = batch_status
+        re_modify.execute_status='noexe'   
+
+    if batch_status=='cancel' and  re_modify.execute_status=='init':
+        re_modify.batch_status = batch_status
         re_modify.execute_status='noexe'   
     re_modify.save()
-
 
 
     #微信
@@ -41,7 +48,7 @@ def dbause_changestatus(request):
             message_content=str(audit_batch)+"批次审核不通过！请线下沟通（审核人："+str(evaluator)+"）"
         elif batch_status=='qualified':
             message_content=str(audit_batch)+"批次审核通过，等待DBA执行（审核人："+str(evaluator)+"）"
-        elif batch_status=='cancel':
+        elif batch_status=='cancel' and re_modify.execute_status=='init':
             message_content=str(audit_batch)+"批次已被取消，请线下沟通（审核人："+str(evaluator)+"）"
 
         if message_content!='':

@@ -1,0 +1,187 @@
+{% extends 'runanalysis/dbstatusbase.html' %}
+{% load myNewLibrary %}
+{% load staticfiles %}
+{% block title %}runanalysis_dbstatus{% endblock %}
+
+
+
+            {%  block subcontent %}   
+            <h3 class="page-title">
+            状态查询 
+            </h3>     
+
+            <div class="clearfix">
+            </div>
+            <div class="row">
+                <div class="col-md-4 col-sm-6">
+                    <!-- BEGIN PORTLET-->
+                    <div class="portlet light ">
+                        <div class="portlet-title">
+                            <div class="caption caption-md">
+                                <span class="caption-subject font-red-sunglo bold uppercase">
+                                <i class="icon-speech"></i>
+                                提交信息</span>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <div id="context" data-toggle="context" data-target="#context-menu">
+
+
+
+  <form class="form-inline" role="form" action="/runanalysis/dbstatus" method="POST" enctype="multipart/form-data">
+  {% csrf_token %}
+
+  <div class="form-group">
+  <strong><i class="icon-social-dribbble"></i> 数据库类型</strong> <br><br>
+  <input name="db_type" type="radio"  value="oracle" onclick="getdatabase()"  
+  {% ifequal db_type "oracle" %}checked="checked"{% endifequal %}>
+  <img src={% static "images/ORACLE.png" %}  class="img-rounded"  alt="ORACLE">
+
+  <input name="db_type" type="radio"  value="mysql" disabled="disabled" 
+    {% ifequal db_type "mysql" %}checked="checked"{% endifequal %}>
+  <img src={% static "images/MySQL.png" %}  class="img-rounded" alt="MySQL">
+  </div><br><br>
+
+  <div class="form-group">
+  <strong><i class="icon-social-dribbble"></i> 数据库</strong>
+  <select id='db_name' name='db_name'class="input-md form-control"   >
+    {% if db_name %}
+  <option value="{{db_name}}" selected="selected">{{db_name}}</option>
+    {% else %}
+  <option value="" selected="selected">请选择</option>
+    {% endif %}
+  </select>
+  </div> &nbsp;&nbsp;
+
+  
+
+  <br><br>
+  <div class="form-group">
+  <strong ><i class="icon-social-dribbble"></i> 选择检查项</strong><br><br>
+  <select id='checkitem' name='checkitem'class="input-md form-control"   >
+
+  {% for item in list_check %}
+  <option value="{{item.type}}.{{item.value}}">  
+  {% ifequal item.value "" %}
+  {{item.type}}     
+  {% else %}
+  {{item.type}}.{{item.value}}
+  {% endifequal %}</option>
+  {% endfor %}
+
+
+  
+
+  </select>
+  </div>
+  <br><br><button type="submit" class="btn btn-success" >提交</button>
+  </form>
+<br><br>
+
+
+
+
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- END PORTLET-->
+                </div>
+                <div class="col-md-8 col-sm-6">
+                    <!-- BEGIN PORTLET-->
+                    <div class="portlet light ">
+                        <div class="portlet-title">
+                            <div class="caption caption-md">
+                                <span class="caption-subject font-red-sunglo bold uppercase">
+                                <i class="icon-speech"></i>
+                                结果展示</span>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <div id="context" data-toggle="context" data-target="#context-menu">
+
+
+<table class="table  table-bordered table-hover table-condensed">
+<!--thead>
+                    <tr>
+                        <th>VALUE</th>       
+                    </tr>
+</thead-->
+<tbody>
+{%for item in list_res %}
+<tr> 
+
+{%for subitem in item %}
+<td>
+{{subitem}}
+</td>
+{% endfor %}
+
+</tr>
+{% endfor %}
+</tbody>
+</table>
+
+
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END PORTLET-->
+                </div>
+
+
+                <div class="col-md-12">
+
+                    <!-- BEGIN PORTLET-->
+                    <!-- END PORTLET-->
+                </div>
+
+            </div>
+
+
+
+
+
+
+<!--表单联动-->
+<script>
+//根据db_type获取db_name
+   function getdatabase(){ 
+    var html;  
+    var db_type = $("input[name='db_type']:checked").val(); 
+    $.ajax({  
+        type: "GET",  
+        async: true,  
+        url: "/cmdb/getdatabase",  
+        data: {'db_type':db_type}, 
+        dataType: "json",  
+        success: function(data) {  
+                var obj=eval(data);
+                    for (var i=0;i<obj.length;i++ )
+                    {
+                       html+="  <option  value="+obj[i].db_name+">"+obj[i].db_name+"</option>"
+                    }
+                        x=document.getElementById('db_name'); 
+                        x.innerHTML=html;
+                        initSchemas();
+        
+        }  
+
+    });  
+  };
+
+
+
+
+</script>
+
+
+
+
+
+            {% endblock  %}

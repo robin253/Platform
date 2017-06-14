@@ -59,6 +59,9 @@
     <div class="page-header-inner">
         <!-- BEGIN LOGO -->
         <div class="page-logo">   
+            <a href="#">
+            <img src={% static "images/logo-big.png" %} alt="logo" class="logo-default"/>
+            </a>
             <div class="menu-toggler sidebar-toggler hide">
             </div>
         </div>
@@ -75,26 +78,43 @@
                 <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar">
                     <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
                     <i class="icon-bell"></i>
-                    <span class="badge badge-default">
+                    <span class="badge badge-danger">
                     3 </span>
                     </a>
                     <ul class="dropdown-menu">
                         <li class="external">
-                            <h3><span class="bold">3</span> notifications</h3>
+                            <h3><span class="bold">3条</span> 须知</h3>
                         </li>
                         <li>
                             <ul class="dropdown-menu-list scroller" style="height: 250px;" data-handle-color="#637283">
                                 <li>
                                     <a href="javascript:;">
-                                    <span class="time">just now</span>
-                                    <span class="details">
                                     <span class="label label-sm label-icon label-success">
-                                    <i class="fa fa-plus"></i>
-                                    </span>
-                                    New user registered. </span>
+                                        <i class="fa fa-bullhorn"></i>
+                                        </span>
+                                    &nbsp;&nbsp;"DML审核"即"数据订正平台",
+                                    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;已全新上线！ 
+                                    </a>
+                                </li>  
+                                <li>
+                                    <a href="javascript:;">
+                                    <span class="label label-sm label-icon label-warning">
+                                    <i class="fa fa-bell-o"></i>
+                                    </span> &nbsp;&nbsp;如遇到报错请积极反馈给系统管理员
+                                    </a>
+                                </li>  
+                                <li>
+                                    <a href="javascript:;">
+                                    <span class="label label-sm label-icon label-warning">
+                                    <i class="fa fa-bell-o"></i>
+                                    </span>&nbsp;&nbsp;
+                                    一些功能模块尚未开发完毕,
+                                    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;请勿随意点击
+                                     </span>
                                     </a>
                                 </li>  
                             </ul>
+                            
                         </li>
                     </ul>
                 </li>
@@ -104,23 +124,35 @@
                 <li class="dropdown dropdown-extended dropdown-tasks" id="header_task_bar">
                     <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
                     <i class="icon-calendar"></i>
-                    <span class="badge badge-default">
-                    7 </span>
+                    <span class="badge badge-danger">
+                    2 </span>
+
                     </a>
                     <ul class="dropdown-menu extended tasks">
                         <li class="external">
-                            <h3>You have <span class="bold">7</span> tasks</h3>
+                            <h3><span class="bold">2 条</span> 在途任务</h3>
                         </li>
                         <li>
                             <ul class="dropdown-menu-list scroller" style="height: 275px;" data-handle-color="#637283">
                                 <li>
                                     <a href="javascript:;">
                                     <span class="task">
-                                    <span class="desc">New release v1.2 </span>
-                                    <span class="percent">30%</span>
+                                    <span class="desc">新版本2.1发布 </span>
+                                    <span class="percent">40%</span>
                                     </span>
                                     <span class="progress">
-                                    <span style="width: 40%;" class="progress-bar progress-bar-success" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"><span class="sr-only">40% Complete</span></span>
+                                    <span style="width: 40%;" class="progress-bar progress-bar-danger" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></span>
+                                    </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                    <span class="task">
+                                    <span class="desc">DDL审核完成全部功能 </span>
+                                    <span class="percent">60%</span>
+                                    </span>
+                                    <span class="progress">
+                                    <span style="width: 60%;" class="progress-bar progress-bar-success" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"><span class="sr-only">60% Complete</span></span>
                                     </span>
                                     </a>
                                 </li>
@@ -152,14 +184,21 @@
                     </ul>
                 </li>
                 <li  >
-                    <h3 style="color:white">   甜橙DBA自动化运维平台</h3>               
+                     <a href="#">
+                     <span class="label label-danger">
+                            自动化运维平台 </span>                             
+                     </a>
+                    
+
                 </li>
 
                 <!-- END USER LOGIN DROPDOWN -->
 
             </ul>
+            
 
         </div>
+
         <!-- END TOP NAVIGATION MENU -->
 
     </div>
@@ -254,13 +293,12 @@
                     <span class="arrow "></span>
                     {% ifequal request.path|limit:13 "/runanalysis/" %} <span class="selected"></span>
                     {% endifequal %}
-
-
                     </a>
+
                     <ul class="sub-menu">
                         <li {% ifequal request.path|limit:24 "/runanalysis/statreport/" %}class=" active"{% endifequal %}>
                             <a href="/runanalysis/statreport/awr">
-                            <i class="icon-screen-desktop "></i>&nbsp;&nbsp;生成状态报告<br>
+                            <i class="icon-screen-desktop "></i>&nbsp;&nbsp;生成报告<br>
                             </a>
                         </li>
                         <li {% ifequal request.path|limit:24 "/runanalysis/objectcheck" %}class=" active"{% endifequal %}>
@@ -268,49 +306,40 @@
                             <i class="icon-badge  "></i>&nbsp;&nbsp;对象治理<br> 
                             </a>
                         </li>
+                        <li {% ifequal request.path|limit:24 "/runanalysis/dbstatus" %}class=" active"{% endifequal %}>
+                            <a href="/runanalysis/dbstatus">
+                            <i class="icon-graph  "></i>&nbsp;&nbsp;数据库状态查询<br> 
+                            </a>
+                        </li>
                     </ul>
                 </li>
 
 
 
-                <li {% ifequal request.path "/datatransfer/transfer" %}class="start active open"
-                    {% else %}
-                    {% ifequal request.path "/datatransfer/logicalbackup" %}class="start active open"
-                    {% else %} 
-                    {% ifequal request.path "/datatransfer/history" %}class="start active open"
-                    {% else %} 
-                    {% endifequal %}
-                    {% endifequal %}
+                <li {% ifequal request.path|limit:14 "/datatransfer/" %}class="start active open"
                     {% endifequal %}>
                     <a href="javascript:;">
                     <i class="icon-refresh "></i>
                     <span class="title">数据搬运</span>
                     <span class="arrow "></span>
-
-                    {% ifequal request.path "/datatransfer/transfer" %}<span class="selected"></span>
-                    {% else %}
-                    {% ifequal request.path "/datatransfer/logicalbackup" %}<span class="selected"></span>
-                    {% else %} 
-                    {% ifequal request.path "/datatransfer/history" %}<span class="selected"></span>
-                    {% else %} 
-                    {% endifequal %}
-                    {% endifequal %}
+                    {% ifequal request.path|limit:14 "/datatransfer/" %}<span class="selected"></span>
                     {% endifequal %}
                     </a>
+
                     <ul class="sub-menu">
-                        <li {% ifequal request.path "/datatransfer/transfer" %}class=" active"{% endifequal %}>
-                            <a href="{% url "datatransfer_transfer" %}">
-                            <i class=" icon-crop "></i>&nbsp;&nbsp;数据迁移<br>
+                        <li {% ifequal request.path|limit:22 "/datatransfer/oradump/" %}class=" active"{% endifequal %}>
+                            <a href="/datatransfer/oradump/expdp">
+                            <i class=" icon-credit-card  "></i>&nbsp;&nbsp;数据迁移<br>
                             </a>
                         </li>
                         <li {% ifequal request.path "/datatransfer/logicalbackup" %}class=" active"{% endifequal %}>
-                            <a href="{% url "datatransfer_logicalbackup" %}" >
-                            <i class=" icon-drawer  "></i>&nbsp;&nbsp;逻辑备份<br>
+                            <a href="/datatransfer/logicalbackup">
+                            <i class=" icon-crop "></i>&nbsp;&nbsp;逻辑备份<br>
                             </a>
                         </li>
-                        <li {% ifequal request.path "/datatransfer/history" %}class=" active"{% endifequal %}>
-                            <a href="{% url "datatransfer_history" %}" >
-                            <i class="icon-energy  "></i>&nbsp;&nbsp;历史数据治理<br>
+                        <li {% ifequal request.path "/datatransfer/hisdata" %}class=" active"{% endifequal %}>
+                            <a href="/datatransfer/hisdata" >
+                            <i class="icon-energy"></i>&nbsp;&nbsp;历史数据治理<br>
                             </a>
                         </li>
                     </ul>
@@ -331,6 +360,11 @@
                         <li>
                             <a href="form_controls.html">
                             <i class="icon-bag  "></i>&nbsp;&nbsp;日志挖掘<br>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="form_controls.html">
+                            <i class="icon-bag  "></i>&nbsp;&nbsp;监听日志分析<br>
                             </a>
                         </li>
                     </ul>

@@ -1,0 +1,310 @@
+
+
+{% extends 'datatransfer/transbase.html' %}
+{% load myNewLibrary %}
+{% load staticfiles %}
+{% block title %}trans_oradump_impdp{% endblock %}
+
+
+
+
+            {%  block subcontent %}   
+            <h3 class="page-title">
+              IMPDP 
+            </h3>     
+
+            <div class="clearfix">
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-sm-6">
+                    <!-- BEGIN PORTLET-->
+                    <div class="portlet light ">
+                        <div class="portlet-title">
+                            <div class="caption caption-md">
+                                <span class="caption-subject font-red-sunglo bold uppercase">
+                                <i class="icon-speech"></i>
+                                选择导入信息</span>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <div id="context" data-toggle="context" data-target="#context-menu">
+
+
+  <form class="form-inline" >
+  <div class="form-group">
+  <strong><i class="icon-handbag"></i> 导出任务选择</strong>
+  <select id='job_name' name='job_name'class="input-md form-control"   >
+  {% for item in list_job_name %}
+  <option value="{{item}}" >{{item}}</option>
+  {% endfor %}
+  </select>
+  </div> <br><br>
+
+
+  <div class="form-group">
+  <strong><i class="icon-handbag"></i> 数据库</strong>
+  <select id='db_name' name='db_name'class="input-md form-control" onclick="Schemas()"  >
+  {% for item in list_db_name %} 
+  <option value="{{item}}" >{{item}}</option>
+  {% endfor %}
+  </select>
+  </div> &nbsp;&nbsp;&nbsp;&nbsp;
+
+  <div class="form-group">
+  <strong ><i class="icon-handbag"></i> schema</strong>
+  <select id = 'skema' name='skema'class="input-md form-control">
+  <option value="" selected="selected">请选择</option>
+  </select>
+  </div><br><br>
+  
+
+
+
+  <div class="form-group">
+  <strong ><i class="icon-handbag "></i> table_exists_action</strong>&nbsp;&nbsp;
+  <select id="table_exists_action" name='table_exists_action' class="input-md form-control">
+  <option value="REPLACE" selected="selected">REPLACE</option>
+  <option value="APPEND" >APPEND </option>
+  <option value="TRUNCATE" >TRUNCATE</option>
+  </select>
+  </div><br><br>
+
+
+  <div class="form-group">
+  <strong ><i class="icon-handbag"></i> remap_table</strong><br><br>
+  <textarea id='remap_table' rows="5" cols="40" name='remap_table' placeholder="exp:remap_table=T1:T2" ></textarea>
+  </div>
+  </form>
+    <!-- 使用ajax来处理 -->
+<br><br>
+  <input type='button'  class="btn  btn-success " value='生成脚本' onclick="get_impdpcommand.call(this)">
+
+
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- END PORTLET-->
+                </div>
+                <div class="col-md-6 col-sm-6">
+                    <!-- BEGIN PORTLET-->
+                    <div class="portlet light ">
+                        <div class="portlet-title">
+                            <div class="caption caption-md">
+                                <span class="caption-subject font-red-sunglo bold uppercase">
+                                <i class="icon-speech"></i>
+                                发起导入</span>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <div id="context" data-toggle="context" data-target="#context-menu">
+
+
+
+<table class="table  table-advance table-hover table-condensed">
+                <thead>
+                <tr >
+
+                  <td width="40%">
+                    <strong>提示信息</strong><br><br>
+                    <span id="remind">待生成</span>
+                  </td>
+                  <td width="60%">
+                    <strong>导入文本</strong><br><br>
+                    <span id="impdpcommand">待生成</span>
+                  </td>
+                </tr>
+                </thead>
+</table>
+
+
+<br>
+<input id='impdpbut' type='button'  class="btn  btn-danger " value='发起导入' onclick="impdp.call(this)">
+<br><br><br>
+
+
+
+
+
+
+<table class="table  table-advance table-hover table-condensed">
+                <thead>
+                <tr >
+
+                  <td width="20%">
+                    <strong>导入状态</strong><br><br>
+                    <span id="status">N/A</span>
+                  </td>
+                  <td width="80%">
+                     <strong>导入日志</strong><br><br>
+                     <span id="logfile">待发起导入</span>
+                  </td>
+                </tr>
+                </thead>
+</table>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END PORTLET-->
+                </div>
+
+
+
+
+            </div>
+
+
+
+
+
+
+<!--表单联动-->
+<script>
+
+//根据db_name获取skema
+function Schemas() {  
+    var html;  
+    var db_name = document.getElementById('db_name').value;
+    $.ajax({  
+        type: "GET",  
+        async: true,  
+        url: "/cmdb/getschema",  
+        data: {'db_name':db_name}, 
+        dataType: "json",  
+        success: function(data) {  
+                 var obj=eval(data);
+                    for (var i=0;i<obj.length;i++ )
+                    {
+                       html+="  <option value="+obj[i].skema+">"+obj[i].skema+"</option>"
+                    }
+                     y=document.getElementById('skema'); 
+                     y.innerHTML=html; 
+                
+ 
+        }  
+
+    });  
+};
+
+
+
+</script>
+
+
+
+
+
+
+<!--获取导入语句所用的ajax-->
+<script> 
+function get_impdpcommand()
+{
+var db_name = document.getElementById('db_name').value;
+var skema = document.getElementById('skema').value;
+var job_name = document.getElementById('job_name').value;
+var remap_table = document.getElementById('remap_table').value;
+var table_exists_action = document.getElementById('table_exists_action').value;
+
+
+
+x=document.getElementById("impdpcommand"); //查找元素
+y=document.getElementById("remind"); 
+
+$.ajax({
+  type: 'GET',
+  url: "/datatransfer/oradump/impdpcommand",
+  data: {'db_name':db_name,'skema':skema,'job_name':job_name,
+         'remap_table':remap_table,'table_exists_action':table_exists_action},
+  async: true,   //flase同步 页面会hang住等待 体验不好
+  contentType: "application/json",
+  beforeSend:function(){
+x.innerHTML="获取中";    //改变内容
+y.innerHTML="获取中";    
+  },
+  success: function(ret){
+            var obj=eval(ret);
+            x.innerHTML= obj[0].inf;
+            y.innerHTML= obj[1].inf;
+             },
+ error: function(){
+            x.innerHTML="后端处理失败,请联系平台管理员";
+            y.innerHTML="后端处理失败,请联系平台管理员";
+             }
+});
+
+
+
+};
+
+</script>
+
+
+
+
+
+
+<!--发起导入所用的ajax-->
+<script> 
+function impdp()
+{
+var db_name = document.getElementById('db_name').value;
+var skema = document.getElementById('skema').value;
+var job_name = document.getElementById('job_name').value;
+var remap_table = document.getElementById('remap_table').value;
+var table_exists_action = document.getElementById('table_exists_action').value;
+
+
+
+$(this).attr("disabled", true); 
+
+
+a=document.getElementById("status"); //查找元素
+b=document.getElementById("logfile"); 
+
+$.ajax({
+  type: 'GET',
+  url: "/datatransfer/oradump/impdp",
+  data: {'db_name':db_name,'skema':skema,'job_name':job_name,
+         'remap_table':remap_table,'table_exists_action':table_exists_action},
+  async: true,   //flase同步 页面会hang住等待 体验不好
+  contentType: "application/json",
+  beforeSend:function(){
+  a.innerHTML="N/A";    //改变内容
+  b.innerHTML="导入中,可通过查询页查询详细信息";  
+  },
+  success: function(ret){
+            var obj=eval(ret);
+            a.innerHTML= obj[0].inf;
+            b.innerHTML= obj[1].inf;
+            //$(this).attr("disabled", false); 
+             },
+  error: function(){
+            a.innerHTML="后端处理失败,请联系平台管理员";
+            b.innerHTML="后端处理失败,请联系平台管理员";
+            //$(this).attr("disabled", false); 
+             }
+});
+
+
+
+};
+
+</script>
+
+
+
+
+            {% endblock  %}
+
+
+
+
+
+
+
+

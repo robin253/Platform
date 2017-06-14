@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% block title %}transbase{% endblock %}
+
+
+
+{% block content %}
+
+ <div class="page-content-wrapper">
+        <div class="page-content">
+
+            <!-- BEGIN PAGE HEADER-->
+            <div class="page-bar">
+                <ul  class="page-breadcrumb">   
+                    <li>
+                        <span class="caption-subject font-yellow-gold bold uppercase">页内导航</span>
+                    </li>
+
+
+
+                    <li>
+                        <i class="icon-credit-card "></i>
+                        <a href="/datatransfer/oradump/expdp">
+
+                        {% ifequal request.path "/datatransfer/oradump/expdp" %}
+                        <span class="caption-subject font-green-sharp bold uppercase">ORA EXPDP</span>
+                        {% else %}
+                        <span class="title"><strong>ORA EXPDP</strong></span>
+                        {% endifequal %}
+                        
+                        </a>
+                    </li>
+
+                    <li>
+                        <i class="icon-handbag"></i>
+                        <a href="/datatransfer/oradump/impdp">
+
+                        {% ifequal request.path "/datatransfer/oradump/impdp" %}
+                        <span class="caption-subject font-green-sharp bold uppercase">ORA IMPDP</span>
+                        {% else %}
+                        <span class="title"><strong>ORA IMPDP</strong></span>
+                        {% endifequal %}
+                        
+                        </a>
+                    </li>
+
+                    <li>
+                        <i class="icon-layers "></i>
+                        <a href="/datatransfer/oraldr">
+
+                        {% ifequal request.path "/datatransfer/oraldr" %}
+                        <span class="caption-subject font-green-sharp bold uppercase">ORA SQLULDR2/SQLLDR</span>
+                        {% else %}
+                        <span class="title"><strong>ORA SQLULDR2/SQLLDR</strong></span>
+                        {% endifequal %}
+                        
+                        </a>
+                    </li>
+
+                    <li>
+                        &nbsp;&nbsp;<i class="icon-bulb "></i>
+                        <a href="/datatransfer/mysqldump">
+
+                        {% ifequal request.path "/datatransfer/mysqldump" %}
+                        <span class="caption-subject font-green-sharp bold uppercase">MYSQLDUMP</span>
+                        {% else %}
+                        <span class="title"><strong>MYSQLDUMP</strong></span>
+                        {% endifequal %}
+
+                        </a>
+                    </li>
+
+
+
+
+
+               
+
+
+                </ul>
+
+
+            </div>
+
+            <!-- END PAGE HEADER-->
+
+
+
+
+
+
+       
+            {%  block subcontent %}   
+            <h3 class="page-title">
+            PAGE-TITLE <small>comments</small>
+            </h3>    
+
+            <div class="clearfix">
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- BEGIN PORTLET-->
+                    subcontent
+                    <!-- END PORTLET-->
+                </div>
+            </div>
+            {% endblock  %}
+
+        </div>
+</div>
+
+
+
+
+
+{% endblock %}

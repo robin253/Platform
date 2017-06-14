@@ -102,7 +102,7 @@ def dbause_execute(request): #ajax
                 auditobject.close_rollback()
             except:
                 pass
-            return HttpResponse("平台发生非预期错误，请DBA协查")
+            return HttpResponse("平台发生非预期错误，请刷新页面")
         else:
 
             if backupfailflag==1:

@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 from django.shortcuts import render
 from django.db.models import Count #为了使用count函数做统计用
-from django.db.models import Q  #w为了使用不等于函数
+from django.db.models import Q  #w为了使用复杂查询
 from django.contrib.auth.decorators import login_required
 
 from ddlaudit import models
@@ -64,32 +64,33 @@ def report(request):
     re=models.T_DDLAUDIT_BATCH_INFO.objects.filter(db_type=db_type,release_date__range=(release_date_from,release_date_to))
 
 
-    #batch_status批次状态  start 发起   submit 审核中   freeze 审核通过  release 已发布  cancel 已取消
-    #execute_status执行状态   wait 待审核 fail 失败  suc 成功
+    # batch_status 批次状态  start 发起   submit 审核中   freeze 审核通过  release 已发布  cancel 已取消
+    # execute_status 执行状态   wait 待审核 fail 失败  suc 成功
 
 
-    #评审不通过或取消的批次数  batch_status="unqualified" "cancel"
-    sta_noqual_num=re.filter(Q(batch_status="unqualified")|Q(batch_status="cancel")).count()
+    #已取消的批次数  
+    cancel_number=re.filter(batch_status="cancel").count()
+    
+    #已发起的批次数
+    start_num=re.filter(batch_status="start").count()
 
+    #审核中的批次数
+    submit_number=re.filter(batch_status="submit").count()
 
-    #执行成功 execute_status='suc'
-    sta_qual_suc=re.filter(batch_status="qualified",execute_status='suc').count()
-    #执行失败 execute_status='fail'
-    sta_qual_fail=re.filter(batch_status="qualified",execute_status='fail').count()
-    #待执行 execute_status='init'  'doing'
-    sta_qual_init=re.filter(batch_status="qualified").filter(Q(execute_status='init')|Q(execute_status='doing')).count()
-    #评审通过的批次数  batch_status="qualified"
-    sta_qual_num=sta_qual_suc+sta_qual_fail+sta_qual_init
+    #审核通过批次
+    freeze_number=re.filter(batch_status="freeze").count()
 
+    #已发布的批次数
+    release_number=re.filter(batch_status="release").count()
+    #执行成功
+    release_suc_number=re.filter(batch_status="release",execute_status='suc').count()
+    #执行失败
+    release_fail_number=re.filter(batch_status="release",execute_status='fail').count()
 
-    #评估中的批次数  batch_status="semi-qualified"
-    sta_semiqual_num=re.filter(batch_status="semi-qualified").count()
 
 
     #受理的总批次数
-    sta_all_num=sta_noqual_num+sta_qual_num+sta_semiqual_num
-
-
+    all_number=cancel_number+start_num+submit_number+freeze_number+release_number
 
     timerange=order_date_from+'-'+order_date_to
 
@@ -100,41 +101,22 @@ def report(request):
     
     #应用项目top 10统计图
     #SELECT app_name, COUNT(app_name) AS total  from XXX group by app_name;
-    sta_exec_app_num=re.values('app_name').annotate(total=Count('app_name')).order_by('-total')[0:10] 
+    sta_10app_info=re.values('app_name').annotate(total=Count('app_name')).order_by('-total')[0:10] 
 
     #计算top 10应用的批次总数
-    sta_count_app_num=0
-    for aitem in sta_exec_app_num:
-        sta_count_app_num=sta_count_app_num+aitem['total']
+    sta_10app_num=0
+    for aitem in sta_10app_info:
+        sta_10app_num=sta_10app_num+aitem['total']
      
-    #订正批次总数
-    sta_exec_app_all_num=sta_all_num
-
 
     #除去top10外的其他app的订正批次数
-    sta_other_ev_app_num=sta_exec_app_all_num-sta_count_app_num   
+    sta_otherapp_num=all_number-sta_10app_num   
+
+
 
     ###############################
 
-    #DBA执行量top 10统计图
-    sta_evaluator_num=re.filter(~Q(executor= '')).values('executor').annotate(total=Count('executor')).order_by('-total')[0:10] 
-
-    
-    #计算top 10 DBA执行的批次总数
-    sta_count_num=0
-    for item in sta_evaluator_num:
-        sta_count_num=sta_count_num+item['total']
-
-   
-    #已执行的订正批次总数
-    sta_exec_all_num=re.filter(~Q(executor= '')).count()
-
-    #除去top外的其他DBA的执行数
-    sta_other_evaluator_num=sta_exec_all_num-sta_count_num
-
-    ###############################
-
-    #订正申请人top 10统计图
+    #申请人top 10统计图
     sta_10user_info=re.values('audit_user').annotate(total=Count('audit_user')).order_by('-total')[0:10] 
 
     #计算top 10订正申请人总批次
@@ -142,42 +124,40 @@ def report(request):
     for aitem in sta_10user_info:
         sta_10user_num=sta_10user_num+aitem['total']
 
-    #订正批次总数
-    sta_alluser_num=sta_all_num
-
     #除去top10外的其他订正申请人的订正批次数
-    sta_otheruser_num=sta_alluser_num-sta_10user_num  
+    sta_otheruser_num=all_number-sta_10user_num  
 
 
 
 
     ###############################
+
+
+
     if re:
         return_flag=True
     else:
         return_flag=False
     return_info = {
         'db_type':db_type,
-        'sta_all_num': sta_all_num,
-        'sta_noqual_num': sta_noqual_num,
-        'sta_qual_num': sta_qual_num,
-        'sta_qual_fail': sta_qual_fail,
-        'sta_qual_suc': sta_qual_suc,
-        'sta_qual_init': sta_qual_init,
-        'sta_semiqual_num': sta_semiqual_num,
+        'all_number': all_number,
+        'cancel_number': cancel_number,
+        'start_num': start_num,
+        'submit_number': submit_number,
+        'freeze_number': freeze_number,
+        'release_number': release_number,
+        'release_suc_number':release_suc_number,
+        'release_fail_number':release_fail_number,
+
         'timerange':timerange,
 
-        'sta_evaluator_num':sta_evaluator_num,
-        'sta_exec_all_num':sta_exec_all_num,
-        'sta_other_evaluator_num':sta_other_evaluator_num,
 
-        'sta_exec_app_num':sta_exec_app_num,
-        'sta_exec_app_all_num':sta_exec_app_all_num,
-        'sta_other_ev_app_num':sta_other_ev_app_num,
+        'sta_10app_info':sta_10app_info,
+        'sta_otherapp_num':sta_otherapp_num,
 
         'sta_10user_info':sta_10user_info,
-        'sta_alluser_num':sta_alluser_num,
         'sta_otheruser_num':sta_otheruser_num,
+
         'return_flag':return_flag
 
     }

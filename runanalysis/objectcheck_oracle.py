@@ -22,18 +22,13 @@ class check():
     #tables
     def tables_info(self):
         """get tables info"""
-        return    ''' select table_name,tablespace_name,'NO' partitioned
-                    from user_tables where table_name not like 'BIN$%' 
-                    and table_name not like '%BAK%' 
-                    and table_name not like '%TMP%'
-                    and table_name not like '%TEMP%' 
-                    and partitioned='NO'
-                   union all
-                  select distinct table_name,tablespace_name,'YES' partitioned
-                    from user_tab_partitions where table_name not like 'BIN$%' 
-                    and table_name not like '%BAK%' 
-                    and table_name not like '%TMP%'
-                    and table_name not like '%TEMP%' 
+        return    ''' select distinct a.table_name,decode(a.partitioned,'YES',b.tablespace_name,a.tablespace_name),a.partitioned,a.degree
+                    from user_tables a left join user_tab_partitions b
+                    on a.table_name=b.table_name
+                    where a.table_name not like 'BIN$%' 
+                    and a.table_name not like '%BAK%' 
+                    and a.table_name not like '%TMP%'
+                    and a.table_name not like '%TEMP%' 
                     '''
     def tables_notpartition(self):
         """big tables but not partitioned"""
@@ -199,7 +194,7 @@ class check():
     #sequences
     def sequences_info(self):
         """sequences"""
-        return  "select sequence_name,cycle_flag,order_flag,cache_size,round(last_number/max_value,2)*100 from user_sequences"
+        return  "select sequence_name,cycle_flag,order_flag,cache_size,round(last_number/max_value,2)*100,max_value from user_sequences"
 
 
 
@@ -231,7 +226,7 @@ class check():
                         and a.table_name not like '%TEMP%')
                         group by table_name
                        '''
-
+    #并行度
 
 
 
@@ -273,8 +268,8 @@ class check():
                 if tablespacecheck=='tablespacecheck':
                     if i[1]!=data_tbs:
                         dict_table[i[0]].append("使用了"+str(i[1])+"表空间，应使用"+str(data_tbs)+"表空间；")
-                else:
-                    pass
+                if int(i[3])!=1 or i[3]=='default':
+                        dict_table[i[0]].append("该表有"+str(i[3])+"个并行度,请关闭；")
 
 
             #检查大表没有分区 tables_notpartition
@@ -395,14 +390,23 @@ class check():
                 dict_sequence[i[0]]=[]
                 if not i[0].startswith(self.dict_config['seqname']):
                     dict_sequence[i[0]].append("序列名不规范，应以"+str(self.dict_config['seqname'])+"开头；")
-                #if i[1]=='Y':
-                # dict_sequence[i[0]].append("本序列使用了CYCLE属性")
+                if i[1]=='Y':
+                #本序列使用了CYCLE属性
+                    if len(str(i[5]))<int(self.dict_config['seq_len']):
+                        dict_sequence[i[0]].append("本循环序列位数少于"+str(self.dict_config['seq_len'])+"，请关注；")
+                elif i[1]=='N':
+                    if i[4]>int(self.dict_config['seq_usedrate']) :
+                        dict_sequence[i[0]].append("本序列使用率达"+str(self.dict_config['seq_usedrate'])+"，请关注；")
+                    if len(str(i[5]))<int(self.dict_config['seq_len']):
+                        dict_sequence[i[0]].append("非循环序列位数少于"+str(self.dict_config['seq_len'])+"，请关注；")
+                else:
+                    pass
+
                 if i[2]=='Y':
                     dict_sequence[i[0]].append("序列使用了ORDER属性，不允许；")
                 if i[3]<int(self.dict_config['seqcache']):
                     dict_sequence[i[0]].append("本序列CACHE值小于"+str(self.dict_config['seqcache'])+"，请关注；")
-                if i[4]>int(self.dict_config['seq_usedrate']) and i[1]=='N':
-                    dict_sequence[i[0]].append("本序列使用率达"+str(self.dict_config['seq_usedrate'])+"，请关注；")
+
 
 
         #注释    

@@ -1496,12 +1496,20 @@ def summary_idx():
         else:
             tabind[tabname]=[indname]
 
+
+
+    #统计表上没有任何索引
+    for tabname in ct_tabnames:
+        if not tabind.has_key(tabname):
+            audit_ci_summary.append("表"+tabname+"上面没有任何索引,请注意；")
     #统计一个表上的索引总个数超过2个的并输出 并将有2个索引或以上的表名收集
-    #print tabind
     for key in tabind:
         indnum = len(tabind[key])
+        #print indnum
         if indnum>int(dict_config['max_indnum_eachtable']): #配置项
             audit_ci_summary.append("表"+key+"上面有"+str(indnum)+"个索引,大于"+str(dict_config['max_indnum_eachtable'])+"个请注意；")
+
+
 
                         
     #冗余的索引处理#

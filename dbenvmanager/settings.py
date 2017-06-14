@@ -12,9 +12,17 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+#celery 相关
 
-#使用了django自带的broker来作为celery的broker 消息队列  还可以使用redis rabbitmq
-BROKER_URL = 'django://localhost:8000//' 
+BROKER_URL = 'redis://192.168.136.88:6379/0'    
+CELERY_RESULT_BACKEND = 'redis://192.168.136.88:6379/1'                                              
+CELERY_ACCEPT_CONTENT = ['application/json']                                           
+CELERY_TASK_SERIALIZER = 'json'                         
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Asia/Shanghai'                         
+
+#定期任务（admin后台配置）
+CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -29,9 +37,9 @@ SECRET_KEY = 'uhjzjw!_+3xc-s(7861$!8in3$j)s3w-ql$zfy*^(jxib0lh_v'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-ALLOWED_HOSTS = []
+#ALLOWED_HOSTS = []
 #DEBUG=False
-#ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -51,8 +59,8 @@ INSTALLED_APPS = [
     'performance',
     'datatransfer',
     'runanalysis',
-    'djcelery',#必须使用
-    'kombu.transport.django',#kombu.transport.django是基于Django的broker
+    'djcelery',
+    'kombu.transport.django',#django自带的celery broker
 ]
 
 MIDDLEWARE = [
@@ -161,3 +169,68 @@ TEMPLATES = [
 STATICFILES_DIRS = (
     os.path.join(os.path.dirname(__file__), '..', 'static').replace('\\', '/'),
 )
+
+#日志配置
+
+
+LOGGING = {
+    'version': 1,#版本，目前就只有一个版本
+    'disable_existing_loggers': True,#禁用所有的已经存在的日志配置
+    'formatters': #格式器
+        {
+        'standard': 
+             {
+             # 日期和时间  [线程名称 线程ID] [记录器的名称 行号]  [日志记录级别的文本名称] - 消息
+            'format': '%(asctime)s [%(threadName)s:%(thread)d] [%(name)s:%(lineno)d] [%(levelname)s]- %(message)s'
+             },
+        'simple': 
+             {
+            'format': '%(message)s'
+             },
+        },
+    'filters': #过滤器 过滤器是用来提供额外的控制，控制哪些日志记录可以被传给处理器处理
+        {},
+    'handlers': #处理器
+        {
+        'default': {
+            'level':'DEBUG',
+            'class':'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(os.path.dirname(__file__), '..', 'logs/dbenvmanager.log').replace('\\', '/'), #文件路径
+            'maxBytes': 1024*1024*5, # 5 MB 文件大小 
+            'backupCount': 5, #备份份数
+            'formatter':'standard',  #指定格式器
+                   },
+        'console':{
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'standard'
+                  },
+        'datatransfer': {
+            'level':'DEBUG',
+            'class':'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(os.path.dirname(__file__), '..', 'logs/datatransfer.log').replace('\\', '/'), 
+            'maxBytes': 1024*1024*5, 
+            'backupCount': 10, 
+            'formatter':'standard',  
+                   },
+        },
+    'loggers': #记录器 当一条信息被发往记录器的时候，消息的记录等级会和记录器的等级相比较，如果符合甚至超越当前等级，
+               #则被发往一个或者多个处理器处理，否则会被忽略掉
+               #五种等级 debug info warning error critical
+        {
+        'django':#处理所有类型日志
+                 {
+            'handlers':['console'],#['default','console']  先不要用default这个处理器  写入日志比较多
+            'propagate': True,
+            'level':'INFO', #DEBUG的话太多了
+                 },
+
+        'datatransfer':
+                {
+            'handlers':['datatransfer','console'],
+            'propagate': True,#会根据包的层次结构去找对应的记录器，没有的话寻找父类
+            'level':'DEBUG',
+                },
+        }
+}
+

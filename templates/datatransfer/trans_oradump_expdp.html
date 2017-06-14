@@ -1,0 +1,343 @@
+
+
+{% extends 'datatransfer/transbase.html' %}
+{% load myNewLibrary %}
+{% load staticfiles %}
+{% block title %}trans_oradump_expdp{% endblock %}
+
+
+
+
+            {%  block subcontent %}   
+            <h3 class="page-title">
+              EXPDP 
+            </h3>     
+
+            <div class="clearfix">
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-sm-6">
+                    <!-- BEGIN PORTLET-->
+                    <div class="portlet light ">
+                        <div class="portlet-title">
+                            <div class="caption caption-md">
+                                <span class="caption-subject font-red-sunglo bold uppercase">
+                                <i class="icon-speech"></i>
+                                选择导出信息</span>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <div id="context" data-toggle="context" data-target="#context-menu">
+
+
+
+
+  <form class="form-inline" >
+  <div class="form-group">
+  <strong><i class="icon-credit-card "></i> 数据库</strong>
+  <select id='db_name' name='db_name'class="input-md form-control" onclick="Schemas()"  >
+  {% for item in list_db_name %} 
+  <option value="{{item}}" >{{item}}</option>
+  {% endfor %}
+  </select>
+  </div> &nbsp;&nbsp;&nbsp;&nbsp;
+
+  <div class="form-group">
+  <strong ><i class="icon-credit-card"></i> schema</strong>
+  <select id = 'skema' name='skema'class="input-md form-control">
+  <option value="" selected="selected">请选择</option>
+  </select>
+  </div><br><br>
+  
+
+  <div class="form-group">
+  <strong ><i class="icon-credit-card "></i> 导出表清单</strong><br><br>
+  <textarea id="tables" rows="5" cols="40" name="tables" placeholder="exp:T1,T2,T3%" ></textarea>
+   </div><br><br>
+
+  <div class="form-group">
+  <strong ><i class="icon-credit-card "></i> 导出类型</strong>&nbsp;&nbsp;
+  <select id="content" name='content' class="input-md form-control">
+  <option value="ALL" selected="selected">导出定义及数据</option>
+  <option value="DATA_ONLY" >只导出数据</option>
+  <option value="METADATA_ONLY" >只导出定义</option>
+  </select>
+  </div>&nbsp;&nbsp;&nbsp;&nbsp;
+
+  <div class="form-group">
+  <strong ><i class="icon-credit-card "></i> 并行设置</strong>&nbsp;&nbsp;
+  <select id='parallel' name='parallel' class="input-md form-control">
+  <option value="4" selected="selected">4</option>
+  <option value="8" >8</option>
+  <option value="16" >16</option>
+  </select>
+  </div><br><br>
+
+
+  <div class="form-group">
+  <strong ><i class="icon-credit-card "></i> 排除对象</strong><br><br>
+  统计信息<input id='statistics' name='statistics' type='checkbox' value="statistics" checked="checked">
+  &nbsp;&nbsp;&nbsp;&nbsp;索引 <input id='index' name='index' type='checkbox' value="index" >
+  &nbsp;&nbsp;&nbsp;&nbsp;约束<input id='constraint' name='constraint' type='checkbox' value="constraint" >
+  &nbsp;&nbsp;&nbsp;&nbsp;授权<input id='grant' name='grant' type='checkbox' value="grant" >
+  </div><br><br><br>
+
+  <div class="form-group">
+  <strong ><i class="icon-credit-card "></i> 自定义附加信息</strong><br><br>
+  <textarea id='additional' rows="5" cols="40" name='additional' placeholder="exp:FLASHBACK_SCN=12345678" ></textarea>
+  </div>
+  </form>
+    <!-- 使用ajax来处理 -->
+<br><br>
+  <input type='button'  class="btn  btn-success " value='生成脚本' onclick="get_expdpcommand.call(this)">
+
+
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- END PORTLET-->
+                </div>
+                <div class="col-md-6 col-sm-6">
+                    <!-- BEGIN PORTLET-->
+                    <div class="portlet light ">
+                        <div class="portlet-title">
+                            <div class="caption caption-md">
+                                <span class="caption-subject font-red-sunglo bold uppercase">
+                                <i class="icon-speech"></i>
+                                发起导出</span>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <div id="context" data-toggle="context" data-target="#context-menu">
+
+
+
+<table class="table  table-advance table-hover table-condensed">
+                <thead>
+                <tr >
+
+                  <td width="20%">
+                    <strong>数据量预估</strong><br><br>
+                    <span id="segments">待生成</span>
+                  </td>
+                  <td width="20%">
+                     <strong>涉及表空间</strong><br><br>
+                     <span id="tablespace">待生成</span>
+                  </td>
+                  <td width="70%">
+                    <strong>导出文本</strong><br><br>
+                    <span id="expdpcommand">待生成</span>
+                  </td>
+                </tr>
+                </thead>
+</table>
+
+
+<br>
+<input id='expdpbut' type='button'  class="btn  btn-danger " value='发起导出' onclick="expdp.call(this)">
+<br><br><br>
+
+
+
+
+
+
+<table class="table  table-advance table-hover table-condensed">
+                <thead>
+                <tr >
+
+                  <td width="20%">
+                    <strong>导出状态</strong><br><br>
+                    <span id="status">N/A</span>
+                  </td>
+                  <td width="80%">
+                     <strong>导出日志</strong><br><br>
+                     <span id="logfile">待发起导出</span>
+                  </td>
+                </tr>
+                </thead>
+</table>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END PORTLET-->
+                </div>
+
+
+
+
+            </div>
+
+
+
+
+
+
+<!--表单联动-->
+<script>
+
+//根据db_name获取skema
+function Schemas() {  
+    var html;  
+    var db_name = document.getElementById('db_name').value;
+    $.ajax({  
+        type: "GET",  
+        async: true,  
+        url: "/cmdb/getschema",  
+        data: {'db_name':db_name}, 
+        dataType: "json",  
+        success: function(data) {  
+                 var obj=eval(data);
+                    for (var i=0;i<obj.length;i++ )
+                    {
+                       html+="  <option value="+obj[i].skema+">"+obj[i].skema+"</option>"
+                    }
+                     y=document.getElementById('skema'); 
+                     y.innerHTML=html; 
+                
+ 
+        }  
+
+    });  
+};
+
+
+
+</script>
+
+
+
+
+
+
+<!--获取导出语句所用的ajax-->
+<script> 
+function get_expdpcommand()
+{
+var db_name = document.getElementById('db_name').value;
+var skema = document.getElementById('skema').value;
+var tables = document.getElementById('tables').value;
+var content = document.getElementById('content').value;
+var parallel = document.getElementById('parallel').value;
+
+var statistics = $("input[id='statistics']:checked").val(); 
+var index = $("input[id='index']:checked").val(); 
+var constraint = $("input[id='constraint']:checked").val(); 
+var grant = $("input[id='grant']:checked").val(); 
+
+var additional = document.getElementById('additional').value;
+
+
+
+x=document.getElementById("expdpcommand"); //查找元素
+y=document.getElementById("segments"); 
+z=document.getElementById("tablespace"); 
+
+$.ajax({
+  type: 'GET',
+  url: "/datatransfer/oradump/expdpcommand",
+  data: {'db_name':db_name,'skema':skema,'tables':tables,
+         'content':content,'parallel':parallel,'statistics':statistics,
+         'index':index,'constraint':constraint,'grant':grant,'additional':additional},
+  async: true,   //flase同步 页面会hang住等待 体验不好
+  contentType: "application/json",
+  beforeSend:function(){
+x.innerHTML="获取中";    //改变内容
+y.innerHTML="获取中";   
+z.innerHTML="获取中";    
+  },
+  success: function(ret){
+            var obj=eval(ret);
+            x.innerHTML= obj[0].inf;
+            y.innerHTML= obj[1].inf;
+            z.innerHTML= obj[2].inf;
+             },
+ error: function(){
+            x.innerHTML="后端处理失败,请联系平台管理员";
+            y.innerHTML="后端处理失败,请联系平台管理员";
+            z.innerHTML="后端处理失败,请联系平台管理员";
+             }
+});
+
+
+
+};
+
+</script>
+
+
+
+
+
+
+<!--发起导出所用的ajax-->
+<script> 
+function expdp()
+{
+var db_name = document.getElementById('db_name').value;
+var skema = document.getElementById('skema').value;
+var tables = document.getElementById('tables').value;
+var content = document.getElementById('content').value;
+var parallel = document.getElementById('parallel').value;
+
+var statistics = $("input[id='statistics']:checked").val(); 
+var index = $("input[id='index']:checked").val(); 
+var constraint = $("input[id='constraint']:checked").val(); 
+var grant = $("input[id='grant']:checked").val(); 
+
+var additional = document.getElementById('additional').value;
+
+
+$(this).attr("disabled", true); 
+
+
+a=document.getElementById("status"); //查找元素
+b=document.getElementById("logfile"); 
+
+$.ajax({
+  type: 'GET',
+  url: "/datatransfer/oradump/expdp",
+  data: {'db_name':db_name,'skema':skema,'tables':tables,
+         'content':content,'parallel':parallel,'statistics':statistics,
+         'index':index,'constraint':constraint,'grant':grant,'additional':additional},
+  async: true,   //flase同步 页面会hang住等待 体验不好
+  contentType: "application/json",
+  beforeSend:function(){
+  a.innerHTML="N/A";    //改变内容
+  b.innerHTML="导出中,可通过查询页查询详细信息";  
+  },
+  success: function(ret){
+            var obj=eval(ret);
+            a.innerHTML= obj[0].inf;
+            b.innerHTML= obj[1].inf;
+             },
+  error: function(){
+            a.innerHTML="后端处理失败,请联系平台管理员";
+            b.innerHTML="后端处理失败,请联系平台管理员";
+             }
+});
+
+
+
+};
+
+</script>
+
+
+
+
+            {% endblock  %}
+
+
+
+
+
+
+
+

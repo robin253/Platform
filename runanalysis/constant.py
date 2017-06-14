@@ -16,6 +16,7 @@ dict_config={
      'seqname': 'SEQ_',
      'seqcache': '200',
      'seq_usedrate': '70',
+     'seq_len':'10',
      'pkname': 'PK_',
      'pk_max_colnum': '2',
      'max_indnum_eachtable': '3',

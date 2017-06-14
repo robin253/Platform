@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% block title %}logicalbackupbase{% endblock %}
+
+
+
+{% block content %}
+
+ <div class="page-content-wrapper">
+        <div class="page-content">
+
+            <!-- BEGIN PAGE HEADER-->
+            <div class="page-bar">
+                <ul  class="page-breadcrumb">   
+                    <li>
+                        <span class="caption-subject font-yellow-gold bold uppercase">页内导航</span>
+                    </li>
+
+
+
+                    <li>
+                        <i class="icon-crop"></i>
+                        <a href="/datatransfer/logicalbackup">
+
+                        {% ifequal request.path "/datatransfer/logicalbackup" %}
+                        <span class="caption-subject font-green-sharp bold uppercase">逻辑备份</span>
+                        {% else %}
+                        <span class="title"><strong>逻辑备份</strong></span>
+                        {% endifequal %}
+                        
+                        </a>
+                    </li>
+
+        
+
+
+
+
+               
+
+
+                </ul>
+
+
+            </div>
+
+            <!-- END PAGE HEADER-->
+
+
+
+
+
+
+       
+            {%  block subcontent %}   
+            <h3 class="page-title">
+            PAGE-TITLE <small>comments</small>
+            </h3>    
+
+            <div class="clearfix">
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- BEGIN PORTLET-->
+                    subcontent
+                    <!-- END PORTLET-->
+                </div>
+            </div>
+            {% endblock  %}
+
+        </div>
+</div>
+
+
+
+
+
+{% endblock %}

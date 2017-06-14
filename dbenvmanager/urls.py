@@ -63,14 +63,21 @@ urlpatterns = [
     url(r'^runanalysis/objectcheck$', runanalysis.views.objectcheck),
     url(r'^runanalysis/objectcheck/download$', runanalysis.views.objectcheck_download),
     url(r'^runanalysis/objectcheck/index$', runanalysis.views.objectcheck_index),
+    
+    url(r'^runanalysis/dbstatus$', runanalysis.views.dbstatus),
 
     url(r'^performance/sqlplanchange$', performance.views.sqlplanchange),
     url(r'^performance/sqlanalysis$', performance.views.sqlanalysis),
     url(r'^performance/sqlinefficient$', performance.views.sqlinefficient),
     url(r'^performance/sqlinefficient/changestatus$', performance.views.sqlinefficient_changestatus),
     
-    url(r'^datatransfer/transfer$', datatransfer.views.transfer,name="datatransfer_transfer"),
-    url(r'^datatransfer/history$', datatransfer.views.history,name="datatransfer_history"),
-    url(r'^datatransfer/logicalbackup$', datatransfer.views.logicalbackup,name="datatransfer_logicalbackup"),
+    url(r'^datatransfer/oradump/expdp$', datatransfer.views.oradump_expdp),
+    url(r'^datatransfer/oradump/expdpcommand$', datatransfer.views.oradump_expdpcommand),
+    url(r'^datatransfer/oradump/impdp$', datatransfer.views.oradump_impdp),
+    url(r'^datatransfer/oradump/impdpcommand$', datatransfer.views.oradump_impdpcommand),
+    url(r'^datatransfer/oraldr$', datatransfer.views.trans_oraldr),
+    url(r'^datatransfer/mysqldump$', datatransfer.views.trans_mysqldump),
+    url(r'^datatransfer/logicalbackup$', datatransfer.views.logicalbackup),
+    url(r'^datatransfer/hisdata$', datatransfer.views.hisdata),
 
 ]

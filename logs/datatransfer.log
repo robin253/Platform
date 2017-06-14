@@ -1,0 +1,355 @@
+2017-05-05 11:45:03,513 [Thread-20:24504] [datatransfer.oracledump:95] [INFO]- 准备发起导出任务job_name:ACCOUNTING20170505114501
+2017-05-05 11:45:03,920 [Thread-20:24504] [datatransfer.oracledump:100] [INFO]-  发起导出任务job_name:ACCOUNTING20170505114501 (192.168.136.88:1521/xljora1)
+ 导出命令expdp "'/ as sysdba'" directory=DATA_PUMP_DIR dumpfile=ACCOUNTING20170505114501%U.dmp logfile=ACCOUNTING20170505114501.log tables=ACCOUNTING.T_A cluster=N compression=all  reuse_dumpfiles=y job_name=ACCOUNTING20170505114501 parallel=4 content=ALL exclude=statistics
+2017-05-05 11:45:19,634 [Thread-20:24504] [datatransfer.oracledump:103] [INFO]-  导出任务job_name:ACCOUNTING20170505114501结束
+2017-05-05 11:45:19,819 [Thread-20:24504] [datatransfer.oracledump:111] [INFO]-  导出任务job_name:ACCOUNTING20170505114501日志：
+Export: Release 11.2.0.4.0 - Production on Fri May 5 11:42:18 2017
+
+Copyright (c) 1982, 2011, Oracle and/or its affiliates.  All rights reserved.
+
+Connected to: Oracle Database 11g Enterprise Edition Release 11.2.0.4.0 - 64bit Production
+With the Partitioning, Oracle Label Security, OLAP, Data Mining,
+Oracle Database Vault and Real Application Testing options
+Starting "SYS"."ACCOUNTING20170505114501":  "/******** AS SYSDBA" directory=DATA_PUMP_DIR dumpfile=ACCOUNTING20170505114501%U.dmp logfile=ACCOUNTING20170505114501.log tables=ACCOUNTING.T_A cluster=N compression=all reuse_dumpfiles=y job_name=ACCOUNTING20170505114501 parallel=4 content=ALL exclude=statistics 
+Estimate in progress using BLOCKS method...
+Processing object type TABLE_EXPORT/TABLE/TABLE_DATA
+Total estimation using BLOCKS method: 64 KB
+. . exported "ACCOUNTING"."T_A"                          4.804 KB       5 rows
+Processing object type TABLE_EXPORT/TABLE/TABLE
+Master table "SYS"."ACCOUNTING20170505114501" successfully loaded/unloaded
+******************************************************************************
+Dump file set for SYS.ACCOUNTING20170505114501 is:
+  /u01/oracle/admin/xljora1/dpdump/ACCOUNTING2017050511450101.dmp
+Job "SYS"."ACCOUNTING20170505114501" successfully completed at Fri May 5 11:42:32 2017 elapsed 0 00:00:09
+
+
+2017-05-13 23:26:02,395 [Thread-29:13244] [datatransfer.oracledump:179] [INFO]- 准备发起导出任务job_name:TEST20170513232549
+2017-05-13 23:26:12,660 [Thread-29:13244] [datatransfer.oracledump:184] [INFO]-  发起导出任务job_name:TEST20170513232549 (192.168.136.88:1521/xljora1)
+ 导出命令expdp "'/ as sysdba'" directory=DATA_PUMP_DIR dumpfile=TEST20170513232549%U.dmp logfile=TEST20170513232549.log tables=TEST.T1 cluster=N compression=all  reuse_dumpfiles=y job_name=TEST20170513232549 parallel=4 content=ALL exclude=statistics 
+2017-05-13 23:27:19,400 [Thread-29:13244] [datatransfer.oracledump:187] [INFO]-  导出任务job_name:TEST20170513232549结束
+2017-05-13 23:27:19,973 [Thread-29:13244] [datatransfer.oracledump:195] [INFO]-  导出任务job_name:TEST20170513232549日志：
+Export: Release 11.2.0.4.0 - Production on Sat May 13 23:26:13 2017
+
+Copyright (c) 1982, 2011, Oracle and/or its affiliates.  All rights reserved.
+
+Connected to: Oracle Database 11g Enterprise Edition Release 11.2.0.4.0 - 64bit Production
+With the Partitioning, Oracle Label Security, OLAP, Data Mining,
+Oracle Database Vault and Real Application Testing options
+Starting "SYS"."TEST20170513232549":  "/******** AS SYSDBA" directory=DATA_PUMP_DIR dumpfile=TEST20170513232549%U.dmp logfile=TEST20170513232549.log tables=TEST.T1 cluster=N compression=all reuse_dumpfiles=y job_name=TEST20170513232549 parallel=4 content=ALL exclude=statistics 
+Estimate in progress using BLOCKS method...
+Processing object type TABLE_EXPORT/TABLE/TABLE_DATA
+Total estimation using BLOCKS method: 376 MB
+Processing object type TABLE_EXPORT/TABLE/TABLE
+. . exported "TEST"."T1"                                 43.05 MB 3633664 rows
+Master table "SYS"."TEST20170513232549" successfully loaded/unloaded
+******************************************************************************
+Dump file set for SYS.TEST20170513232549 is:
+  /u01/oracle/admin/xljora1/dpdump/TEST2017051323254901.dmp
+Job "SYS"."TEST20170513232549" successfully completed at Sat May 13 23:27:12 2017 elapsed 0 00:00:49
+
+
+2017-05-13 23:36:28,372 [Thread-45:13248] [datatransfer.oracledump:179] [INFO]- 准备发起导出任务job_name:TEST20170513233617
+2017-05-13 23:36:38,742 [Thread-45:13248] [datatransfer.oracledump:184] [INFO]-  发起导出任务job_name:TEST20170513233617 (192.168.136.88:1521/xljora1)
+ 导出命令expdp "'/ as sysdba'" directory=DATA_PUMP_DIR dumpfile=TEST20170513233617%U.dmp logfile=TEST20170513233617.log tables=TEST.T1 cluster=N compression=all  reuse_dumpfiles=y job_name=TEST20170513233617 parallel=4 content=DATA_ONLY exclude=statistics,constraint 
+2017-05-13 23:37:12,799 [Thread-45:13248] [datatransfer.oracledump:187] [INFO]-  导出任务job_name:TEST20170513233617结束
+2017-05-13 23:37:13,095 [Thread-45:13248] [datatransfer.oracledump:195] [INFO]-  导出任务job_name:TEST20170513233617日志：
+Export: Release 11.2.0.4.0 - Production on Sat May 13 23:36:38 2017
+
+Copyright (c) 1982, 2011, Oracle and/or its affiliates.  All rights reserved.
+
+Connected to: Oracle Database 11g Enterprise Edition Release 11.2.0.4.0 - 64bit Production
+With the Partitioning, Oracle Label Security, OLAP, Data Mining,
+Oracle Database Vault and Real Application Testing options
+Starting "SYS"."TEST20170513233617":  "/******** AS SYSDBA" directory=DATA_PUMP_DIR dumpfile=TEST20170513233617%U.dmp logfile=TEST20170513233617.log tables=TEST.T1 cluster=N compression=all reuse_dumpfiles=y job_name=TEST20170513233617 parallel=4 content=DATA_ONLY exclude=statistics,constraint 
+Estimate in progress using BLOCKS method...
+Processing object type TABLE_EXPORT/TABLE/TABLE_DATA
+Total estimation using BLOCKS method: 376 MB
+. . exported "TEST"."T1"                                 43.05 MB 3633664 rows
+Master table "SYS"."TEST20170513233617" successfully loaded/unloaded
+******************************************************************************
+Dump file set for SYS.TEST20170513233617 is:
+  /u01/oracle/admin/xljora1/dpdump/TEST2017051323361701.dmp
+  /u01/oracle/admin/xljora1/dpdump/TEST2017051323361702.dmp
+Job "SYS"."TEST20170513233617" successfully completed at Sat May 13 23:37:10 2017 elapsed 0 00:00:30
+
+
+2017-05-17 14:49:18,219 [Thread-10:13212] [datatransfer.oracledump:193] [INFO]- 准备发起导出任务job_name:TEST20170517144903
+2017-05-17 14:49:28,477 [Thread-10:13212] [datatransfer.oracledump:198] [INFO]-  发起导出任务job_name:TEST20170517144903 (192.168.136.88:1521/xljora1)
+ 导出命令expdp "'/ as sysdba'" directory=DATA_PUMP_DIR dumpfile=TEST20170517144903%U.dmp logfile=TEST20170517144903.log tables=TEST.T1,TEST.T2 cluster=N compression=all  reuse_dumpfiles=y job_name=TEST20170517144903 parallel=4 content=ALL exclude=statistics 
+2017-05-17 14:50:41,469 [Thread-10:13212] [datatransfer.oracledump:201] [INFO]-  导出任务job_name:TEST20170517144903结束
+2017-05-17 14:50:42,082 [Thread-10:13212] [datatransfer.oracledump:209] [INFO]-  导出任务job_name:TEST20170517144903日志：
+Export: Release 11.2.0.4.0 - Production on Wed May 17 14:49:27 2017
+
+Copyright (c) 1982, 2011, Oracle and/or its affiliates.  All rights reserved.
+
+Connected to: Oracle Database 11g Enterprise Edition Release 11.2.0.4.0 - 64bit Production
+With the Partitioning, Oracle Label Security, OLAP, Data Mining,
+Oracle Database Vault and Real Application Testing options
+Starting "SYS"."TEST20170517144903":  "/******** AS SYSDBA" directory=DATA_PUMP_DIR dumpfile=TEST20170517144903%U.dmp logfile=TEST20170517144903.log tables=TEST.T1,TEST.T2 cluster=N compression=all reuse_dumpfiles=y job_name=TEST20170517144903 parallel=4 content=ALL exclude=statistics 
+Estimate in progress using BLOCKS method...
+Processing object type TABLE_EXPORT/TABLE/TABLE_DATA
+Total estimation using BLOCKS method: 640 MB
+Processing object type TABLE_EXPORT/TABLE/TABLE
+Processing object type TABLE_EXPORT/TABLE/INDEX/INDEX
+. . exported "TEST"."T2"                                 8.987 MB 3145728 rows
+. . exported "TEST"."T1"                                 43.05 MB 3633664 rows
+Master table "SYS"."TEST20170517144903" successfully loaded/unloaded
+******************************************************************************
+Dump file set for SYS.TEST20170517144903 is:
+  /u01/oracle/admin/xljora1/dpdump/TEST2017051714490301.dmp
+  /u01/oracle/admin/xljora1/dpdump/TEST2017051714490302.dmp
+  /u01/oracle/admin/xljora1/dpdump/TEST2017051714490303.dmp
+Job "SYS"."TEST20170517144903" successfully completed at Wed May 17 14:50:35 2017 elapsed 0 00:00:59
+
+
+2017-05-17 16:16:57,362 [Thread-13:11208] [datatransfer.oracledump:329] [INFO]- 准备发起导入任务job_name:IMP_TEST20170517144901
+2017-05-17 16:17:07,693 [Thread-13:11208] [datatransfer.oracledump:334] [INFO]-  发起导入任务job_name:IMP_TEST20170517144901 (192.168.136.88:1521/xljora1)
+ 导入命令impdp "'/ as sysdba'" directory=DATA_PUMP_DIR dumpfile=TEST20170517144901%U.dmp logfile=IMP_TEST20170517144901.log tables=TEST.T1,TEST.T2 cluster=N job_name=IMP_TEST20170517144901 parallel=4 table_exists_action=REPLACE remap_schema=TEST:ACCOUNTING remap_tablespace=SYSAUX:TBS_DATA,USERS:TBS_DATA,SYSTEM:TBS_IDX 
+2017-05-17 16:17:13,033 [Thread-13:11208] [datatransfer.oracledump:337] [INFO]-  导入任务job_name:IMP_TEST20170517144901结束
+2017-05-17 16:17:13,038 [Thread-13:11208] [datatransfer.oracledump:343] [INFO]-  导入任务job_name:IMP_TEST20170517144901日志：
+Import: Release 11.2.0.4.0 - Production on Wed May 17 16:17:07 2017
+
+Copyright (c) 1982, 2011, Oracle and/or its affiliates.  All rights reserved.
+
+Connected to: Oracle Database 11g Enterprise Edition Release 11.2.0.4.0 - 64bit Production
+With the Partitioning, Oracle Label Security, OLAP, Data Mining,
+Oracle Database Vault and Real Application Testing options
+ORA-39001: invalid argument value
+ORA-39000: bad dump file specification
+ORA-31640: unable to open dump file "/u01/oracle/admin/xljora1/dpdump/TEST2017051714490101.dmp" for read
+ORA-27037: unable to obtain file status
+Linux-x86_64 Error: 2: No such file or directory
+Additional information: 3
+
+
+
+2017-05-17 16:25:18,312 [Thread-40:11780] [datatransfer.oracledump:193] [INFO]- 准备发起导出任务job_name:TEST20170517162507
+2017-05-17 16:25:28,691 [Thread-40:11780] [datatransfer.oracledump:198] [INFO]-  发起导出任务job_name:TEST20170517162507 (192.168.136.88:1521/xljora1)
+ 导出命令expdp "'/ as sysdba'" directory=DATA_PUMP_DIR dumpfile=TEST20170517162507%U.dmp logfile=TEST20170517162507.log tables=TEST.T1,TEST.T2 cluster=N compression=all  reuse_dumpfiles=y job_name=TEST20170517162507 parallel=4 content=ALL exclude=statistics 
+2017-05-17 16:26:14,976 [Thread-40:11780] [datatransfer.oracledump:201] [INFO]-  导出任务job_name:TEST20170517162507结束
+2017-05-17 16:26:15,621 [Thread-40:11780] [datatransfer.oracledump:209] [INFO]-  导出任务job_name:TEST20170517162507日志：
+Export: Release 11.2.0.4.0 - Production on Wed May 17 16:25:27 2017
+
+Copyright (c) 1982, 2011, Oracle and/or its affiliates.  All rights reserved.
+
+Connected to: Oracle Database 11g Enterprise Edition Release 11.2.0.4.0 - 64bit Production
+With the Partitioning, Oracle Label Security, OLAP, Data Mining,
+Oracle Database Vault and Real Application Testing options
+Starting "SYS"."TEST20170517162507":  "/******** AS SYSDBA" directory=DATA_PUMP_DIR dumpfile=TEST20170517162507%U.dmp logfile=TEST20170517162507.log tables=TEST.T1,TEST.T2 cluster=N compression=all reuse_dumpfiles=y job_name=TEST20170517162507 parallel=4 content=ALL exclude=statistics 
+Estimate in progress using BLOCKS method...
+Processing object type TABLE_EXPORT/TABLE/TABLE_DATA
+Total estimation using BLOCKS method: 640 MB
+Processing object type TABLE_EXPORT/TABLE/TABLE
+Processing object type TABLE_EXPORT/TABLE/INDEX/INDEX
+. . exported "TEST"."T2"                                 8.987 MB 3145728 rows
+. . exported "TEST"."T1"                                 43.05 MB 3633664 rows
+Master table "SYS"."TEST20170517162507" successfully loaded/unloaded
+******************************************************************************
+Dump file set for SYS.TEST20170517162507 is:
+  /u01/oracle/admin/xljora1/dpdump/TEST2017051716250701.dmp
+  /u01/oracle/admin/xljora1/dpdump/TEST2017051716250702.dmp
+  /u01/oracle/admin/xljora1/dpdump/TEST2017051716250703.dmp
+Job "SYS"."TEST20170517162507" successfully completed at Wed May 17 16:26:10 2017 elapsed 0 00:00:41
+
+
+2017-05-17 16:26:42,128 [Thread-58:11560] [datatransfer.oracledump:329] [INFO]- 准备发起导入任务job_name:IMP_TEST20170517162503
+2017-05-17 16:26:52,454 [Thread-58:11560] [datatransfer.oracledump:334] [INFO]-  发起导入任务job_name:IMP_TEST20170517162503 (192.168.136.88:1521/xljora1)
+ 导入命令impdp "'/ as sysdba'" directory=DATA_PUMP_DIR dumpfile=TEST20170517162503%U.dmp logfile=IMP_TEST20170517162503.log tables=TEST.T1,TEST.T2 cluster=N job_name=IMP_TEST20170517162503 parallel=4 table_exists_action=REPLACE remap_schema=TEST:ACCOUNTING remap_tablespace=SYSAUX:TBS_DATA,USERS:TBS_DATA,SYSTEM:TBS_IDX 
+2017-05-17 16:26:55,698 [Thread-58:11560] [datatransfer.oracledump:337] [INFO]-  导入任务job_name:IMP_TEST20170517162503结束
+2017-05-17 16:26:55,818 [Thread-58:11560] [datatransfer.oracledump:343] [INFO]-  导入任务job_name:IMP_TEST20170517162503日志：
+Import: Release 11.2.0.4.0 - Production on Wed May 17 16:26:51 2017
+
+Copyright (c) 1982, 2011, Oracle and/or its affiliates.  All rights reserved.
+
+Connected to: Oracle Database 11g Enterprise Edition Release 11.2.0.4.0 - 64bit Production
+With the Partitioning, Oracle Label Security, OLAP, Data Mining,
+Oracle Database Vault and Real Application Testing options
+ORA-39001: invalid argument value
+ORA-39000: bad dump file specification
+ORA-31640: unable to open dump file "/u01/oracle/admin/xljora1/dpdump/TEST2017051716250301.dmp" for read
+ORA-27037: unable to obtain file status
+Linux-x86_64 Error: 2: No such file or directory
+Additional information: 3
+
+
+
+2017-05-17 16:31:22,924 [Thread-83:12508] [datatransfer.oracledump:193] [INFO]- 准备发起导出任务job_name:TEST20170517163111
+2017-05-17 16:31:33,305 [Thread-83:12508] [datatransfer.oracledump:198] [INFO]-  发起导出任务job_name:TEST20170517163111 (192.168.136.88:1521/xljora1)
+ 导出命令expdp "'/ as sysdba'" directory=DATA_PUMP_DIR dumpfile=TEST20170517163111%U.dmp logfile=TEST20170517163111.log tables=TEST.T1,TEST.T2 cluster=N compression=all  reuse_dumpfiles=y job_name=TEST20170517163111 parallel=4 content=ALL exclude=statistics 
+2017-05-17 16:32:28,884 [Thread-83:12508] [datatransfer.oracledump:201] [INFO]-  导出任务job_name:TEST20170517163111结束
+2017-05-17 16:32:29,108 [Thread-83:12508] [datatransfer.oracledump:209] [INFO]-  导出任务job_name:TEST20170517163111日志：
+Export: Release 11.2.0.4.0 - Production on Wed May 17 16:31:32 2017
+
+Copyright (c) 1982, 2011, Oracle and/or its affiliates.  All rights reserved.
+
+Connected to: Oracle Database 11g Enterprise Edition Release 11.2.0.4.0 - 64bit Production
+With the Partitioning, Oracle Label Security, OLAP, Data Mining,
+Oracle Database Vault and Real Application Testing options
+Starting "SYS"."TEST20170517163111":  "/******** AS SYSDBA" directory=DATA_PUMP_DIR dumpfile=TEST20170517163111%U.dmp logfile=TEST20170517163111.log tables=TEST.T1,TEST.T2 cluster=N compression=all reuse_dumpfiles=y job_name=TEST20170517163111 parallel=4 content=ALL exclude=statistics 
+Estimate in progress using BLOCKS method...
+Processing object type TABLE_EXPORT/TABLE/TABLE_DATA
+Total estimation using BLOCKS method: 640 MB
+Processing object type TABLE_EXPORT/TABLE/TABLE
+Processing object type TABLE_EXPORT/TABLE/INDEX/INDEX
+. . exported "TEST"."T2"                                 8.987 MB 3145728 rows
+. . exported "TEST"."T1"                                 43.05 MB 3633664 rows
+Master table "SYS"."TEST20170517163111" successfully loaded/unloaded
+******************************************************************************
+Dump file set for SYS.TEST20170517163111 is:
+  /u01/oracle/admin/xljora1/dpdump/TEST2017051716311101.dmp
+  /u01/oracle/admin/xljora1/dpdump/TEST2017051716311102.dmp
+  /u01/oracle/admin/xljora1/dpdump/TEST2017051716311103.dmp
+Job "SYS"."TEST20170517163111" successfully completed at Wed May 17 16:32:26 2017 elapsed 0 00:00:52
+
+
+2017-05-17 16:38:57,609 [Thread-10:12756] [datatransfer.oracledump:329] [INFO]- 准备发起导入任务job_name:IMP_TEST20170517163111
+2017-05-17 16:39:07,859 [Thread-10:12756] [datatransfer.oracledump:334] [INFO]-  发起导入任务job_name:IMP_TEST20170517163111 (192.168.136.88:1521/xljora1)
+ 导入命令impdp "'/ as sysdba'" directory=DATA_PUMP_DIR dumpfile=TEST20170517163111%U.dmp logfile=IMP_TEST20170517163111.log tables=TEST.T1,TEST.T2 cluster=N job_name=IMP_TEST20170517163111 parallel=4 table_exists_action=REPLACE remap_schema=TEST:ACCOUNTING remap_tablespace=SYSAUX:TBS_DATA,USERS:TBS_DATA,SYSTEM:TBS_IDX 
+2017-05-17 16:40:35,619 [Thread-10:12756] [datatransfer.oracledump:337] [INFO]-  导入任务job_name:IMP_TEST20170517163111结束
+2017-05-17 16:40:35,637 [Thread-10:12756] [datatransfer.oracledump:343] [INFO]-  导入任务job_name:IMP_TEST20170517163111日志：
+Import: Release 11.2.0.4.0 - Production on Wed May 17 16:39:06 2017
+
+Copyright (c) 1982, 2011, Oracle and/or its affiliates.  All rights reserved.
+
+Connected to: Oracle Database 11g Enterprise Edition Release 11.2.0.4.0 - 64bit Production
+With the Partitioning, Oracle Label Security, OLAP, Data Mining,
+Oracle Database Vault and Real Application Testing options
+Master table "SYS"."IMP_TEST20170517163111" successfully loaded/unloaded
+Starting "SYS"."IMP_TEST20170517163111":  "/******** AS SYSDBA" directory=DATA_PUMP_DIR dumpfile=TEST20170517163111%U.dmp logfile=IMP_TEST20170517163111.log tables=TEST.T1,TEST.T2 cluster=N job_name=IMP_TEST20170517163111 parallel=4 table_exists_action=REPLACE remap_schema=TEST:ACCOUNTING remap_tablespace=SYSAUX:TBS_DATA,USERS:TBS_DATA,SYSTEM:TBS_IDX 
+Processing object type TABLE_EXPORT/TABLE/TABLE
+Processing object type TABLE_EXPORT/TABLE/TABLE_DATA
+. . imported "ACCOUNTING"."T2"                           8.987 MB 3145728 rows
+. . imported "ACCOUNTING"."T1"                           43.05 MB 3633664 rows
+Processing object type TABLE_EXPORT/TABLE/INDEX/INDEX
+Job "SYS"."IMP_TEST20170517163111" successfully completed at Wed May 17 16:40:32 2017 elapsed 0 00:01:25
+
+
+2017-05-17 16:44:19,276 [Thread-20:11876] [datatransfer.oracledump:193] [INFO]- 准备发起导出任务job_name:ACCOUNTING201705171644
+2017-05-17 16:44:29,563 [Thread-20:11876] [datatransfer.oracledump:198] [INFO]-  发起导出任务job_name:ACCOUNTING201705171644 (192.168.136.88:1521/xljora1)
+ 导出命令expdp "'/ as sysdba'" directory=DATA_PUMP_DIR dumpfile=ACCOUNTING201705171644%U.dmp logfile=ACCOUNTING201705171644.log tables=ACCOUNTING.T1 cluster=N compression=all  reuse_dumpfiles=y job_name=ACCOUNTING201705171644 parallel=4 content=ALL exclude=statistics 
+2017-05-17 16:44:36,378 [Thread-20:11876] [datatransfer.oracledump:201] [INFO]-  导出任务job_name:ACCOUNTING201705171644结束
+2017-05-17 16:58:05,273 [Thread-19:2396] [datatransfer.oracledump:191] [INFO]- 准备发起导出任务job_name:ACCOUNTING201705171657
+2017-05-17 16:58:15,540 [Thread-19:2396] [datatransfer.oracledump:196] [INFO]-  发起导出任务job_name:ACCOUNTING201705171657 (192.168.136.88:1521/xljora1)
+ 导出命令expdp "'/ as sysdba'" directory=DATA_PUMP_DIR dumpfile=ACCOUNTING201705171657%U.dmp logfile=ACCOUNTING201705171657.log tables=ACCOUNTING.T1 cluster=N compression=all  reuse_dumpfiles=y job_name=ACCOUNTING201705171657 parallel=4 content=ALL exclude=statistics 
+2017-05-17 16:58:53,344 [Thread-19:2396] [datatransfer.oracledump:199] [INFO]-  导出任务job_name:ACCOUNTING201705171657结束
+2017-05-17 16:58:53,619 [Thread-19:2396] [datatransfer.oracledump:207] [INFO]-  导出任务job_name:ACCOUNTING201705171657日志：
+Export: Release 11.2.0.4.0 - Production on Wed May 17 16:58:14 2017
+
+Copyright (c) 1982, 2011, Oracle and/or its affiliates.  All rights reserved.
+
+Connected to: Oracle Database 11g Enterprise Edition Release 11.2.0.4.0 - 64bit Production
+With the Partitioning, Oracle Label Security, OLAP, Data Mining,
+Oracle Database Vault and Real Application Testing options
+Starting "SYS"."ACCOUNTING201705171657":  "/******** AS SYSDBA" directory=DATA_PUMP_DIR dumpfile=ACCOUNTING201705171657%U.dmp logfile=ACCOUNTING201705171657.log tables=ACCOUNTING.T1 cluster=N compression=all reuse_dumpfiles=y job_name=ACCOUNTING201705171657 parallel=4 content=ALL exclude=statistics 
+Estimate in progress using BLOCKS method...
+Processing object type TABLE_EXPORT/TABLE/TABLE_DATA
+Total estimation using BLOCKS method: 376 MB
+Processing object type TABLE_EXPORT/TABLE/TABLE
+Processing object type TABLE_EXPORT/TABLE/INDEX/INDEX
+. . exported "ACCOUNTING"."T1"                           43.05 MB 3633664 rows
+Master table "SYS"."ACCOUNTING201705171657" successfully loaded/unloaded
+******************************************************************************
+Dump file set for SYS.ACCOUNTING201705171657 is:
+  /u01/oracle/admin/xljora1/dpdump/ACCOUNTING20170517165701.dmp
+  /u01/oracle/admin/xljora1/dpdump/ACCOUNTING20170517165702.dmp
+Job "SYS"."ACCOUNTING201705171657" successfully completed at Wed May 17 16:58:51 2017 elapsed 0 00:00:35
+
+
+2017-05-17 17:03:39,696 [Thread-17:13860] [datatransfer.oracledump:327] [INFO]- 准备发起导入任务job_name:IMP_ACCOUNTING201705171657
+2017-05-17 17:03:49,967 [Thread-17:13860] [datatransfer.oracledump:332] [INFO]-  发起导入任务job_name:IMP_ACCOUNTING201705171657 (192.168.136.88:1521/xljora1)
+ 导入命令impdp "'/ as sysdba'" directory=DATA_PUMP_DIR dumpfile=ACCOUNTING201705171657%U.dmp logfile=IMP_ACCOUNTING201705171657.log tables=ACCOUNTING.T1 cluster=N job_name=IMP_ACCOUNTING201705171657 parallel=4 table_exists_action=REPLACE remap_tablespace=TBS_DATA:TBS_DATA,TBS_IDX:TBS_IDX 
+2017-05-17 17:04:20,867 [Thread-17:13860] [datatransfer.oracledump:335] [INFO]-  导入任务job_name:IMP_ACCOUNTING201705171657结束
+2017-05-17 17:09:11,585 [Thread-17:14152] [datatransfer.oracledump:327] [INFO]- 准备发起导入任务job_name:IMP_ACCOUNTING201705171657
+2017-05-17 17:09:21,803 [Thread-17:14152] [datatransfer.oracledump:332] [INFO]-  发起导入任务job_name:IMP_ACCOUNTING201705171657 (192.168.136.88:1521/xljora1)
+ 导入命令impdp "'/ as sysdba'" directory=DATA_PUMP_DIR dumpfile=ACCOUNTING201705171657%U.dmp logfile=IMP_ACCOUNTING201705171657.log tables=ACCOUNTING.T1 cluster=N job_name=IMP_ACCOUNTING201705171657 parallel=4 table_exists_action=REPLACE remap_tablespace=TBS_DATA:TBS_DATA,TBS_IDX:TBS_IDX 
+2017-05-17 17:10:00,513 [Thread-17:14152] [datatransfer.oracledump:335] [INFO]-  导入任务job_name:IMP_ACCOUNTING201705171657结束
+2017-05-17 17:10:00,634 [Thread-17:14152] [datatransfer.oracledump:341] [INFO]-  导入任务job_name:IMP_ACCOUNTING201705171657日志：
+Import: Release 11.2.0.4.0 - Production on Wed May 17 17:09:20 2017
+
+Copyright (c) 1982, 2011, Oracle and/or its affiliates.  All rights reserved.
+
+Connected to: Oracle Database 11g Enterprise Edition Release 11.2.0.4.0 - 64bit Production
+With the Partitioning, Oracle Label Security, OLAP, Data Mining,
+Oracle Database Vault and Real Application Testing options
+Master table "SYS"."IMP_ACCOUNTING201705171657" successfully loaded/unloaded
+Starting "SYS"."IMP_ACCOUNTING201705171657":  "/******** AS SYSDBA" directory=DATA_PUMP_DIR dumpfile=ACCOUNTING201705171657%U.dmp logfile=IMP_ACCOUNTING201705171657.log tables=ACCOUNTING.T1 cluster=N job_name=IMP_ACCOUNTING201705171657 parallel=4 table_exists_action=REPLACE remap_tablespace=TBS_DATA:TBS_DATA,TBS_IDX:TBS_IDX 
+Processing object type TABLE_EXPORT/TABLE/TABLE
+Processing object type TABLE_EXPORT/TABLE/TABLE_DATA
+. . imported "ACCOUNTING"."T1"                           43.05 MB 3633664 rows
+Processing object type TABLE_EXPORT/TABLE/INDEX/INDEX
+Job "SYS"."IMP_ACCOUNTING201705171657" successfully completed at Wed May 17 17:09:58 2017 elapsed 0 00:00:36
+
+
+2017-05-17 17:14:44,776 [Thread-21:13756] [datatransfer.oracledump:327] [INFO]- 准备发起导入任务job_name:IMP_ACCOUNTING201705171657
+2017-05-17 17:14:55,066 [Thread-21:13756] [datatransfer.oracledump:332] [INFO]-  发起导入任务job_name:IMP_ACCOUNTING201705171657 (192.168.136.88:1521/xljora1)
+ 导入命令impdp "'/ as sysdba'" directory=DATA_PUMP_DIR dumpfile=ACCOUNTING201705171657%U.dmp logfile=IMP_ACCOUNTING201705171657.log tables=ACCOUNTING.T1 cluster=N job_name=IMP_ACCOUNTING201705171657 parallel=4 table_exists_action=TRUNCATE remap_schema=ACCOUNTING:TEST 
+2017-05-17 17:15:39,904 [Thread-21:13756] [datatransfer.oracledump:335] [INFO]-  导入任务job_name:IMP_ACCOUNTING201705171657结束
+2017-05-17 17:15:40,019 [Thread-21:13756] [datatransfer.oracledump:341] [INFO]-  导入任务job_name:IMP_ACCOUNTING201705171657日志：
+Import: Release 11.2.0.4.0 - Production on Wed May 17 17:14:54 2017
+
+Copyright (c) 1982, 2011, Oracle and/or its affiliates.  All rights reserved.
+
+Connected to: Oracle Database 11g Enterprise Edition Release 11.2.0.4.0 - 64bit Production
+With the Partitioning, Oracle Label Security, OLAP, Data Mining,
+Oracle Database Vault and Real Application Testing options
+Master table "SYS"."IMP_ACCOUNTING201705171657" successfully loaded/unloaded
+Starting "SYS"."IMP_ACCOUNTING201705171657":  "/******** AS SYSDBA" directory=DATA_PUMP_DIR dumpfile=ACCOUNTING201705171657%U.dmp logfile=IMP_ACCOUNTING201705171657.log tables=ACCOUNTING.T1 cluster=N job_name=IMP_ACCOUNTING201705171657 parallel=4 table_exists_action=TRUNCATE remap_schema=ACCOUNTING:TEST 
+Processing object type TABLE_EXPORT/TABLE/TABLE
+Table "TEST"."T1" exists and has been truncated. Data will be loaded but all dependent metadata will be skipped due to table_exists_action of truncate
+Processing object type TABLE_EXPORT/TABLE/TABLE_DATA
+. . imported "TEST"."T1"                                 43.05 MB 3633664 rows
+Processing object type TABLE_EXPORT/TABLE/INDEX/INDEX
+Job "SYS"."IMP_ACCOUNTING201705171657" successfully completed at Wed May 17 17:15:37 2017 elapsed 0 00:00:43
+
+
+2017-05-17 17:23:19,740 [Thread-17:12548] [datatransfer.oracledump:325] [INFO]- 导入任务job_name:IMP_ACCOUNTING201705171657发起失败，环境变量获取异常
+2017-05-17 17:24:11,016 [Thread-9:12504] [datatransfer.oracledump:327] [INFO]- 准备发起导入任务job_name:IMP_ACCOUNTING201705171657
+2017-05-17 17:24:21,262 [Thread-9:12504] [datatransfer.oracledump:332] [INFO]-  发起导入任务job_name:IMP_ACCOUNTING201705171657 (192.168.136.88:1521/xljora1)
+ 导入命令impdp "'/ as sysdba'" directory=DATA_PUMP_DIR dumpfile=ACCOUNTING201705171657%U.dmp logfile=IMP_ACCOUNTING201705171657.log tables=ACCOUNTING.T1 cluster=N job_name=IMP_ACCOUNTING201705171657 parallel=4 table_exists_action=REPLACE remap_schema=ACCOUNTING:TEST 
+2017-05-17 17:25:13,538 [Thread-9:12504] [datatransfer.oracledump:335] [INFO]-  导入任务job_name:IMP_ACCOUNTING201705171657结束
+2017-05-17 17:25:13,657 [Thread-9:12504] [datatransfer.oracledump:341] [INFO]-  导入任务job_name:IMP_ACCOUNTING201705171657日志：
+Import: Release 11.2.0.4.0 - Production on Wed May 17 17:24:20 2017
+
+Copyright (c) 1982, 2011, Oracle and/or its affiliates.  All rights reserved.
+
+Connected to: Oracle Database 11g Enterprise Edition Release 11.2.0.4.0 - 64bit Production
+With the Partitioning, Oracle Label Security, OLAP, Data Mining,
+Oracle Database Vault and Real Application Testing options
+Master table "SYS"."IMP_ACCOUNTING201705171657" successfully loaded/unloaded
+Starting "SYS"."IMP_ACCOUNTING201705171657":  "/******** AS SYSDBA" directory=DATA_PUMP_DIR dumpfile=ACCOUNTING201705171657%U.dmp logfile=IMP_ACCOUNTING201705171657.log tables=ACCOUNTING.T1 cluster=N job_name=IMP_ACCOUNTING201705171657 parallel=4 table_exists_action=REPLACE remap_schema=ACCOUNTING:TEST 
+Processing object type TABLE_EXPORT/TABLE/TABLE
+Processing object type TABLE_EXPORT/TABLE/TABLE_DATA
+. . imported "TEST"."T1"                                 43.05 MB 3633664 rows
+Processing object type TABLE_EXPORT/TABLE/INDEX/INDEX
+Job "SYS"."IMP_ACCOUNTING201705171657" successfully completed at Wed May 17 17:25:10 2017 elapsed 0 00:00:49
+
+
+2017-05-18 17:44:48,122 [Thread-32:10608] [datatransfer.oracledump:191] [INFO]- 准备发起导出任务job_name:TEST201705181744
+2017-05-18 17:44:58,397 [Thread-32:10608] [datatransfer.oracledump:196] [INFO]-  发起导出任务job_name:TEST201705181744 (192.168.136.88:1521/xljora1)
+ 导出命令expdp "'/ as sysdba'" directory=DATA_PUMP_DIR dumpfile=TEST201705181744%U.dmp logfile=TEST201705181744.log tables=TEST.T1,TEST.T2 cluster=N compression=all  reuse_dumpfiles=y job_name=TEST201705181744 parallel=8 content=ALL exclude=statistics 
+2017-05-18 17:48:39,359 [Thread-32:10608] [datatransfer.oracledump:199] [INFO]-  导出任务job_name:TEST201705181744结束
+2017-05-18 17:48:42,105 [Thread-32:10608] [datatransfer.oracledump:207] [INFO]-  导出任务job_name:TEST201705181744日志：
+Export: Release 11.2.0.4.0 - Production on Thu May 18 17:44:57 2017
+
+Copyright (c) 1982, 2011, Oracle and/or its affiliates.  All rights reserved.
+
+Connected to: Oracle Database 11g Enterprise Edition Release 11.2.0.4.0 - 64bit Production
+With the Partitioning, Oracle Label Security, OLAP, Data Mining,
+Oracle Database Vault and Real Application Testing options
+Starting "SYS"."TEST201705181744":  "/******** AS SYSDBA" directory=DATA_PUMP_DIR dumpfile=TEST201705181744%U.dmp logfile=TEST201705181744.log tables=TEST.T1,TEST.T2 cluster=N compression=all reuse_dumpfiles=y job_name=TEST201705181744 parallel=8 content=ALL exclude=statistics 
+Estimate in progress using BLOCKS method...
+Processing object type TABLE_EXPORT/TABLE/TABLE_DATA
+Total estimation using BLOCKS method: 640 MB
+Processing object type TABLE_EXPORT/TABLE/TABLE
+Processing object type TABLE_EXPORT/TABLE/INDEX/INDEX
+. . exported "TEST"."T2"                                 8.987 MB 3145728 rows
+. . exported "TEST"."T1"                                 43.05 MB 3633664 rows
+Master table "SYS"."TEST201705181744" successfully loaded/unloaded
+******************************************************************************
+Dump file set for SYS.TEST201705181744 is:
+  /u01/oracle/admin/xljora1/dpdump/TEST20170518174401.dmp
+  /u01/oracle/admin/xljora1/dpdump/TEST20170518174402.dmp
+  /u01/oracle/admin/xljora1/dpdump/TEST20170518174403.dmp
+Job "SYS"."TEST201705181744" successfully completed at Thu May 18 17:48:21 2017 elapsed 0 00:03:17
+
+

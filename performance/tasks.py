@@ -1,11 +1,11 @@
 #!/bin/env python
 # -*- coding: UTF-8 -*-
 
-from celery import shared_task
+from celery import shared_task,task
 import time
-import sendwechat 
 
-@shared_task  #忽略装饰器 像平时那样调用函数也是可以的
+
+@task(name="sum_two_numbers")  #忽略装饰器 像平时那样调用函数也是可以的
 def add(x,y):
     return x+y
 
@@ -18,9 +18,7 @@ def mul(x,y):
 def xsum(numbers):
     return sum(numbers)
 
-@shared_task 
-def sendwe(content):
-    time.sleep(10)
-    wechat_sender=sendwechat.WeChat()
-    msg_dict=wechat_sender.send_messages(content)#调用方法发送信息 并返回信息
-    return msg_dict
+
+@task(ignore_result=True,max_retries=1,default_retry_delay=10)#taskname
+def just_print():
+    print "Print from celery task"

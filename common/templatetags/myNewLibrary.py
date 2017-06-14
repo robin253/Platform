@@ -39,7 +39,7 @@ def displaychinese(var):
 @register.filter(name='ddldisplaychinese')
 def ddldisplaychinese(var):
     dict_trans={0:'通过',1:'待修改',2:'不通过',
-               'wait':'待审核','fail':'失败','suc':'成功',
+               'wait':'待审核','fail':'失败','suc':'成功',#执行状态
                'start':'发起','submit':'审核中','freeze':'审核通过','release':'已发布','cancel':'已取消',  #批次状态
                }  
 
