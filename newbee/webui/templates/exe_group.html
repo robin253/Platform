@@ -1,0 +1,162 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+{% load bootstrap_pagination %}
+{% block username %}
+{{ username }}
+{% endblock %}
+{% block main-menu-hostinfo %}
+<li class="start active open">
+  <a href="javascript:;">
+  <i class="icon-screen-desktop"></i>
+  <span class="title">主机信息</span>
+  <span class="selected"></span>
+  <span class="arrow open"></span>
+  </a>
+{% endblock %}
+{% block content %}
+<!-- BEGIN PAGE HEADER-->
+        <div class="page-content-wrapper">
+            <div class="page-content">
+            <!-- BEGIN PAGE BREADCRUMB -->
+            <ul class="page-breadcrumb breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="{% url 'index' %}">首页</a>                  
+                </li>
+                <li>
+                    <i class="fa fa-desktop"></i>
+                    <a href="{% url 'index' %}">主机信息</a>
+                </li>
+                <li>
+                    <i class="fa fa-cubes"></i>
+                    <a href="{% url 'exe_group' %}">执行组列表</a>
+                </li>
+            </ul>
+            <!-- END PAGE BREADCRUMB -->
+<!-- END PAGE HEADER-->
+<!-- BEGIN PAGE CONTENT-->
+		<div class="row">
+				<div class="col-md-12">
+					<!-- BEGIN TABLE PORTLET-->
+					<div class="portlet box blue">
+						<div class="portlet-title">
+						<div class="caption">
+								<i class="fa fa-edit"></i>执行组列表
+							</div>
+							<div class="tools">
+								<a href="javascript:;" class="collapse">
+								</a>
+								<a href="javascript:;" class="reload" onclick="reloadflush()">
+								</a>
+								<a href="javascript:;" class="remove">
+								</a>
+							</div>
+						</div>
+						<div class="portlet-body">
+                            <div class="table-toolbar">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="btn-group">
+                                            <button id="sample_editable_1_new" class="btn green">
+                                            添加执行组 <i class="fa fa-plus"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                        <span style="position:relative;left:50px">
+                                                执行组名：<input type="text" id="szxz" value="{{ view.inputword }}" >
+                                               <input type='button' name='查询' value='查询' onclick="search()">
+                                          </span>
+                                </div>
+                              </div>
+{#                        <div class="table-responsive" >#}
+                            <table class="table table-striped table-hover table-bordered"  id="sample_editable_1">
+{#							<table class="table table-striped table-hover table-bordered" id="sample_editable_1">#}
+							<thead>
+							<tr>
+                                <th>
+									 执行组Id
+								</th>
+								<th>
+									 执行组名
+								</th>
+								<th>
+                                     执行组变量
+								</th>
+                                <th>
+									 详细信息
+								</th>
+                                <th>
+									 创建时间
+								</th>
+                                <th>
+                                     保存/修改
+                                </th>
+                                <th>
+                                     删除
+                                </th>
+							</tr>
+							</thead>
+							<tbody>
+                                {% for m in object_list  %}
+                                    <tr>
+                                        <td>{{ m.id }}</td>
+{#                                        <td><a href="{% url 'host_exe_group' m.id %}"> {{ m.exe_groupname }} </a> </td>#}
+{#                                        <td><a href="/host_exe_group?id={{ m.id }}"> {{ m.exe_groupname }} </a> </td>#}
+                                        <td><a href="javascript:void(0)" onclick="openwins({{ m.id }}, '{{m.exe_groupname}}')"> {{ m.exe_groupname }} </a> </td>
+                                        <td>{{ m.group_var }}</td>
+                                        <td>{{ m.detail }}</td>
+                                        <td>{{ m.created_date }}</td>
+                                        <td> <a class="edit" href="javascript:;">
+                                    修改 </a></td>
+                                        <td> <a class="delete" href="javascript:;">
+                                    删除 </a></td>
+                                    </tr>
+                                {% endfor %}
+							</tbody>
+							</table>
+                           {% bootstrap_paginate page_obj %}
+                            <div>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}. Size {{ page_obj.paginator.per_page }}</div>
+						</div>
+{#						</div>#}
+					</div>
+					<!-- END TABLE PORTLET-->
+				</div>
+			</div>
+			<!-- END PAGE CONTENT -->
+		</div>
+    </div>
+   </div>
+{% endblock %}
+{% block scripts %}
+<!--<script charset="utf-8">-->
+    <!--$.ajaxSetup({-->
+        <!--data: {csrfmiddlewaretoken: '{{ csrf_token }}' },-->
+    <!--});-->
+<!--</script>-->
+
+<script type="text/javascript" src="../static/assets/global/plugins/select2/select2.min.js"></script>
+<script type="text/javascript" src="../static/assets/global/plugins/datatables/media/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="../static/assets/global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.js"></script>
+<script src="../static/assets/admin/pages/scripts/table-editable.js"></script>
+
+<script>
+
+
+
+jQuery(document).ready(function() {
+Metronic.init(); // init metronic core components
+Layout.init(); // init current layout
+Demo.init(); // init demo features
+
+TableEditable.init();
+
+});
+</script>
+ <script>
+function reloadflush() {
+    location.reload();
+}
+</script>
+{% endblock %}
+
+

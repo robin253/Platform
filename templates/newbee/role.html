@@ -1,0 +1,87 @@
+{% extends "newbee/newbeebase.html" %}
+{% load staticfiles %}
+{% load bootstrap_pagination %}
+{% block username %}
+{{ username }}
+{% endblock %}
+{% block subcontent %}
+    <div class="page-content-wrapper">
+			<!-- BEGIN PAGE BREADCRUMB -->
+			<!-- END PAGE BREADCRUMB -->
+			<div class="row">
+				<div class="col-md-12">
+					<!-- BEGIN EXAMPLE TABLE PORTLET-->
+					<div class="portlet box blue">
+						<div class="portlet-title">
+							<div class="caption">
+								<i class="fa fa-edit"></i>角色列表
+							</div>
+							<div class="tools">
+								<a href="javascript:;" class="collapse">
+								</a>
+								<a href="javascript:;" class="reload" onclick="reloadflush()">
+								</a>
+								<a href="javascript:;" class="remove">
+								</a>
+							</div>
+						</div>
+						<div class="portlet-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+{#							<table class="table table-striped table-hover table-bordered" id="sample_editable_1">#}
+							<thead>
+							<tr>
+								<th>
+									 角色名
+								</th>
+                                <th>
+									 角色变量
+								</th>
+								<th>
+                                     详细信息
+								</th>
+                                <th>
+									 创建时间
+								</th>
+                                <th>
+                                     修改时间
+                                </th>
+							</tr>
+							</thead>
+							<tbody>
+                                {% for m in object_list  %}
+                                    <tr>
+                                        <td>{{ m.rolename }}</td>
+                                        <td>{{ m.role_var }}</td>
+                                        <td>{{ m.detail }}</td>
+                                        <td>{{ m.created_date }}</td>
+                                        <td>{{ m.modified_date }}</td>
+                                    </tr>
+                                {% endfor %}
+							</tbody>
+							</table>
+                           {% bootstrap_paginate page_obj %}
+                            <div>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}. Size {{ page_obj.paginator.per_page }}</div>
+						</div>
+						</div>
+					</div>
+					<!-- END EXAMPLE TABLE PORTLET-->
+				</div>
+		</div>
+    </div>
+{% endblock %}
+{% block scripts %}
+<script>
+jQuery(document).ready(function() {
+Metronic.init(); // init metronic core components
+Layout.init(); // init current layout
+Demo.init(); // init demo features
+});
+</script>
+<script>
+function reloadflush() {
+    location.reload();
+}
+</script>
+{% endblock %}
+

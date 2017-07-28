@@ -13,7 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url
+from django.conf.urls import url,include
 from django.contrib import admin
 
 import cmdb.views
@@ -26,6 +26,7 @@ import usercontrol.views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^newbee/', include('newbee.urls')),
 
     url(r'^$', usercontrol.views.home),
     url(r'^usercontrol/userlogout$', usercontrol.views.userlogout),
@@ -63,14 +64,14 @@ urlpatterns = [
     url(r'^runanalysis/objectcheck$', runanalysis.views.objectcheck),
     url(r'^runanalysis/objectcheck/download$', runanalysis.views.objectcheck_download),
     url(r'^runanalysis/objectcheck/index$', runanalysis.views.objectcheck_index),
-    
+
     url(r'^runanalysis/dbstatus$', runanalysis.views.dbstatus),
 
     url(r'^performance/sqlplanchange$', performance.views.sqlplanchange),
     url(r'^performance/sqlanalysis$', performance.views.sqlanalysis),
     url(r'^performance/sqlinefficient$', performance.views.sqlinefficient),
     url(r'^performance/sqlinefficient/changestatus$', performance.views.sqlinefficient_changestatus),
-    
+
     url(r'^datatransfer/oradump/expdp$', datatransfer.views.oradump_expdp),
     url(r'^datatransfer/oradump/expdpcommand$', datatransfer.views.oradump_expdpcommand),
     url(r'^datatransfer/oradump/impdp$', datatransfer.views.oradump_impdp),

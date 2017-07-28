@@ -14,12 +14,12 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 import os
 #celery 相关
 
-BROKER_URL = 'redis://192.168.136.88:6379/0'    
-CELERY_RESULT_BACKEND = 'redis://192.168.136.88:6379/1'                                              
-CELERY_ACCEPT_CONTENT = ['application/json']                                           
-CELERY_TASK_SERIALIZER = 'json'                         
+BROKER_URL = 'redis://192.168.56.103:6379/0'
+CELERY_RESULT_BACKEND = 'redis://192.168.56.103:6379/1'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TIMEZONE = 'Asia/Shanghai'                         
+CELERY_TIMEZONE = 'Asia/Shanghai'
 
 #定期任务（admin后台配置）
 CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'bootstrap_pagination',
     'usercontrol',
     'common',
     'cmdb',
@@ -60,6 +61,7 @@ INSTALLED_APPS = [
     'datatransfer',
     'runanalysis',
     'djcelery',
+    'newbee',
     'kombu.transport.django',#django自带的celery broker
 ]
 
@@ -95,9 +97,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'dbenvmanager',
-        'USER': 'rootbp',
-        'PASSWORD': 'root',
-        'HOST': '192.168.136.88',
+        'USER': 'dbcontrol',
+        'PASSWORD': 'dbcontrol',
+        'HOST': '192.168.56.103',
         'PORT': '3306',
     }
 }
@@ -178,12 +180,12 @@ LOGGING = {
     'disable_existing_loggers': True,#禁用所有的已经存在的日志配置
     'formatters': #格式器
         {
-        'standard': 
+        'standard':
              {
              # 日期和时间  [线程名称 线程ID] [记录器的名称 行号]  [日志记录级别的文本名称] - 消息
             'format': '%(asctime)s [%(threadName)s:%(thread)d] [%(name)s:%(lineno)d] [%(levelname)s]- %(message)s'
              },
-        'simple': 
+        'simple':
              {
             'format': '%(message)s'
              },
@@ -196,7 +198,7 @@ LOGGING = {
             'level':'DEBUG',
             'class':'logging.handlers.RotatingFileHandler',
             'filename': os.path.join(os.path.dirname(__file__), '..', 'logs/dbenvmanager.log').replace('\\', '/'), #文件路径
-            'maxBytes': 1024*1024*5, # 5 MB 文件大小 
+            'maxBytes': 1024*1024*5, # 5 MB 文件大小
             'backupCount': 5, #备份份数
             'formatter':'standard',  #指定格式器
                    },
@@ -208,10 +210,10 @@ LOGGING = {
         'datatransfer': {
             'level':'DEBUG',
             'class':'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(os.path.dirname(__file__), '..', 'logs/datatransfer.log').replace('\\', '/'), 
-            'maxBytes': 1024*1024*5, 
-            'backupCount': 10, 
-            'formatter':'standard',  
+            'filename': os.path.join(os.path.dirname(__file__), '..', 'logs/datatransfer.log').replace('\\', '/'),
+            'maxBytes': 1024*1024*5,
+            'backupCount': 10,
+            'formatter':'standard',
                    },
         },
     'loggers': #记录器 当一条信息被发往记录器的时候，消息的记录等级会和记录器的等级相比较，如果符合甚至超越当前等级，

@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% block title %}newbeebase{% endblock %}
+
+
+
+{% block content %}
+
+ <div class="page-content-wrapper">
+        <div class="page-content">
+
+            <!-- BEGIN PAGE HEADER-->
+            <div class="page-bar">
+                <ul  class="page-breadcrumb">   
+                    <li>
+                        <span class="caption-subject font-yellow-gold bold uppercase">页内导航</span>
+                    </li>
+
+
+                    <li>
+                        <i class="icon-pencil"></i>
+                        <a href="{% url 'newbeehosturl' %}">
+                        {% url 'newbeehosturl' as newbeehost %}
+                        {% ifequal request.path newbeehost %}
+                        <span class="caption-subject font-green-sharp bold uppercase">主机列表</span>
+                        {% else %}
+                        <span class="title"><strong>主机列表</strong></span>
+                        {% endifequal %}
+                        
+                        </a>
+                    </li>
+ 
+
+                    <li>
+                        &nbsp;&nbsp;<i class="icon-magnifier"></i>
+                        <a href="{% url 'newbee_exegroup' %}">
+                        {% url 'newbee_exegroup' as exegroup %}
+                        {% ifequal request.path exegroup %}
+                        <span class="caption-subject font-green-sharp bold uppercase">执行组列表</span>
+                        {% else %}
+                        <span class="title"><strong>执行组列表</strong></span>
+                        {% endifequal %}
+
+                        </a>
+                    </li>
+              
+                     
+                    <li>
+                        &nbsp;&nbsp;<i class="icon-rocket"></i>
+                        <a href="{% url 'newbeeroleurl' %}">
+                        {% url 'newbeeroleurl' as newbeerole %}
+                        {% ifequal request.path newbeerole %}
+                        <span class="caption-subject font-green-sharp bold uppercase">角色列表</span>
+                        {% else %}
+                        <span class="title"><strong>角色列表</strong></span>
+                        {% endifequal %}
+
+                        </a>
+                    </li>
+
+
+                    <li>
+                        &nbsp;&nbsp;<i class="icon-magnet"></i>
+                        <a href="{% url 'newbee_mission' %}">
+                        {% url 'newbee_mission' as newbeemission %}
+                        {% ifequal request.path newbeemission %}
+                        <span class="caption-subject font-green-sharp bold uppercase">任务列表</span>
+                        {% else %}
+                        <span class="title"><strong>任务列表</strong></span>
+                        {% endifequal %}
+
+                        </a>
+                    </li>
+ 
+                    <li>
+                        &nbsp;&nbsp;<i class="icon-pie-chart"></i>
+                        <a href="{% url 'newbee_donemission' %}">
+                        {% url 'newbee_donemission' as newbeedonemission %}
+
+                        {% ifequal request.path newbeedonemission %}
+                        <span class="caption-subject font-green-sharp bold uppercase">完成任务列表</span>
+                        {% else %}
+                        <span class="title"><strong>完成任务列表</strong></span>
+                        {% endifequal %}
+
+                        </a>
+                    </li>
+                </ul>
+
+            </div>
+
+            <!-- END PAGE HEADER-->
+
+
+       
+            {%  block subcontent %}   
+            <h3 class="page-title">
+            PAGE-TITLE <small>comments</small>
+            </h3>    
+
+            <div class="clearfix">
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- BEGIN PORTLET-->
+                    subcontent
+                    <!-- END PORTLET-->
+                </div>
+            </div>
+            {% endblock  %}
+
+        </div>
+</div>
+{% endblock %}
+

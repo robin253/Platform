@@ -1,0 +1,29 @@
+django<1.9
+django-extensions
+djangorestframework
+djangorestframework-filters
+django-filter
+django-vanilla-views
+wheel
+django_select2==5.8.4
+django-simple_history
+#django-guardian
+django-pagination-bootstrap
+cryptography
+
+# celery
+celery[redis]==3.1.19
+django-celery==3.1.17
+flower==0.8.3
+#MySql-python
+django-redis
+# Requires python-ldap before install django-auth-ldap
+# MySql-python
+# python-ldap
+# django-auth-ldap
+
+django-debug-toolbar
+django-import-export
+netaddr
+django-bootstrap-pagination
+django-cors-headers

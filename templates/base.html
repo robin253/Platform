@@ -233,6 +233,13 @@
                 <li class="heading">
                     <h3 class="uppercase">配置管理</h3>
                 </li>
+
+                <li>
+                    <a href="{% url 'newbeehosturl' %}">
+                    <i class="icon-basket"></i>
+                    <span class="title">基盒搭建</span>
+                    </a>
+                </li>
                 
                 <li>
                     <a href="#">
@@ -507,6 +514,7 @@
 <script src={% static "assets/piejs/jquery.gvChart-1.0.1.min.js" %}></script>
 <script src={% static "assets/piejs/jquery.ba-resize.min.js" %}></script>
  <!--END 报表饼图-->
+<!--表格填加-->
 
 <script>
 jQuery(document).ready(function() {    
@@ -516,6 +524,8 @@ jQuery(document).ready(function() {
    // Index.init(); // init index page
    Tasks.initDashboardWidget(); // init tash dashboard widget 
    EcommerceOrders.init();// 日期选项插件 
+
+
 });
 </script>
 
@@ -564,10 +574,10 @@ jQuery(document).ready(function() {
         });
     </script>
 
-
-
  <!--END 报表饼图-->
 
+    {% block scripts %}{% endblock %}  
+   <!--用于子应用加载相关的js脚本 -->
 
 
 
