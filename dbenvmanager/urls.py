@@ -27,6 +27,7 @@ import usercontrol.views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^newbee/', include('newbee.urls')),
+    url(r'cmdb/', include('cmdb.urls')),
 
     url(r'^$', usercontrol.views.home),
     url(r'^usercontrol/userlogout$', usercontrol.views.userlogout),

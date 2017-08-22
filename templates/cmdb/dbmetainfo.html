@@ -1,0 +1,112 @@
+{% extends 'cmdb/cmdbbase.html' %}
+{% load myNewLibrary %}
+{% load staticfiles %}
+<!--
+{% load %}只允许导入注册app目录下的模板库
+这样做是为了保证你的模板库可以不被其它Django程序使用
+-->
+{% block title %}cmdb_info{% endblock %}
+
+{%  block subcontent %}   
+<h3 class="page-title">
+    数据库基本信息 
+</h3>     
+
+<div class="clearfix">
+</div>
+<div class="row">
+    <div class="col-md-12">
+
+		<!-- BEGIN SAMPLE TABLE PORTLET-->
+		<div class="portlet box red">
+			<div class="portlet-title">
+				<div class="caption">
+					<i class="fa fa-cogs"></i>数据基本信息
+				</div>
+				<div class="tools">
+					<a href="javascript:;" class="collapse">
+					</a>
+					<a href="#portlet-config" data-toggle="modal" class="config">
+					</a>
+					<a href="javascript:;" class="reload">
+					</a>
+					<!--<a href="javascript:;" class="remove">-->
+					<!--</a>-->
+				</div>
+			</div>
+			<div class="portlet-body">
+				<div class="table-scrollable">
+					<table id='dbmetainfo-table' class="table table-hover">
+						<thead>
+							<tr>
+								<th>
+									id
+								</th>
+								<th>
+									域名
+								</th>
+								<th>
+									管理网IP
+								</th>
+								<th>
+									PORT
+								</th>
+								<th>
+									service_name
+								</th>
+								<th>
+									描述
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+                            {% for dbinfo in db_list %}
+							<tr>
+								<td>
+                                    {{ dbinfo.id  }}
+								</td>
+								<td>
+                                    {{ dbinfo.domain_name }}
+								</td>
+								<td>
+                                    {{ dbinfo.admin_ip }}
+								</td>
+								<td>
+                                    {{ dbinfo.db_port }}
+								</td>
+								<td>
+                                    {{ dbinfo.service_name }}
+								</td>
+                                <td>
+                                    {{ dbinfo.db_desc }}
+                                </td>
+							</tr>
+                            {% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<!-- END SAMPLE TABLE PORTLET--> 
+
+    </div>
+</div>
+
+
+<!--执行语句所用的ajax-->
+
+
+
+{% endblock  %}
+
+
+
+{% block scripts %}
+<script src={% static "assets/admin/pages/scripts/table-editable.js" %} >
+</script>
+<script> 
+    $('#dbmetainfo-table').DataTable();
+//TableEditable.init();
+</script>
+
+{% endblock %}

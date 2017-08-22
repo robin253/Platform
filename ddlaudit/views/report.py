@@ -43,7 +43,7 @@ def report(request):
         order_date_from=sevenbefore
     if order_date_to == '':
         order_date_to=today
-             
+
 
     day_from=order_date_from.split('/')[0]
     month_from=order_date_from.split('/')[1]
@@ -68,9 +68,9 @@ def report(request):
     # execute_status 执行状态   wait 待审核 fail 失败  suc 成功
 
 
-    #已取消的批次数  
+    #已取消的批次数
     cancel_number=re.filter(batch_status="cancel").count()
-    
+
     #已发起的批次数
     start_num=re.filter(batch_status="start").count()
 
@@ -98,26 +98,26 @@ def report(request):
 
     ###############################
 
-    
+
     #应用项目top 10统计图
     #SELECT app_name, COUNT(app_name) AS total  from XXX group by app_name;
-    sta_10app_info=re.values('app_name').annotate(total=Count('app_name')).order_by('-total')[0:10] 
+    sta_10app_info=re.values('app_name').annotate(total=Count('app_name')).order_by('-total')[0:10]
 
     #计算top 10应用的批次总数
     sta_10app_num=0
     for aitem in sta_10app_info:
         sta_10app_num=sta_10app_num+aitem['total']
-     
+
 
     #除去top10外的其他app的订正批次数
-    sta_otherapp_num=all_number-sta_10app_num   
+    sta_otherapp_num=all_number-sta_10app_num
 
 
 
     ###############################
 
     #申请人top 10统计图
-    sta_10user_info=re.values('audit_user').annotate(total=Count('audit_user')).order_by('-total')[0:10] 
+    sta_10user_info=re.values('audit_user').annotate(total=Count('audit_user')).order_by('-total')[0:10]
 
     #计算top 10订正申请人总批次
     sta_10user_num=0
@@ -125,7 +125,7 @@ def report(request):
         sta_10user_num=sta_10user_num+aitem['total']
 
     #除去top10外的其他订正申请人的订正批次数
-    sta_otheruser_num=all_number-sta_10user_num  
+    sta_otheruser_num=all_number-sta_10user_num
 
 
 
@@ -161,6 +161,6 @@ def report(request):
         'return_flag':return_flag
 
     }
-    
+
     #print return_info
     return render(request,"ddlaudit/report.html",return_info)

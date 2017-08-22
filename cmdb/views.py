@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 import json
 import models
+from models import DBMeta
 #import datetime
 
 
@@ -51,5 +52,13 @@ def getapp(request):
 
     return HttpResponse(json.dumps(list_app_name))
     #http://localhost:8000/cmdb/getapp?db_name=test&skema=xulijia
+
+
+def getdbmeta(request):
+    db_list = DBMeta.objects.all()
+    req_msg = {
+        'db_list':db_list
+    }
+    return render(request,'cmdb/dbmetainfo.html',req_msg)
 
 

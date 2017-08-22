@@ -33,42 +33,54 @@ class PublicColumns(models.Model):#每个数据模型都是 django.db.models.Mod
                        #一般我们用它来归纳一些公共属性字段，然后继承它的子类可以继承这些字段
 
 
-class T_CMDB_DBINFO(PublicColumns): 
+class T_CMDB_DBINFO(PublicColumns):
     #part1
     db_name=models.CharField(max_length=64, help_text="db_type ip port servicename db_usage等的别称 确定一个实例")
-    db_type= models.CharField(max_length=32,choices=db_type_choices,help_text="数据库类型") 
+    db_type= models.CharField(max_length=32,choices=db_type_choices,help_text="数据库类型")
     ipadress=models.CharField(max_length=64)
     port=models.CharField(max_length=8)
     servicename=models.CharField(max_length=32,blank=True,help_text="服务名,仅ORACLE需要")
     db_usage = models.CharField(max_length=10, choices=db_usage_choices, help_text="数据库环境")
-    dbausername=models.CharField(max_length=64,blank=True,help_text="数据库DBA维护账户") 
+    dbausername=models.CharField(max_length=64,blank=True,help_text="数据库DBA维护账户")
     dbapassword=models.CharField(max_length=64,blank=True,help_text="数据库DBA维护账号密码")
     sysuser=models.CharField(max_length=64,help_text="操作系统账号")
     syspassword=models.CharField(max_length=64,help_text="操作系统账号密码")
     directory=models.CharField(max_length=64,blank=True,help_text="oracle 导入导出路径")
     #part2
-    skema=models.CharField(max_length=64,help_text="数据库schema") 
-    username=models.CharField(max_length=64,help_text="连接该skema的用户") 
-    password=models.CharField(max_length=64,help_text="连接该skema的用户密码") 
+    skema=models.CharField(max_length=64,help_text="数据库schema")
+    username=models.CharField(max_length=64,help_text="连接该skema的用户")
+    password=models.CharField(max_length=64,help_text="连接该skema的用户密码")
     privilege_flag=models.CharField(max_length=1, choices=yn_choices,help_text="权限分离标志")
-    appuser=models.CharField(max_length=64,blank=True,help_text="应用用户") 
-    appuser_password=models.CharField(max_length=64,blank=True,help_text="应用用户密码") 
-    readuser=models.CharField(max_length=64,blank=True,help_text="只读用户") 
+    appuser=models.CharField(max_length=64,blank=True,help_text="应用用户")
+    appuser_password=models.CharField(max_length=64,blank=True,help_text="应用用户密码")
+    readuser=models.CharField(max_length=64,blank=True,help_text="只读用户")
     readuser_password=models.CharField(max_length=64,blank=True,help_text="只读用户密码")
     default_data_tbs=models.CharField(max_length=64,blank=True,help_text="数据表空间")
     default_ind_tbs=models.CharField(max_length=64,blank=True,help_text="索引表空间")
     #part3
     app_name=models.CharField(max_length=64, help_text="对应应用模块名")
-    remark=models.CharField(max_length=128,blank=True, help_text="备注")  #blank=True 允许是空字符串   mysql中存入'' 
+    remark=models.CharField(max_length=128,blank=True, help_text="备注")  #blank=True 允许是空字符串   mysql中存入''
                                                      #null=True 可为null 这和数据库字段定义相关了 默认not null
 
-    #part1  part2 part3 分别是： 实例  schema  应用模块 的概念  概念上说是逐层一对多的   
+    #part1  part2 part3 分别是： 实例  schema  应用模块 的概念  概念上说是逐层一对多的
 
     class Meta:
-        db_table='T_CMDB_DBINFO' 
+        db_table='T_CMDB_DBINFO'
         unique_together = (("db_name","skema","app_name"),)   #设置唯一约束
         verbose_name='数据库信息表'
         verbose_name_plural='数据库信息表'
+
+
+class DBMeta(PublicColumns):
+    domain_name = models.CharField(max_length=128,help_text='域名')
+    db_port = models.IntegerField(help_text='实例端口')
+    service_name = models.CharField(max_length=32,help_text='实例名')
+    admin_ip = models.CharField(max_length=16,help_text='管理网IP')
+    service_ip = models.CharField(max_length=16,help_text='服务网IP')
+    data_ip = models.CharField(max_length = 16, help_text='数据网IP')
+    db_desc = models.CharField(max_length=128, help_text='数据描述')
+    class Meta:
+        db_table = 'T_DBMETA_INFO'
 
 
 

@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+{% block title %}cmdbbase{% endblock %}
+
+
+
+{% block content %}
+
+ <div class="page-content-wrapper">
+        <div class="page-content">
+
+            <!-- BEGIN PAGE HEADER-->
+            <div class="page-bar">
+                <ul  class="page-breadcrumb">   
+                    <li>
+                        <span class="caption-subject font-yellow-gold bold uppercase">页内导航</span>
+                    </li>
+
+
+                    <li>
+                        <i class="icon-pencil"></i>
+                        <a href="/cmdb/info/">
+
+                        {% ifequal request.path "/cmdb/info/" %}
+                        <span class="caption-subject font-green-sharp bold uppercase">数据库信息</span>
+                        {% else %}
+                        <span class="title"><strong>数据库信息</strong></span>
+                        {% endifequal %}
+                        
+                        </a>
+                    </li>
+ 
+
+
+
+                    <li>
+                        &nbsp;&nbsp;<i class="icon-magnifier"></i>
+                        <a href="/cmdb/tbsadmin">
+
+                        {% ifequal request.path "/cmdb/tbsadmin" %}
+                        <span class="caption-subject font-green-sharp bold uppercase">表空间处理</span>
+                        {% else %}
+                        <span class="title"><strong>表空间处理</strong></span>
+                        {% endifequal %}
+
+                        </a>
+                    </li>
+              
+                     
+                    {% if perms.dmlaudit.dmldbause_access %}
+                    <li>
+                        &nbsp;&nbsp;<i class="icon-rocket"></i>
+                        <a href="/dmlaudit/dbause">
+
+                        {% ifequal request.path "/dmlaudit/dbause" %}
+                        <span class="caption-subject font-green-sharp bold uppercase">评估或执行语句</span>
+                        {% else %}
+                        <span class="title"><strong>评估或执行语句</strong></span>
+                        {% endifequal %}
+
+                        </a>
+                    </li>
+                    {% endif %}
+
+
+                    {% if perms.dmlaudit.dmlbackup_access %}
+                    <li>
+                        &nbsp;&nbsp;<i class="icon-magnet"></i>
+                        <a href="/dmlaudit/backup">
+
+                        {% ifequal request.path "/dmlaudit/backup" %}
+                        <span class="caption-subject font-green-sharp bold uppercase">备份文件</span>
+                        {% else %}
+                        <span class="title"><strong>备份文件</strong></span>
+                        {% endifequal %}
+
+                        </a>
+                    </li>
+                    {% endif %}
+ 
+                    {% if perms.dmlaudit.dmlreport_access %}
+                    <li>
+                        &nbsp;&nbsp;<i class="icon-pie-chart"></i>
+                        <a href="/dmlaudit/report">
+
+                        {% ifequal request.path "/dmlaudit/report" %}
+                        <span class="caption-subject font-green-sharp bold uppercase">报表统计</span>
+                        {% else %}
+                        <span class="title"><strong>报表统计</strong></span>
+                        {% endifequal %}
+
+                        </a>
+                    </li>
+                    {% endif %}
+
+                    <li> 
+                        &nbsp;&nbsp;<i class="icon-puzzle"></i>
+                        <a href="/dmlaudit/faq">
+
+                        {% ifequal request.path "/dmlaudit/faq" %}
+                        <span class="caption-subject font-green-sharp bold uppercase">功能说明</span>
+                        {% else %}
+                        <span class="title"><strong>功能说明</strong></span>
+                        {% endifequal %}
+
+                        </a>
+                    </li>
+
+                    <li>
+                        &nbsp;&nbsp;<i class="icon-envelope-open"></i>
+                        <a href="/dmlaudit/errorcheck">
+
+                        {% ifequal request.path "/dmlaudit/errorcheck" %}
+                        <span class="caption-subject font-green-sharp bold uppercase">报错白皮书</span>
+                        {% else %}
+                        <span class="title"><strong>报错白皮书</strong></span>
+                        {% endifequal %}
+
+                        </a>
+                    </li>
+
+                </ul>
+
+
+            </div>
+
+            <!-- END PAGE HEADER-->
+
+
+
+
+
+
+       
+            {%  block subcontent %}   
+            <h3 class="page-title">
+            PAGE-TITLE <small>comments</small>
+            </h3>    
+
+            <div class="clearfix">
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- BEGIN PORTLET-->
+                    subcontent
+                    <!-- END PORTLET-->
+                </div>
+            </div>
+            {% endblock  %}
+
+        </div>
+</div>
+
+
+
+
+
+{% endblock %}
