@@ -17,7 +17,7 @@
 
 
 
-
+                   
                     <li>
                         <i class="icon-pencil"></i>
                         <a href="/ddlaudit/audit">
@@ -44,7 +44,7 @@
                         </a>
                     </li>
 
-                    <li>
+                    <!--li>
                         &nbsp;&nbsp;<i class="icon-rocket"></i>
                         <a href="/ddlaudit/dbause">
 
@@ -55,7 +55,7 @@
                         {% endifequal %}
 
                         </a>
-                    </li>
+                    </li-->
 
                     <li>
                         &nbsp;&nbsp;<i class="icon-graduation "></i>
@@ -70,7 +70,7 @@
                         </a>
                     </li>
 
-
+                     {% if perms.ddlaudit.ddlreport_access %}
                     <li>
                         &nbsp;&nbsp;<i class="icon-pie-chart"></i>
                         <a href="/ddlaudit/report">
@@ -83,6 +83,15 @@
 
                         </a>
                     </li>
+                     {%else %}
+                     <!--li>
+                        &nbsp;&nbsp;<i class="icon-pie-chart"></i>
+                        
+                        <span class="title"><strong>报表统计(无权限)</strong></span>
+                       
+                    </li>-->
+
+                     {% endif %}
 
                     <li> 
                         &nbsp;&nbsp;<i class="icon-puzzle"></i>
@@ -92,6 +101,20 @@
                         <span class="caption-subject font-green-sharp bold uppercase">功能说明</span>
                         {% else %}
                         <span class="title"><strong>功能说明</strong></span>
+                        {% endifequal %}
+
+                        </a>
+                    </li>
+
+
+                    <li> 
+                        &nbsp;&nbsp;<i class="icon-puzzle"></i>
+                        <a href="/ddlaudit/creation">
+
+                        {% ifequal request.path "/ddlaudit/creation" %}
+                        <span class="caption-subject font-green-sharp bold uppercase">语句生成模板</span>
+                        {% else %}
+                        <span class="title"><strong>语句生成模板</strong></span>
                         {% endifequal %}
 
                         </a>

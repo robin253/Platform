@@ -89,7 +89,9 @@ def  remove_cont_parenthesis(sqltext):
         
         return sqlreturn
 
-#x='col number(20),col2 varchar2(20) not null,col3 date default sysdate'
-#y=remove_cont_parenthesis(x)
-#print y
+  
+if __name__=="__main__":
+    x='col number(20),col2 varchar2(20) not null,col3 date default sysdate'
+    y=remove_cont_parenthesis(x)
+    print y  #col number,col2 varchar2 not null,col3 date default sysdate
 

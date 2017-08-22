@@ -3,7 +3,7 @@
 {% extends 'ddlaudit/ddlauditbase.html' %}
 {% load myNewLibrary %}
 
-{% block title %}ddlaudit_checkresult{% endblock %}
+{% block title %}DDL审核结果查询{% endblock %}
 
 
 
@@ -51,11 +51,11 @@
 
 <tr >
 <td width="12%" >数据库类型</td>
-<td width="20%" >发布时间区间<br>
+<td width="20%" >时间区间<br>
 <span class="label label-sm label-default"><i class="icon-info "></i> 如不填选则默认为近2天</span>
 </td>
 <td width="10%" >提交人</td>
-<td width="10%" >review人</td>
+<td width="10%" >审核人</td>
 </tr>
 
 
@@ -119,23 +119,28 @@
 <td>
 <select name="batch_status" class="form-control form-filter input-sm">
 <option value="all" selected="selected">全部状态</option>
-<option value="start">  发起</option>
-<option value="submit">  审核中</option>
-<option value="freeze">  审核通过</option>
-<option value="release"> 已发布</option>  
-<option value="cancel">  已取消</option>  
+<option value="qualified">  通过</option>
+<option value="semi-qualified">  待修复或DBA评估</option>
+<option value="unqualified">  不通过</option>
+<option value="cancel"> 已取消</option>  
 </select>      
 </td>
+
 
 
  <td>
 <select name="execute_status" class="form-control form-filter input-sm">
 <option value="all" selected="selected">全部状态</option>
-<option value="wait">待审核</option>
+<option value="init">待执行</option>
 <option value="suc">成功</option>
 <option value="fail">失败</option>  
+<option value="noexe">不可执行</option>  
+<option value="doing">执行中</option>  
 </select>     
 </td>
+
+
+
 
 <td>
 <input type="submit" name='optioncheck' value="查询"  class="btn btn-success">
@@ -196,64 +201,52 @@
 {% if re_detail%}
 
 
-<table class="table table-hover table-condensed ">
+
+
+
+
+<table class="table table-bordered table-hover table-condensed ">
+                <thead>
+                    <tr>
+                        <!--th>提交者</th-->       <!--batch_info模型 audit_user-->
+                        <th>批次号</th>       <!--batch_info模型 audit_batch-->  
+                        <th>应用项目</th>     <!--batch_info模型 app_name--> 
+                        <!--th>数据库类型</th-->   <!--batch_info模型 db_type--> 
+                        <th>编号</th>      <!--detail模型 sqlnum-->
+                        <th>文本</th>      <!--detail模型 sqltext-->
+                        <th>类型</th>      <!--detail模型 sqltype-->
+                        <th>审核结果</th>     <!--detail模型 audit_result-->
+                        <th>状态</th>         <!--detail模型 audit_status--> 
+                    </tr>
+                </thead>
+
                  <tbody>
+
 {%for item in re_detail %}
-
-
-{% ifequal item.sqlnum 0 %}
 <tr>
-<td width='8%' class="success">
-<strong>提交者:<br><p class="font-green-sharp">{{ item.audit_batch.audit_user}}  </p></strong></td>
-
-<td width='28%' class="success">
-<strong>应用项目:<br> <p class="font-green-sharp"> {{ item.audit_batch.app_name}} </p></strong></td>
-
-<td width='8%' class="success">
-<strong>数据库类型:<br> <p class="font-green-sharp">{{ item.audit_batch|displaychoices:'db_type'}} </p></strong></td>
-
-<td width='40%' class="success">
-<strong>批次号:<br><p class="font-green-sharp">{{ item.audit_batch.audit_batch}}</p>
-        批次状态:<br><p class="font-green-sharp">{{ item.audit_batch.batch_status|ddldisplaychinese}}</p>
-</strong>
-
-</td>
-
-<td width='8%' class="success">
-<strong>review人:<br><p class="font-green-sharp">{{ item.audit_batch.evaluator}}</p>
-        执行状态:<br><p class="font-green-sharp">{{ item.audit_batch.execute_status|ddldisplaychinese}}</p> 
-</strong>
-
-</td>
-
-
-</tr>
-
-<tr> 
-                        <td><strong>DDL编号</strong></td>      <!--detail模型 sqlnum-->
-                        <td><strong>DDL文本</strong></td>      <!--detail模型 sqltext-->
-                        <td><strong>DDL类型</strong></td>      <!--detail模型 sqltype-->
-                        <td><strong>审核结果</strong></td>     <!--detail模型 audit_result--> 
-                        <td><strong>状态</strong></td>         <!--detail模型 audit_status--> 
-                        <td></td> 
-
-</tr>
-{% else %}
+<!--td>{{ item.audit_batch.audit_user}}</td-->
+<td>{{ item.audit_batch.audit_batch}}
+{% ifequal item.sqlnum 1 %}
+<form  action="/ddlaudit/download" method="POST" >
+ {% csrf_token %} 
+<input type="hidden" name="downloadresult" value="{{item.audit_batch.audit_batch}}">  
+<button class="btn btn-info btn-xs" type="submit">下载审核结果</button>
+</form>
 {% endifequal %}
-
-
-<tr> 
+</td>
+<td>{{ item.audit_batch.app_name}}</td>
+<!--td>{{ item.audit_batch|displaychoices:'db_type'}}</td-->  
 <td>{{ item.sqlnum}}</td>
-<td> {{item.sqltext|limit:50}}
 
-{% ifequal item.sqltype 'N/A' %}
+<td> {{item.sqltext|limit:50}}
+{% ifequal item.sqltype|limit:7 'summary' %}
 {% else %}
 <!-- 按钮触发模态框 -->
-<button class="btn btn-success btn-xs" data-toggle="modal" data-target="#{{item.audit_batch.audit_batch}}sqltext{{item.sqlnum}}Modal">
+<button class="btn btn-success btn-xs" data-toggle="modal" data-target="#{{ item.audit_batch.audit_batch}}{{item.sqlnum}}Modal">
 展示全文
 </button>
 <!-- 模态框（Modal） -->
-<div class="modal fade" id="{{item.audit_batch.audit_batch}}sqltext{{item.sqlnum}}Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="{{ item.audit_batch.audit_batch}}{{item.sqlnum}}Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -271,53 +264,53 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
 </div>
-{% endifequal %}
+{% endifequal %} 
 </td>
-
-
-
-<td>{{ item|displaychoices:'sqltype'}}</td>  
-
-
-<td>{% for i in item.audit_result|strtolist%}
-{{i|newline|safe}}<br>
- {% endfor %}
-</td>
-
 
 
 <td>
-
-{% ifequal item.audit_status 0 %}
-<p class="font-green-sharp">
+{%ifequal item.sqltype|limit:15 'summary_sqltype' %}
+summary_sqltype
 {% else %}
-{% ifequal item.audit_status 1 %}
-<p class="font-yellow-gold"> 
-{% else %}
-{% ifequal item.audit_status 2 %}
-<p class="font-red-haze"> 
-{% else %}
-{% endifequal %} 
-{% endifequal %} 
-{% endifequal %} 
-{{item.audit_status|ddldisplaychinese}}
-</p> 
+{{item.sqltype}}
+{% endifequal %}
 </td>
 
+<td> 
+{% for i in item.audit_result|strtolist %}
+{{i.1}}<br>
+ {% endfor %}
+</td>
+
+<td
+{% ifequal item.audit_status 0 %}
+class="success"
+{% else %}
+{% ifequal item.audit_status 1 %}
+class="warning"
+{% else %}
+{% ifequal item.audit_status  2 %}
+class="danger"
+{% else %}
+class="info"
+{% endifequal %} 
+{% endifequal %} 
+{% endifequal %}
+>
+{{item.audit_status|ddldisplaychinese}}</td>
+
+</tr>
 
 
 
 
-
-</tr>   
- {% endfor %}       
+{% endfor %}
+           
                 </tbody>
-
-            </table>
-
-
+</table>
 
 {% endif %}
+
 
   <!--end content 2--> 
 

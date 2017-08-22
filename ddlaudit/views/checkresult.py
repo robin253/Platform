@@ -75,18 +75,20 @@ def checkresult(request):
 
 
 
-            
+
             day_from=order_date_from.split('/')[0]
             month_from=order_date_from.split('/')[1]
             year_from=order_date_from.split('/')[2]
-            release_date_from=year_from+month_from+day_from
+            install_data_from=datetime.datetime(int(year_from),int(month_from),int(day_from),0,0,0)
 
             day_to=order_date_to.split('/')[0]
             month_to=order_date_to.split('/')[1]
             year_to=order_date_to.split('/')[2]
-            release_date_to=year_to+month_to+day_to
+            install_data_to=datetime.datetime(int(year_to),int(month_to),int(day_to),23,59,59,999999)
 
-            audit_detail=models.T_DDLAUDIT_BATCH_INFO.objects.filter(release_date__range=(release_date_from,release_date_to))
+
+
+            audit_detail=models.T_DDLAUDIT_BATCH_INFO.objects.filter(created_at__range=(install_data_from,install_data_to)).order_by('-created_at')
 
             if batch_status!='all':
                 audit_detail=audit_detail.filter(batch_status=batch_status)

@@ -8,6 +8,7 @@ from common import seq_generator
 from ddlaudit import ddlaudit_oracle
 from ddlaudit import constant
 from ddlaudit import models
+import chardet
 
 @login_required(login_url="/")
 def audit(request):
@@ -19,7 +20,6 @@ def audit(request):
         db_name=request.POST.get('db_name','')
         skema=request.POST.get('skema','')
         app_name=request.POST.get('app_name','')
-        date=request.POST.get('date','')
         allsqltext=request.POST.get('allsqltext','')#print type(allsqltext) #unicode
         try:
             onedbinfo=cmdb.models.T_CMDB_DBINFO.objects.get(db_type=db_type,db_name=db_name,skema=skema,app_name=app_name)
@@ -74,23 +74,12 @@ def audit(request):
                         }
             return render(request,'ddlaudit/audit.html', audit_info)
 
-    if date=='':
-        today_value=datetime.datetime.now()
-        twoafter_value=today_value+datetime.timedelta(days=+2)
-        twoafter=twoafter_value.strftime('%d/%m/%Y')
-        release_date=twoafter
-    else:
-    	release_date=date
-    day=release_date.split('/')[0]
-    month=release_date.split('/')[1]
-    year=release_date.split('/')[2]
-    release_date=year+month+day
-    print release_date
+
 
 
 
     audit_user=request.user.username#审核人
-    audit_batch=seq_generator.ddlaudit_batch(db_type,release_date,skema)
+    audit_batch=seq_generator.ddlaudit_batch(db_type)
 
     #配置文件
     dict_config=constant.dict_config
@@ -106,46 +95,86 @@ def audit(request):
 
     #开始审核
     if db_type=='oracle':
-        result=ddlaudit_oracle.process_sqlfile(allsqltext,dict_config)  
+        result=ddlaudit_oracle.process_sqlfile(allsqltext,dict_config,onedbinfo.privilege_flag,onedbinfo.username,onedbinfo.password,\
+               onedbinfo.ipadress,onedbinfo.port,onedbinfo.servicename)  
     elif db_type=='mysql':
     	pass#ddlaudit_mysql.process_sqlfile(allsqltext)
     else:
     	pass
     
-    #print result  result是一个list  {'status':,'type':'','content':"",'results':[xx,blabla]}
+    #print result  result是一个list  {'type':'createtab','content':"sqlstr",'results':[(0,"blabla"),(1,"blabla")]}
+    
 
-
+    #批次状态 
+    dict_batch_status={'qualified':0,'semi-qualified':0,'unqualified':0}
+    #统计DDL的数量
     sqlamount=0
     for item in result:
-        if item['type']=="N/A":
-            pass
-        else:
-            sqlamount=sqlamount+1
-            
+        if item['type'].startswith('summary_sqltype'):
+            tmpstr=item['type'].replace("summary_sqltype","")
+            try:
+                sqlamount=int(tmpstr)
+            except:
+                pass
+            else:
+                pass
+
+        for subitem in item['results']:
+            if subitem[0]==2:
+                dict_batch_status['unqualified']+=1
+
+            elif subitem[0]==1:
+                dict_batch_status['semi-qualified']+=1
+                #execute_status="init"
+                #continue
+            else:
+                dict_batch_status['qualified']+=1
+   
+
+    if dict_batch_status['unqualified']>0:
+        batch_status='unqualified'
+        execute_status="noexe"
+    elif dict_batch_status['semi-qualified']>0:
+        batch_status='semi-qualified'
+        execute_status="init"
+    else:
+        batch_status="qualified"
+        execute_status="init"
+
+
     # 记录到数据模型 T_DDLAUDIT_BATCH_INFO 中    
     model_batch_info_insert=models.T_DDLAUDIT_BATCH_INFO(audit_user=audit_user,audit_batch=audit_batch,app_name=app_name,\
-    db_type=db_type,allsqltext=allsqltext,sqlamount=sqlamount,batch_status='start',execute_status='wait',\
-    release_date=release_date)
+    release_date=20700506,db_type=db_type,allsqltext=allsqltext,sqlamount=sqlamount,batch_status=batch_status,execute_status=execute_status)
     model_batch_info_insert.save()
 
+
+
+
+    #记录到T_DDLAUDIT_BATCH_DETAIL表中
     i=1
-    summary=[]
-    summary_status=0
-    for item in result: #{'status':,'type':'','content':"",'results':[xx,blabla]}
-        if item['type']=="N/A":
-            strtmp="==="+item['content']+"===\n"+'\n'.join(item['results'])
-            summary.append(strtmp)
-            if item['status']==1:
-                summary_status=1
-        else:
-            #记录到数据模型 T_DDLAUDIT_BATCH_DETAIL 中
-            model_batch_detail_insert=models.T_DDLAUDIT_BATCH_DETAIL(audit_batch=model_batch_info_insert,sqlnum=i,\
-            sqltext=item['content'],sqltype=item['type'],audit_result=item['results'],audit_status=item['status'])
-            model_batch_detail_insert.save()
+    for item in result: 
+        audit_status= 0  #"qualified"
+        for subitem in item['results']:
+            if subitem[0]==2:
+                audit_status=2  #错误
+                break
+            elif subitem[0]==1:
+                audit_status=1  #警告
+            elif subitem[0]==3: #信息
+                audit_status=3
+                break
+            else:
+                pass
+
+
+        model_batch_detail_insert=models.T_DDLAUDIT_BATCH_DETAIL(audit_batch=model_batch_info_insert,sqlnum=i,\
+        sqltext=item['content'],sqltype=item['type'],audit_result=item['results'],audit_status=audit_status)
+        model_batch_detail_insert.save()
+
+        item['num']=i #给字典添加一个编号
         i=i+1     
-    model_batch_detail_insertsummary=models.T_DDLAUDIT_BATCH_DETAIL(audit_batch=model_batch_info_insert,sqlnum=0,\
-    sqltext='summary',sqltype='N/A',audit_result=summary,audit_status=summary_status)
-    model_batch_detail_insertsummary.save()
+
+        
 
  
     audit_info = {
@@ -156,7 +185,9 @@ def audit(request):
         'skema':skema,
         'app_name':app_name,
         'allsqltext':allsqltext,
-        'result':result
+        'result':result,
+        'batch_status':batch_status,
+        'sqlamount':sqlamount
     }
 
 
