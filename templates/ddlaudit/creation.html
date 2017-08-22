@@ -1,0 +1,221 @@
+
+{% extends 'ddlaudit/ddlauditbase.html' %}
+{% load staticfiles %}
+
+{% block title %}DDL语句生成模板{% endblock %}
+
+
+{%  block subcontent %}
+            <h3 class="page-title">
+            语句生成模板
+            </h3>    
+
+            <div class="clearfix">
+            </div>
+            <div class="row">
+                <div class="col-md-12  col-sm-12">
+                    <!-- BEGIN PORTLET-->
+                                           <div class="portlet light">
+                        <div class="portlet-title tabbable-line">
+
+                            <ul class="nav nav-tabs pull-left">
+                                <li class="active">
+                                    <a href="#tab_1_1" data-toggle="tab">
+                                    创建SCHEMA </a>
+                                </li>
+
+                                <li >
+                                    <a href="#tab_1_2" data-toggle="tab">
+                                    授权语句生成 </a>
+                                </li>
+                              
+          
+                              
+                            </ul>
+                        </div>
+                        <div class="portlet-body">
+                            <!--BEGIN TABS-->
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="tab_1_1">
+                                    <div >
+                                        <ul class="feeds">
+                                            <li>
+                                                <div class="col1">
+                                                    <div class="cont">
+                                                        <div class="cont-col1">
+                                                            <!--div class="label label-sm label-success">
+                                                                <i class="fa fa-bullhorn"></i>
+                                                            </div-->
+                                                        </div>
+                                                        <div class="cont-col2">
+                                                            <div class="desc">
+  
+<strong>输入schema名并点击生成按钮：</strong><br><br>
+<input id="schema_name" type="text" cols="20"  placeholder="schema" name='schema_name'>
+
+<input type='button'  class="btn  btn-success btn-sm " value='生成' onclick="get_schemascripts.call(this)">
+<br>
+<br>
+  <!--span id="schemascripts">待生成</span-->
+ <textarea id="schemascripts" rows="10" cols="80" placeholder="待生成" ></textarea>
+
+
+
+
+
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            
+                                            
+
+
+                                           
+
+
+                                        </ul>
+                                    </div>
+                                </div>
+                                
+
+
+
+                                <div class="tab-pane " id="tab_1_2">
+                                    <div >
+                                        <ul class="feeds">
+                                            <li>
+                                                <div class="col1">
+                                                    <div class="cont">
+                                                        <div class="cont-col1">
+                                                            <!--div class="label label-sm label-success">
+                                                                <i class="fa fa-bullhorn"></i>
+                                                            </div-->
+                                                        </div>
+                                                        <div class="cont-col2">
+                                                            <div class="desc">
+  
+<strong>输入需要授权的用户 和 表、序列对象</strong><br><br>
+<textarea id="grantinfo" rows="6" cols="80"  placeholder="如：SCHEMA:T1,SEQ1,SEQ2" ></textarea>
+
+<input type='button'  class="btn  btn-success btn-sm " value='生成' onclick="get_grantscripts.call(this)">
+<br>
+<br>
+  <!--span id="schemascripts">待生成</span-->
+ <textarea id="grantscripts" rows="10" cols="80" placeholder="待生成" ></textarea>
+
+
+
+
+
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            
+                                            
+
+
+                                           
+
+
+                                        </ul>
+                                    </div>
+                                </div>
+
+
+
+
+
+
+
+                            </div>
+                            <!--END TABS-->
+                        </div>
+                    </div>
+                    <!-- END PORTLET-->
+                </div>
+            </div>
+
+
+
+<!--获取schema语句的ajax-->
+<script> 
+function get_schemascripts()
+{
+var schema_name = document.getElementById('schema_name').value;
+
+
+x=document.getElementById("schemascripts"); //查找元素
+
+
+$.ajax({
+  type: 'GET',
+  url: "/ddlaudit/creation/schema",
+  data: {'schema_name':schema_name},
+  async: true,   //flase同步 页面会hang住等待 体验不好
+  contentType: "application/json",
+  beforeSend:function(){
+x.innerHTML="获取中";    //改变内容   
+  },
+  success: function(ret){
+            var info;
+            info=ret;
+            x.innerHTML=info;
+             },
+ error: function(){
+            x.innerHTML="后端处理失败";
+             }
+});
+
+
+
+};
+
+</script>
+
+
+
+
+<!--获取grant语句的ajax-->
+<script> 
+function get_grantscripts()
+{
+var grantinfo = document.getElementById('grantinfo').value;
+
+
+x=document.getElementById("grantscripts"); //查找元素
+
+
+$.ajax({
+  type: 'GET',
+  url: "/ddlaudit/creation/grant",
+  data: {'grantinfo':grantinfo},
+  async: true,   //flase同步 页面会hang住等待 体验不好
+  contentType: "application/json",
+  beforeSend:function(){
+x.innerHTML="获取中";    //改变内容   
+  },
+  success: function(ret){
+            var info;
+            info=ret;
+            x.innerHTML=info;
+             },
+ error: function(){
+            x.innerHTML="后端处理失败";
+             }
+});
+
+
+
+};
+
+</script>
+
+
+
+{% endblock  %}

@@ -2,7 +2,7 @@
 {% extends 'ddlaudit/ddlauditbase.html' %}
 {% load myNewLibrary %}
 {% load staticfiles %}
-{% block title %}ddlaudit_audit{% endblock %}
+{% block title %}DDL语句审核{% endblock %}
 
 
 
@@ -73,7 +73,7 @@
   <option value="" selected="selected">请选择</option>
   </select>
   {% endif %}
-  </div><br><br>
+  </div>
 
   <div class="form-group">
   <strong ><i class="icon-fire"></i> 请选择应用项目</strong>
@@ -87,13 +87,7 @@
   </div>&nbsp;&nbsp;&nbsp;&nbsp;
 
 
-<strong ><i class="icon-fire"></i> 准生产上线日期</strong>
-<div class="input-group date date-picker margin-bottom-5" data-date-format="dd/mm/yyyy">
-<input type="text" class="form-control form-filter input-md" readonly name="date" placeholder="日期">
-<span class="input-group-btn">
-<button class="btn btn-md default" type="button"><i class="fa fa-calendar"></i></button>
-</span>
-</div>&nbsp;&nbsp;<span class="label label-md label-default"><i class="icon-info "></i> 如不填选则默认为T+2</span>
+
 
 <br><br>
   <div class="form-group">
@@ -152,32 +146,70 @@
 
 {% if result %}
 
+<div class="alert alert-success">
+<form  action="/ddlaudit/download" method="POST" >
+ {% csrf_token %} 
+点击右侧按钮下载审核结果的文本文件 <input type="hidden" name="downloadresult" value="{{audit_batch}}">  
+<button class="btn btn-success btn-xs" type="submit">下载</button>
+</form>
+</div>
+
+
+<!-- BEGIN -->
+{% ifequal batch_status 'unqualified' %}
+<!--不通过-->
+<h3  class="font-red-haze">
+<strong>批次号  ：{{audit_batch}}</strong><br>
+<strong>语句条数：{{sqlamount}}</strong><br>
+<strong>审核结果：不通过</strong>
+<span class="label label-sm label-default"><i class="icon-info "></i> 请修改后再次提交</span>
+</h3>
+{% else %}
+{% ifequal batch_status 'semi-qualified' %}
+<!--待评估-->
+<h3  class="font-yellow-gold">
+<strong>批次号  ：{{audit_batch}}</strong><br>
+<strong>语句条数：{{sqlamount}}</strong><br>
+<strong>审核结果：待修复或待DBA评估</strong>
+<span class="label label-sm label-default"><i class="icon-info "></i> 请调整后再次提交或待DBA评估</span>
+ </h3>
+{% else %}
+<!--通过-->
+<h3  class="font-green-sharp">
+<strong>批次号  ：{{audit_batch}}</strong><br>
+<strong>语句条数：{{sqlamount}}</strong><br>
+<strong>审核结果：通过</strong>
+ </h3>
+{% endifequal %} 
+{% endifequal %}
+<!-- END -->
 
 <table class="table table-condensed table-bordered  table-hover">
 <thead>
                     <tr >
-                        <th width="40%">语句 </th>     
-                        <th width="5%"> 语句类型</th>   
-                        <th width="5%"> 状态</th> 
-                        <th> 审核结果</th> 
+                        <th>编号</th>
+                        <th>语句 </th>     
+                        <th>类型</th>   
+                        <th>审核结果</th> 
                     </tr>
 </thead>
 <tbody>
 
 {%for item in result %}
 <tr> 
+<td>{{item.num}}</td>
 
 <td>
 {{item.content|limit:50}}
 
-{% ifequal item.type 'N/A' %}
+{% ifequal item.type|limit:7 'summary' %}
 {% else %}
 <!-- 按钮触发模态框 -->
-<button class="btn btn-success btn-xs" data-toggle="modal" data-target="#sqltext{{item.sqlnum}}Modal">
+<button class="btn btn-success btn-xs" data-toggle="modal" data-target="#{{item.num}}{{item.type}}Modal">
 展示全文
 </button>
 <!-- 模态框（Modal） -->
-<div class="modal fade" id="sqltext{{item.sqlnum}}Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="{{item.num}}{{item.type}}Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -186,7 +218,7 @@
                 </button>
             </div>
             <div class="modal-body">
-              {{item.content}}
+              {{item.content|newline|safe}}
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭
@@ -200,28 +232,34 @@
 </td>
 
 <td>
+{%ifequal item.type|limit:15 'summary_sqltype' %}
+summary_sqltype
+{% else %}
 {{item.type}}
+{% endifequal %}
 </td>
-<td  
-{% ifequal item.status 0 %}
-class="success"
-{% else %}
-{% ifequal item.status 1 %}
-class="warning"
-{% else %}
-{% ifequal item.status 2 %}
-class="danger"
-{% else %}
-{% endifequal %} 
-{% endifequal %} 
-{% endifequal %} 
->
-{{item.status|ddldisplaychinese}}
-</td>
+
 
 <td>
 {% for i in item.results %}
- {{i}}<br>
+{% ifequal i.0 0 %}
+<span class="label label-success">通过</span>{{i.1}}
+{% else %}
+
+{% ifequal i.0  1 %}
+<span class="label label-warning">警告</span>{{i.1}}
+{% else %}
+
+{% ifequal i.0  3 %}
+<span class="label label-info">信息</span>{{i.1}}
+{% else %}
+<span class="label label-danger">错误</span>{{i.1}}   
+{% endifequal %}
+
+{% endifequal %}
+
+{% endifequal %}
+<br>
  {% endfor %}
 
 </td>

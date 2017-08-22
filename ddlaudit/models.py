@@ -52,7 +52,7 @@ class T_DDLAUDIT_BATCH_INFO(PublicColumns):
     allsqltext=models.TextField(help_text="审核文本")   
     sqlamount=models.IntegerField(help_text="批次DDL条数")
     batch_status=models.CharField(max_length=16,blank=True,help_text="批次状态") 
-    evaluator=models.CharField(max_length=64,blank=True,help_text="review人")  
+    evaluator=models.CharField(max_length=64,blank=True,help_text="审核人")  
     execute_status=models.CharField(max_length=8,help_text="执行状态") 
     executor=models.CharField(max_length=64,blank=True,help_text="执行人")   
     exe_failreason=models.CharField(max_length=128,blank=True,help_text="执行失败原因")#记录第几句失败
@@ -75,7 +75,7 @@ class T_DDLAUDIT_BATCH_DETAIL(PublicColumns):
     sqltext = models.TextField()
     sqltype= models.CharField(max_length=16,choices=sqltype_choices)
     audit_result=models.TextField(help_text="审核结果")  
-    audit_status= models.IntegerField(help_text="审核结果状态：通过，待修改，不通过")
+    audit_status= models.IntegerField(help_text="审核结果状态：通过，警告，错误，信息")#汇总
 
     class Meta:
         db_table='T_DDLAUDIT_BATCH_DETAIL'  

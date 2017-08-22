@@ -30,8 +30,8 @@ def removespaces(inputstr):
          pass
       else:
          tmp_list2.append(item)
-   re_list=' '.join(tmp_list2)  #将列表tmp_list2的项用空格间隔转为字符串
-   return re_list
+   re_str=' '.join(tmp_list2)  #将列表tmp_list2的项用空格间隔转为字符串
+   return re_str
 
 # findallstr函数
 #判断字符串中是否有指定的一个或者多个字符 全部找到返回1  否则返回0
@@ -63,65 +63,34 @@ def findanystr(str,*vartuple):
 
 
 
-
-
-
-
-
-
 #findstrnext函数
-#找字符串某个关键词后面的词 空格作为词的分隔符号  返回0那么说明不存在关键词或者关键词后面没有词了 使用前先调用removespaces函数
-def findstrnext(str,findstr):
-    b=str.find(findstr)  #找到关键词开始的位置
-    if b==-1:        #没有找到
-        return 0
-    else:
-        c=str.find(' ',b)  #找到关键词之后空格开始的位置
-        if c==-1:          #没有找到
+#找字符串某个关键词后面的词 空格作为词的分隔符号  返回0那么说明不存在关键词或者关键词后面没有词了 
+def findstrnext(strinput,findstr):
+    tmp_list=strinput.split(" ")
+    if tmp_list.count(findstr)>=1:
+        #print "number",tmp_list.count(findstr)
+        try:
+            #print tmp_list.index(findstr)
+            returnstr=tmp_list[tmp_list.index(findstr)+1]
+        except:
             return 0
         else:
-            d=str.find(' ',c+1) #找到关键词后面的我要的词之后的空格位置
-            if d==-1:         #没有空格的话说明就结尾了
-               if str[c+1:]!='':
-                  return str[c+1:]  
-               else:
-                  return 0
-            else:
-               if str[c+1:d]!='':
-                  return str[c+1:d]
-               else:
-                  return 0
-
-
+            return returnstr
+    else:
+        return 0
+        
 #findstrbefore函数
-#找字符串某个关键词前面的词 空格作为词的分隔符号  返回0那么说明不存在关键词或者关键词前面没有词了 使用前先调用removespaces函数
-#用上一个函数类似方法 只是字符串倒叙一下
+#找字符串某个关键词前面的词 空格作为词的分隔符号  返回0那么说明不存在关键词或者关键词前面没有词了 
 
-def findstrbefore(str,findstr):
-    str=str[::-1]     #字符串倒叙一下
-    findstr=findstr[::-1]
-    b=str.find(findstr)  #找到关键词开始的位置
-    if b==-1:
-        return 0
-    else:
-        c=str.find(' ',b)  #找到关键词之后空格开始的位置
-        if c==-1:            #没有找到
-            return 0
+def findstrbefore(strinput,findstr):
+    tmp_list=strinput.split(" ")
+    if tmp_list.count(findstr)>=1:
+        if tmp_list.index(findstr)-1>=0:
+            return tmp_list[tmp_list.index(findstr)-1]
         else:
-            d=str.find(' ',c+1) #找到关键词后面的我要的词之后的空格位置 
-            if d==-1:           #没有空格的话说明就结尾了
-                if str[c+1:]!='':
-                   tmp=str[c+1:]
-                   return tmp[::-1]  #字符串倒叙一下
-                else:
-                   return 0
-            else:
-                if str[c+1:d]!='':
-                   tmp=str[c+1:d]
-                   return tmp[::-1]  #字符串倒叙一下
-                else:
-                  return 0
-
+            return 0
+    else:
+        return 0
 
 
 
@@ -158,8 +127,10 @@ def bracklet_split(sql_str):
     return res_list
 
 
+
+
 #remove_comma_childstr函数
-#对字符串以，分隔为列表,如果列表元素中有相关关键字那么删除这个元素 返回字符串         
+#对字符串以，分隔为列表,如果列表元素中有相关关键字那么删除这个元素 返回字符串     
 def remove_comma_childstr(str,keyword):
    tmp_list=bracklet_split(str) #以,分隔为列表
    #print tmp_list
@@ -176,13 +147,32 @@ def remove_comma_childstr(str,keyword):
 
 
 
+#removechildstr函数
+#在字符串中删除特定部分，分别用两个子字符串来确认删除部分的开头和结尾
+
+def removechildstr(str,strstart,strend):
+   p1=str.find(strstart)  #找到开头的位置
+   p2=str.find(strend)  #找到结尾的位置
+   #print p1,p2
+   if p1==-1 or p2==-1:
+      return str
+   elif p1>=p2:
+      return str
+   else:
+      ptail=p2+len(strend)
+      #print p1,ptail
+      return str[0:p1]+str[ptail:]
+
+#a="/* time is money */create table t1 (id number,name varchar2(20);"
+#b=removechildstr(a,"/*","*/")
+#print b
+#create table t1 (id number,name varchar2(20);
 
 
 ##将字符串owner.object_name 以.分隔并返回object_name  
 def namesplit(namestr):
   namelist = namestr.split('.')
   return namelist[-1]
-
 
 #检查对象名长度不超过30并不能用数字开头
 def namecheck(str):
@@ -199,5 +189,14 @@ def namecheck(str):
 if __name__=="__main__":
     mystr = "(nihao,danshi,zhe,zhende,bushi(zhe,zhende,bushi),yigehao,fangshi,(wo,know))"
     mystr2 = "nihao,woshishei,nishishei,women shizenyangde,danshi varchar(10),nihao number(20)"
-    mylist = bracklet_split(mystr)
-    print mylist
+    print bracklet_split(mystr)
+    print bracklet_split(mystr2)
+    #['nihao', 'danshi', 'zhe', 'zhende', 'bushi(zhe,zhende,bushi)', 'yigehao', 'fangshi', '(wo,know)']
+    #['nihao', 'woshishei', 'nishishei', 'women shizenyangde', 'danshi varchar(10)', 'nihao number(20)']
+     
+    sql_str='''create index I_telereport_cell_phone_MOBILE on TEST (MOBILE)  online tablespace TBS_CRPAY_IDX'''
+
+
+    print findstrbefore(sql_str.upper(),'TEST') #抽取索引名
+
+

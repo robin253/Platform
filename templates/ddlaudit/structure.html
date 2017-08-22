@@ -1,15 +1,17 @@
 {% extends 'ddlaudit/ddlauditbase.html' %}
 {% load myNewLibrary %}
+{% load staticfiles %}
 <!--
 {% load %}只允许导入注册app目录下的模板库
 这样做是为了保证你的模板库可以不被其它Django程序使用
 -->
-{% block title %}ddlaudit_structure{% endblock %}
+
+{% block title %}DDL线上结构查询{% endblock %}
 
 
             {%  block subcontent %}   
             <h3 class="page-title">
-            线上表结构查询 
+            线上结构查询 
             </h3>     
 
             <div class="clearfix">
@@ -32,7 +34,89 @@
                             <div id="context" data-toggle="context" data-target="#context-menu">
 
 <!--begin content 1-->
-test1
+
+<div class="widget">  <!--信息提交框-->
+  <div class="widget-content">    
+
+  <form class="form-inline" role="form" action="/ddlaudit/structure" method="POST" enctype="multipart/form-data">
+  {% csrf_token %}
+
+  <div class="form-group">
+  <strong><i class="icon-fire "></i> 请选择数据库类型</strong> 
+  <input name="db_type" type="radio"  value="oracle" onclick="getdatabase()"  
+  {% ifequal db_type "oracle" %}checked="checked"{% endifequal %}>
+  <img src={% static "images/ORACLE.png" %}  class="img-rounded"  alt="ORACLE">
+
+  <input name="db_type" type="radio"  value="mysql" disabled="disabled"
+  {% ifequal db_type "mysql" %}checked="checked"{% endifequal %}>
+  <img src={% static "images/MySQL.png" %}  class="img-rounded" alt="MySQL">
+
+  </div><br><br>
+
+  <div class="form-group">
+  <strong><i class="icon-fire"></i> 请选择数据库&nbsp;&nbsp;</strong>
+  {% if db_name %}
+  <select id='db_name' name='db_name'class="input-md form-control" onclick="initSchemas()"  >
+  <option value="{{db_name}}" selected="selected" >{{db_name}}</option>
+  </select>
+  {% else %}
+  <select id='db_name' name='db_name'class="input-md form-control" onchange="initSchemas()"  >
+  <option value="" selected="selected">请选择</option>
+  </select>
+  {% endif %}
+  </div>&nbsp;&nbsp;&nbsp;&nbsp;
+
+  <div class="form-group">
+  <strong ><i class="icon-fire"></i> 请选择schema</strong>
+  {% if skema %}
+  <select id = 'skema' name='skema'class="input-md form-control" onclick="initApps()"  >
+  <option value="{{skema}}" selected="selected"  >{{skema}}</option>
+  </select>
+  {% else %}
+  <select id = 'skema' name='skema'class="input-md form-control" onchange="initApps()"  >
+  <option value="" selected="selected">请选择</option>
+  </select>
+  {% endif %}
+  </div>
+
+  <div class="form-group">
+  <strong ><i class="icon-fire"></i> 请选择应用项目</strong>
+  <select id = 'app_name' name='app_name'class="input-md form-control"   >
+  {% if app_name %}
+  <option value="{{app_name}}" selected="selected">{{app_name}}</option>
+  {% else %}
+  <option value="" selected="selected">请选择</option>
+  {% endif %}
+  </select>
+  </div>&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+<br><br>
+  <div class="form-group">
+  <strong><i class="icon-fire"></i> 输入表名</strong>
+<br>
+        <span class="label label-danger">
+        NOTE! </span>
+        <span>
+        <span class="bold">
+        &nbsp;&nbsp;以逗号分隔多个表名 </span>
+        支持模糊查询</span>
+
+<br><br>
+  {% if allsqltext %}
+  <textarea rows="4" cols="60" name="allsqltext">{{allsqltext}}</textarea>
+  {% else %}
+  <textarea rows="4" cols="60" name="allsqltext" placeholder="Ex:T_INFO_MOBILE,T_LOG_PAYMENT%" ></textarea>
+  {% endif %}
+&nbsp;&nbsp;&nbsp;&nbsp;<button type="submit" class="btn btn-warning" >查询</button>
+  </div>
+
+  </form>
+
+  </div> 
+  </div> <!--信息提交框结束-->
 <!--end content 1-->
 
 
@@ -60,7 +144,399 @@ test1
 
 
 <!--begin content 2-->
-test2
+<!--审核结果-->
+{% if  errmsg %}
+<div class="alert alert-danger" >
+<i class="icon-close"></i> {{errmsg}}</div> 
+{% endif %}
+<!--审核结果结束-->
+
+
+
+<!-- BEGIN ACCORDION PORTLET-->
+          <div class="portlet">
+            <div class="portlet-title">
+              <div class="caption">
+               </i>信息如下
+              </div>
+              <div class="tools">
+                <a href="javascript:;" class="collapse">
+                </a>
+
+              </div>
+            </div>
+            <div class="portlet-body">
+              <div class="panel-group accordion" id="accordion1">
+                <div class="panel ">
+                  <div class="panel-heading">
+                    <h4 class="panel-title">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapse_1">
+                表信息&nbsp;&nbsp;<i class="icon-magnifier-add "></i>  </a>  
+                    </h4>
+                  </div>
+                  <div id="collapse_1" class="panel-collapse in"> <!-- class="panel-collapse in" -->
+                    <div class="panel-body">
+
+<!--tab_info-->
+{% if list_tab %}
+<table class="table table-condensed table-bordered  table-hover">
+<tbody>
+
+{%for item in list_tab %}
+<tr> 
+
+
+<td{% ifequal item.0 '表名' %}
+class="success"
+{% else %}
+{% endifequal %}>{{item.0}}</td>
+<td{% ifequal item.1 '表空间' %}
+class="success"
+{% else %}
+{% endifequal %}>{{item.1}}</td>
+<td{% ifequal item.2 '是否分区' %}
+class="success"
+{% else %}
+{% endifequal %}>{{item.2}}</td>
+<td{% ifequal item.3 '行数' %}
+class="success"
+{% else %}
+{% endifequal %}>{{item.3}}</td>
+<td{% ifequal item.4 '平均行字节' %}
+class="success"
+{% else %}
+{% endifequal %}>{{item.4}}</td>
+<td{% ifequal item.5 '分析日期' %}
+class="success"
+{% else %}
+{% endifequal %}>{{item.5}}</td>
+<td  {% ifequal item.6 '注释' %}
+class="success"
+{% else %}
+{% endifequal %}>
+{{item.6}}
+</td>
+
+</tr>
+{% endfor %}
+
+</tbody>
+</table>
+{% endif %}
+<!--tab_info-->
+                    </div>
+                  </div>
+                </div>
+                <div class="panel ">
+                  <div class="panel-heading">
+                    <h4 class="panel-title">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapse_2">
+                    字段信息 &nbsp;&nbsp;<i class="icon-magnifier-add "></i> </a>
+                    </h4>
+                  </div>
+                  <div id="collapse_2" class="panel-collapse collapse">
+                    <div class="panel-body" style="height:200px; overflow-y:auto;">
+                    
+
+<!--tab_info-->
+{% if list_col %}
+<table class="table table-condensed table-bordered  table-hover">
+<tbody>
+
+
+
+{%for item in list_col %}
+<tr> 
+
+<td{% ifequal item.0 '表名' %}
+class="success"
+{% else %}
+{% endifequal %}>{{item.0}}</td>
+<td{% ifequal item.1 '字段名' %}
+class="success"
+{% else %}
+{% endifequal %}>{{item.1}}</td>
+<td{% ifequal item.2 '数据类型' %}
+class="success"
+{% else %}
+{% endifequal %}>{{item.2}}</td>
+<td{% ifequal item.3 '是否可空' %}
+class="success"
+{% else %}
+{% endifequal %}>{{item.3}}</td>
+<td{% ifequal item.4 'DISTINCT值' %}
+class="success"
+{% else %}
+{% endifequal %}>{{item.4}}</td>
+<td{% ifequal item.5 '空值记录数' %}
+class="success"
+{% else %}
+{% endifequal %}>{{item.5}}</td>
+<td  {% ifequal item.6 '列注释' %}
+class="success"
+{% else %}
+{% endifequal %}>
+{{item.6}}
+</td>
+
+</tr>
+{% endfor %}
+
+</tbody>
+</table>
+{% endif %}
+<!--tab_info-->
+
+                    </div>
+                  </div>
+                </div>
+                <div class="panel ">
+                  <div class="panel-heading">
+                    <h4 class="panel-title">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapse_3">
+                    索引信息 &nbsp;&nbsp;<i class="icon-magnifier-add "></i> </a>
+                    </h4>
+                  </div>
+                  <div id="collapse_3" class="panel-collapse collapse">
+                    <div class="panel-body">
+
+
+<!--tab_info-->
+{% if list_ind %}
+<table class="table table-condensed table-bordered  table-hover">
+<tbody>
+
+{%for item in list_ind %}
+<tr> 
+
+<td{% ifequal item.0 '表名' %}
+class="success"
+{% else %}
+{% endifequal %}>{{item.0}}</td>
+<td{% ifequal item.1 '索引名' %}
+class="success"
+{% else %}
+{% endifequal %}>{{item.1}}</td>
+
+<td{% ifequal item.2 '唯一性' %}
+class="success"
+{% else %}
+{% endifequal %}>{{item.2}}</td>
+<td{% ifequal item.3 '表空间' %}
+class="success"
+{% else %}
+{% endifequal %}>{{item.3}}</td>
+<td{% ifequal item.4 '层级' %}
+class="success"
+{% else %}
+{% endifequal %}>{{item.4}}</td>
+
+
+<td  {% ifequal item.5 'DISTINCT值' %}
+class="success"
+{% else %}
+{% endifequal %}>
+{{item.5}}
+</td>
+
+<td  {% ifequal item.6 '行数' %}
+class="success"
+{% else %}
+{% endifequal %}>
+{{item.6}}
+</td>
+
+<td  {% ifequal item.7 '聚簇因子' %}
+class="success"
+{% else %}
+{% endifequal %}>
+{{item.7}}
+</td>
+
+<td  {% ifequal item.8 '是否分区' %}
+class="success"
+{% else %}
+{% endifequal %}>
+{{item.8}}
+</td>
+
+<td  {% ifequal item.9 '并行度' %}
+class="success"
+{% else %}
+{% endifequal %}>
+{{item.9}}
+</td>
+
+<td  {% ifequal item.10 '索引列' %}
+class="success"
+{% else %}
+{% endifequal %}>
+{{item.10}}
+</td>
+
+
+</tr>
+{% endfor %}
+
+</tbody>
+</table>
+{% endif %}
+<!--tab_info-->
+
+
+                    </div>
+                  </div>
+                </div>
+
+
+
+                <div class="panel ">
+                  <div class="panel-heading">
+                    <h4 class="panel-title">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapse_4">
+                    分区信息 &nbsp;&nbsp;<i class="icon-magnifier-add "></i> </a>
+                    </h4>
+                  </div>
+                  <div id="collapse_4" class="panel-collapse collapse">
+                    <div class="panel-body">
+
+
+
+<!--tab_info1-->
+{% if list_tab_part %}
+<table class="table table-condensed table-bordered  table-hover">
+<tbody>
+
+{%for item in list_tab_part %}
+<tr> 
+
+<td{% ifequal item.0 '表名' %}
+class="success"
+{% else %}
+{% endifequal %}>{{item.0}}</td>
+<td{% ifequal item.1 '分区数' %}
+class="success"
+{% else %}
+{% endifequal %}>{{item.1}}</td>
+
+<td{% ifequal item.2 '分区类型' %}
+class="success"
+{% else %}
+{% endifequal %}>{{item.2}}</td>
+<td{% ifequal item.3 '子分区类型' %}
+class="success"
+{% else %}
+{% endifequal %}>{{item.3}}</td>
+<td{% ifequal item.4 '默认表空间' %}
+class="success"
+{% else %}
+{% endifequal %}>{{item.4}}</td>
+
+
+<td  {% ifequal item.5 '间隔' %}
+class="success"
+{% else %}
+{% endifequal %}>
+{{item.5}}
+</td>
+
+<td  {% ifequal item.6 '分区键' %}
+class="success"
+{% else %}
+{% endifequal %}>
+{{item.6}}
+</td>
+
+<td  {% ifequal item.7 '子分区键' %}
+class="success"
+{% else %}
+{% endifequal %}>
+{{item.7}}
+</td>
+
+</tr>
+{% endfor %}
+
+</tbody>
+</table>
+{% endif %}
+<!--tab_info1-->
+
+
+<!--tab_info2-->
+{% if list_ind_part %}
+<table class="table table-condensed table-bordered  table-hover">
+<tbody>
+
+{%for item in list_ind_part %}
+<tr> 
+
+<td{% ifequal item.0 '表名' %}
+class="success"
+{% else %}
+{% endifequal %}>{{item.0}}</td>
+
+
+<td{% ifequal item.1 '索引名' %}
+class="success"
+{% else %}
+{% endifequal %}>{{item.1}}</td>
+<td{% ifequal item.2 '分区数' %}
+class="success"
+{% else %}
+{% endifequal %}>{{item.2}}</td>
+
+<td{% ifequal item.3 '分区类型' %}
+class="success"
+{% else %}
+{% endifequal %}>{{item.3}}</td>
+
+<td{% ifequal item.4 '子分区类型' %}
+class="success"
+{% else %}
+{% endifequal %}>{{item.4}}</td>
+
+<td{% ifequal item.5 '索引类型' %}
+class="success"
+{% else %}
+{% endifequal %}>{{item.5}}</td>
+
+
+<td  {% ifequal item.6 '默认表空间' %}
+class="success"
+{% else %}
+{% endifequal %}>
+{{item.6}}
+</td>
+
+<td  {% ifequal item.7 '间隔' %}
+class="success"
+{% else %}
+{% endifequal %}>
+{{item.7}}
+</td>
+
+</tr>
+{% endfor %}
+
+</tbody>
+</table>
+{% endif %}
+<!--tab_info2-->
+
+
+                    </div>
+                  </div>
+                </div>
+
+
+
+
+              </div>
+            </div>
+          </div>
+          <!-- END ACCORDION PORTLET-->
+
 <!--end content 2-->
 
 
@@ -82,6 +558,83 @@ test2
 
 
 
+<!--表单联动-->
+<script>
+//根据db_type获取db_name
+   function getdatabase(){ 
+    var html;  
+    var db_type = $("input[name='db_type']:checked").val(); 
+    $.ajax({  
+        type: "GET",  
+        async: true,  
+        url: "/cmdb/getdatabase",  
+        data: {'db_type':db_type}, 
+        dataType: "json",  
+        success: function(data) {  
+                var obj=eval(data);
+                    for (var i=0;i<obj.length;i++ )
+                    {
+                       html+="  <option  value="+obj[i].db_name+">"+obj[i].db_name+"</option>"
+                    }
+                        x=document.getElementById('db_name'); 
+                        x.innerHTML=html;
+                        initSchemas();
+        
+        }  
+
+    });  
+  };
+//根据db_name获取skema
+function initSchemas() {  
+    var html;  
+    var db_name = document.getElementById('db_name').value;
+    $.ajax({  
+        type: "GET",  
+        async: true,  
+        url: "/cmdb/getschema",  
+        data: {'db_name':db_name}, 
+        dataType: "json",  
+        success: function(data) {  
+                 var obj=eval(data);
+                    for (var i=0;i<obj.length;i++ )
+                    {
+                       html+="  <option value="+obj[i].skema+">"+obj[i].skema+"</option>"
+                    }
+                     y=document.getElementById('skema'); 
+                     y.innerHTML=html; 
+                     initApps();
+                
+ 
+        }  
+
+    });  
+};
+
+// 根据db_name skema获取app_name  
+function initApps() {  
+    var db_name = document.getElementById('db_name').value;
+    var skema = document.getElementById('skema').value;
+    var html;  
+    $.ajax({  
+        type: "GET",  
+        async: true,  
+        url: "/cmdb/getapp",   
+        data: {'db_name':db_name,
+               'skema':skema}, 
+        dataType: "json",  
+        success: function(data) {  
+                var obj=eval(data);
+                    for (var i=0;i<obj.length;i++ )
+                    {
+                       html+="  <option value="+obj[i].app_name+">"+obj[i].app_name+"</option>"
+                    }
+                     z=document.getElementById('app_name'); 
+                     z.innerHTML=html; 
+            
+        }  
+    });  
+};
+</script>
 
             {% endblock  %}
 

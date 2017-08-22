@@ -2,7 +2,7 @@
 {% extends 'ddlaudit/ddlauditbase.html' %}
 {% load staticfiles %}
 
-{% block title %}ddlaudit_faq{% endblock %}
+{% block title %}DDL功能说明{% endblock %}
 
 
 {%  block subcontent %}
@@ -21,17 +21,17 @@
                             <ul class="nav nav-tabs pull-left">
                                 <li class="active">
                                     <a href="#tab_1_1" data-toggle="tab">
-                                    使用流程说明 </a>
+                                    审核结果说明 </a>
                                 </li>
                               
                                 <li>
                                     <a href="#tab_1_2" data-toggle="tab">
                                     权限说明 </a>
                                 </li>
-                                <li>
+                                <!--li>
                                     <a href="#tab_1_3" data-toggle="tab">
                                     关注微信公众号 </a>
-                                </li>
+                                </li-->
                             </ul>
                         </div>
                         <div class="portlet-body">
@@ -40,82 +40,68 @@
                                 <div class="tab-pane active" id="tab_1_1">
                                     <div >
                                         <ul class="feeds">
+                                            
+
                                             <li>
                                                 <div class="col1">
                                                     <div class="cont">
                                                         <div class="cont-col1">
                                                             <div class="label label-sm label-success">
-                                                                <i class="fa fa-bullhorn"></i>
+                                                                <i class="fa fa-share"></i>
                                                             </div>
                                                         </div>
                                                         <div class="cont-col2">
                                                             <div class="desc">
-                                                                DDL审核和DML的流程有一些不同，同一个数据库、schema、
-                                                                应用系统和发布日期下只能有一个批次的审核被提交。<br>
-                                                                在正式提交给DBAreview之前、这个批次的DDL变更语句
-                                                                是可以被修改并重新提交到系统自动审核的。<br>
-                                                                建议当系统审核结果无异常后提交给DBAreview，提交后
-                                                                该批次的状态是冻结的，无法再进行修改了。
-
+                                                                《通过》———— 提交的DDL语句语法正确、符合规范
+                                                                <span class="label label-sm label-success">
+                                                                DBA可线下执行</span>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </li>
-                                            
+
+
                                             <li>
+                                                <div class="col1">
+                                                    <div class="cont">
+                                                        <div class="cont-col1">
+                                                            <div class="label label-sm label-warning">
+                                                                <i class="fa fa-bell-o "></i>
+                                                            </div>
+                                                        </div>
+                                                        <div class="cont-col2">
+                                                            <div class="desc">
+                                                           《警告》———— 
+                                                            提交的DDL语句不符合上线规范或设计不合理
+                                                            <span class="label label-sm label-warning">
+                                                            开发人员根据审核结果进行调整</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+
+
+                                             <li>
                                                 <div class="col1">
                                                     <div class="cont">
                                                         <div class="cont-col1">
                                                             <div class="label label-sm label-danger">
-                                                                <i class="fa fa-slack "></i>
+                                                                <i class="fa fa-bolt"></i>
                                                             </div>
                                                         </div>
                                                         <div class="cont-col2">
                                                             <div class="desc">
-                                                                DBAreview通过，那么该批次的DDL变更会在上线日择机执行。
+                                                                 《错误》———— 
+                                                                 提交的DDL语句语法错误或和线上结构冲突
+                                                                 <span class="label label-sm label-danger">
+                                                                开发人员根据审核结果进行修复 </span>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </li>
-
-                                            <li>
-                                                <div class="col1">
-                                                    <div class="cont">
-                                                        <div class="cont-col1">
-                                                            <div class="label label-sm label-danger">
-                                                                <i class="fa fa-slack "></i>
-                                                            </div>
-                                                        </div>
-                                                        <div class="cont-col2">
-                                                            <div class="desc">
-                                                                DBAreview不通过，那么该批次冻结状态解除，
-                                                                开发人员对相应问题进行修改并审核，然后再次提交给DBAreview。
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>
-
-                                            <li>
-                                                <div class="col1">
-                                                    <div class="cont">
-                                                        <div class="cont-col1">
-                                                            <div class="label label-sm label-info">
-                                                                <i class="fa fa-send "></i>
-                                                            </div>
-                                                        </div>
-                                                        <div class="cont-col2">
-                                                            <div class="desc">
-                                                                详见流程图<br>
-                                                                 <img src={% static "images/ddlauditprocess.jpg" %}  class="img-rounded" alt="ddlauditprocess">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>
-
 
                                         </ul>
                                     </div>
@@ -146,17 +132,17 @@
                  <tbody>
                  
 
-<tr> <td ><strong>audit_access</strong> </td>      <td >语句审核</td><td ><span class="label  label-success"><i class="icon-check"></i></span></td><td ><span class="label  label-success"><i class="icon-check"></i></span></td></tr>
-<tr> <td ><strong>checkresult_access</strong></td> <td >查看审核结果</td><td ><span class="label  label-success"><i class="icon-check"></i></span></td><td ><span class="label  label-success"><i class="icon-check"></i></span></td></tr>
-<tr> <td ><strong>dbause_access</strong> </td>     <td >DBA最终review</td><td ><span class="label  label-success"><i class="icon-check"></i></span></td><td ><span class="label  label-danger"><i class="icon-close"></i></span></td></tr>
-<tr> <td ><strong>structure_access</strong> </td>     <td >线上表结构查询</td><td ><span class="label  label-success"><i class="icon-check"></i></span></td><td >
- <span class="label  label-danger"><i class="icon-close"></i></span>
+<tr> <td ><strong>ddlaudit_access</strong> </td>      <td >语句审核</td><td ><span class="label  label-success"><i class="icon-check"></i></span></td><td ><span class="label  label-success"><i class="icon-check"></i></span></td></tr>
+<tr> <td ><strong>ddlcheckresult_access</strong></td> <td >查看审核结果</td><td ><span class="label  label-success"><i class="icon-check"></i></span></td><td ><span class="label  label-success"><i class="icon-check"></i></span></td></tr>
+
+<tr> <td ><strong>ddlstructure_access</strong> </td>     <td >线上表结构查询</td><td ><span class="label  label-success"><i class="icon-check"></i></span></td><td >
+ <span class="label  label-success"><i class="icon-check"></i></span>
 </td></tr>
 
-<tr> <td ><strong>report_access</strong> </td>     <td >报表统计</td><td ><span class="label  label-success"><i class="icon-check"></i></span></td><td ><span class="label  label-danger"><i class="icon-close"></i></span></td></tr>
+<tr> <td ><strong>ddlreport_access</strong> </td>     <td >报表统计</td><td ><span class="label  label-success"><i class="icon-check"></i></span></td><td ><span class="label  label-danger"><i class="icon-close"></i></span></td></tr>
 
 <tr> <td >            </td>       <td >功能说明</td><td ><span class="label  label-success"><i class="icon-check"></i></span></td><td ><span class="label  label-success"><i class="icon-check"></i></span></td></tr>
-
+<tr> <td >            </td>       <td >语句生成模板</td><td ><span class="label  label-success"><i class="icon-check"></i></span></td><td ><span class="label  label-success"><i class="icon-check"></i></span></td></tr>
 
 
 
@@ -182,7 +168,7 @@
 
 
 
-                                <div class="tab-pane active" id="tab_1_3">
+                                <!--div class="tab-pane active" id="tab_1_3">
                                     <div >
                                         <ul class="feeds">
                                             <li>
@@ -208,7 +194,7 @@
 
                                         </ul>
                                     </div>
-                                </div>
+                                </div-->
 
 
 

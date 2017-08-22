@@ -30,4 +30,3 @@ def dealsqltext(sqltext):
 
 
     return list_sql
-
