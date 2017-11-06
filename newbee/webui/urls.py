@@ -1,7 +1,6 @@
 from django.conf.urls import include, url
 # from django.contrib import admin
 from newbee.webui import views
-from newbee.webui.forms import LoginForm
 # from info_api.models import List
 from django.contrib.auth.decorators import login_required, permission_required
 
@@ -36,7 +35,7 @@ urlpatterns = [
         # },
         # name='login'),
     # Django Select2
-    url(r'^select2/', include('django_select2.urls')),
+    # url(r'^select2/', include('django_select2.urls')),
 
     # url(r'^logout/$',
         # 'django.contrib.auth.views.logout',

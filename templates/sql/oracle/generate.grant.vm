@@ -1,0 +1,8 @@
+{% load myNewLibrary %}
+{% for item in list_object%}                                  {% ifequal item|limit:1 'S' %}
+grant select on {{schema}}.{{item}} to {{schema}}_APP;
+grant select on {{schema}}.{{item}} to {{schema}}_READ;       {% else %}
+grant select,insert,update,delete on {{schema}}.{{item}} to {{schema}}_APP;
+grant select on {{schema}}.{{item}} to {{schema}}_READ;       {% endifequal %} 
+create synonym {{schema}}_APP.{{item}} for {{schema}}.{{item}};
+create synonym {{schema}}_READ.{{item}} for {{schema}}.{{item}};{% endfor %} 

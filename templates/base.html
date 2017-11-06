@@ -230,35 +230,36 @@
                     </div>
                     <!-- END SIDEBAR TOGGLER BUTTON -->
                 </li>
+                {% if perms.usercontrol.dbconfig_acces %}
                 <li class="heading">
                     <h3 class="uppercase">配置管理</h3>
                 </li>
+                {% endif %}
 
+                {% if perms.usercontrol.newbee_acces %}
                 <li>
                     <a href="{% url 'newbeehosturl' %}">
                     <i class="icon-basket"></i>
                     <span class="title">基盒搭建</span>
                     </a>
                 </li>
+                {% endif %}
                 
+                {% if perms.usercontrol.cmdb_acces %}
                 <li>
                     <a href="{% url 'dbmetainfourl' %}">
                     <i class="icon-basket"></i>
                     <span class="title">数据库管理</span>
                     </a>
                 </li>
+                {% endif %}
 
-                <li>
-                    <a href="#">
-                    <i class="icon-cloud-download "></i>
-                    <span class="title">资源生成</span>
-                    </a>
-                </li>
-
-                
+                {% if perms.usercontrol.database_acces %}
                 <li class="heading">
                     <h3 class="uppercase">数据库审核</h3>
                 </li>
+                {% endif %}
+                {% if perms.usercontrol.ddlaudit_acces %}
                 <li {% ifequal request.path|limit:10 "/ddlaudit/" %}class="start active open"{% endifequal %}>
                     <a href="/ddlaudit/audit">
                     <i class="icon-fire"></i>
@@ -269,6 +270,8 @@
                     {% endifequal %}
                     </a> 
                 </li>
+                {% endif %}
+                {% if perms.usercontrol.dmlaudit_acces %}
                 <li {% ifequal request.path|limit:10 "/dmlaudit/" %}class="start active open"{% endifequal %}>
                     <a href="/dmlaudit/audit">
                     <i class="icon-social-dribbble "></i>
@@ -280,16 +283,22 @@
                     {% endifequal %}
                     </a> 
                 </li>
+                {% endif %}
+                {% if perms.usercontrol.newbee_acces %}
                 <li>
                     <a href="javascript:;">
                     <i class="icon-key"></i>
                     <span class="title">SQL代码审核</span>
                     </a> 
                 </li>
+                {% endif %}
                 
+                {% if perms.usercontrol.newbee_acces %}
                 <li class="heading">
                     <h3 class="uppercase"  >日常运维</h3>
                 </li>
+                {% endif %}
+                {% if perms.usercontrol.newbee_acces %}
                 <li {% ifequal request.path|limit:13 "/runanalysis/" %}class="start active open"
                     {% endifequal %}>
                     <a href="javascript:;">
@@ -320,9 +329,11 @@
                         </li>
                     </ul>
                 </li>
+                {% endif %}
 
 
 
+                {% if perms.usercontrol.newbee_acces %}
                 <li {% ifequal request.path|limit:14 "/datatransfer/" %}class="start active open"
                     {% endifequal %}>
                     <a href="javascript:;">
@@ -351,7 +362,9 @@
                         </li>
                     </ul>
                 </li>
+                {% endif %}
 
+                {% if perms.usercontrol.newbee_acces %}
                 <li>
                     <a href="javascript:;">
                     <i class="icon-docs "></i>
@@ -376,9 +389,11 @@
                         </li>
                     </ul>
                 </li>
+                {% endif %}
 
 
                 
+                {% if perms.usercontrol.newbee_acces %}
                 <li {% ifequal request.path|limit:13 "/performance/" %}class="start active open"{% endifequal %}>
                     <a href="/performance/sqlinefficient">
                     <i class="icon-wrench"></i>
@@ -389,8 +404,10 @@
                     {% endifequal %}
                     </a> 
                 </li>
+                {% endif %}
 
                 
+                {% if perms.usercontrol.newbee_acces %}
                 <li class="heading">
                     <h3 class="uppercase">平台配置</h3>
                 </li>
@@ -400,6 +417,7 @@
                     <span class="title">参数配置</span>
                     </a>
                 </li>
+                {% endif %}
                 <li>
                     <a href="/usercontrol/changepasswd">
                     <i class="icon-users"></i>

@@ -8,6 +8,8 @@ db_usage_choices = (('pro','生产'),('dev','开发'),('test','测试'),('qa','�
 
 db_type_choices = (('oracle', 'ORACLE'),('mysql',  'MySQL'),('redis',  'REDIS'))  #第一个是存入数据库的值 第二个是ADMIN后台展示的值
 
+db_style_choices = (('w','写'),('r','读'))
+
 yn_choices= (('n','否'),('y','是'))
 
 
@@ -72,15 +74,20 @@ class T_CMDB_DBINFO(PublicColumns):
 
 
 class DBMeta(PublicColumns):
-    domain_name = models.CharField(max_length=128,help_text='域名')
-    db_port = models.IntegerField(help_text='实例端口')
+    domain_name = models.CharField(max_length=128,help_text='域名',verbose_name='域名')
+    db_type = models.CharField(max_length=32,help_text='数据库类型',choices=db_type_choices,verbose_name='数据库类型')
+    db_port = models.IntegerField(help_text='实例端口',default=1521,verbose_name='监听端口')
+    data_port = models.IntegerField(help_text='数据网端口',default=1540,verbose_name='数据网端口')
     service_name = models.CharField(max_length=32,help_text='实例名')
-    admin_ip = models.CharField(max_length=16,help_text='管理网IP')
+    admin_ip = models.CharField(max_length=16,help_text='管理网IP',verbose_name='管理网IP')
     service_ip = models.CharField(max_length=16,help_text='服务网IP')
     data_ip = models.CharField(max_length = 16, help_text='数据网IP')
-    db_desc = models.CharField(max_length=128, help_text='数据描述')
+    db_desc = models.CharField(max_length=128, help_text='数据库名',verbose_name='数据库名')
+    rw_flag = models.CharField(max_length=1,help_text='读写库标示，r读库，w写库',choices=db_style_choices,default='r',verbose_name='读写库')
     class Meta:
         db_table = 'T_DBMETA_INFO'
+        verbose_name='数据库元数据'
+        verbose_name_plural='数据库元数据表'
 
 
 

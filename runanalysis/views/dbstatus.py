@@ -56,9 +56,9 @@ def dbstatus(request):
 
 
         ]
-    if request.method=="GET":  
+    if request.method=="GET":
         return render(request, 'runanalysis/dbstatus.html',{'list_check':list_check})
-    if request.method=="POST":  
+    if request.method=="POST":
         checkitem=request.POST.get('checkitem','')
         #print "====",checkitem
         db_name=request.POST.get('db_name','')
@@ -76,7 +76,7 @@ def dbstatus(request):
             try:
                 obj_dbstatus=dbstatus_oracle.check(**dict_tmp)
                 #print getattr(obj_dbstatus,checkitem.split(".")[0])  #获取对象的方法名
-                method=getattr(obj_dbstatus,checkitem.split(".")[0]) 
+                method=getattr(obj_dbstatus,checkitem.split(".")[0])
                 argnames=inspect.getargspec(method).args[1:]   #获取方法的传入变量 列表
                 if argnames!=[]:
                 	list_res=method (checkitem.split(".")[1])
@@ -95,8 +95,9 @@ def dbstatus(request):
                             }
 
                 return render(request, 'runanalysis/dbstatus.html',dict_return)
-            except:
-            	pass
+            except Exception as err:
+                print 'error happened please check',err
+                pass
             else:
                 pass
 
@@ -105,5 +106,5 @@ def dbstatus(request):
 
 
 
- 
-    
+
+

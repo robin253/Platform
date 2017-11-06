@@ -1,0 +1,18 @@
+/* 建用户{{schema_name}}语句如下 */
+
+/* 建表和索引的放置表空间 */
+CREATE TABLESPACE TBS_{{schema_name}}_DATA datafile  size 30G; 
+CREATE TABLESPACE TBS_{{schema_name}}_IDX datafile  size 30G;
+
+/* 建配套权限分离用户 */
+create user {{schema_name}} identified by "{{schema_password}}" default tablespace TBS_{{schema_name}}_DATA;
+create user {{schema_name}}_APP identified by "{{schemaapp_password}}" default tablespace TBS_{{schema_name}}_DATA;
+create user {{schema_name}}_READ identified by "{{schemaread_password}}" default tablespace TBS_{{schema_name}}_DATA;
+
+/* 用户权限相关 */
+grant connect,resource to {{schema_name}};
+grant create any synonym to {{schema_name}};
+revoke unlimited tablespace from {{schema_name}};
+alter user {{schema_name}} quota unlimited on TBS_{{schema_name}}_DATA;
+alter user {{schema_name}} quota unlimited on TBS_{{schema_name}}_IDX;
+grant create session to {{schema_name}}_APP,{{schema_name}}_READ;

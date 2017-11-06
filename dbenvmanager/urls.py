@@ -54,6 +54,14 @@ urlpatterns = [
     url(r'^ddlaudit/dbause$', ddlaudit.views.dbause),
     url(r'^ddlaudit/report$', ddlaudit.views.report),
     url(r'^ddlaudit/faq$', ddlaudit.views.faq),
+    url(r'^ddlaudit/download$', ddlaudit.views.download),
+    url(r'^ddlaudit/creation$', ddlaudit.views.creation),
+    url(r'^ddlaudit/creation/schema$', ddlaudit.views.creation_schema),
+    url(r'^ddlaudit/creation/grant$', ddlaudit.views.creation_grant),
+
+
+    #url(r'^sqlreview/extractxml$', sqlreview.views.extractxml),
+
 
 
     url(r'^runanalysis/statreport/ash$', runanalysis.views.statreport_ash),

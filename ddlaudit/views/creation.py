@@ -20,7 +20,7 @@ def creation_schema(request):
         schema_password=seq_generator.GenerateRandomPasswd(8)
         schemaapp_password=seq_generator.GenerateRandomPasswd(8)
         schemaread_password=seq_generator.GenerateRandomPasswd(8)
-        tmpsrt= render_to_string("sql/oracle/generate.schema.vm", 
+        tmpsrt= render_to_string("sql/oracle/generate.schema.vm",
             {"schema_name":schema_name.upper(),
             "schema_password":schema_password,
             "schemaapp_password":schemaapp_password,
@@ -42,10 +42,10 @@ def creation_grant(request):
     except:
         return render(request, 'ddlaudit/creation.html')
     else:
-        tmpsrt= render_to_string("sql/oracle/generate.grant.vm", 
+        tmpsrt= render_to_string("sql/oracle/generate.grant.vm",
             {"schema":schema.upper(),
             "list_object":list_object})
         tmpsrt.replace("\n","")
-        print tmpsrt
+        #print tmpsrt
 
         return HttpResponse(tmpsrt)

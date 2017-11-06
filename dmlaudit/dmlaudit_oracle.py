@@ -2,7 +2,7 @@
 # -*- coding:utf-8 -*-
 
 from common.connect_oracle import Oracle_Conn
-from common import splitor 
+from common import splitor
 
 import re
 import os
@@ -11,7 +11,7 @@ os.environ['NLS_LANG'] = 'SIMPLIFIED CHINESE_CHINA.UTF8'#防止oracle中文返�
 
 
 class DmlAudit():
-    sql_species = {"(^INSERT\s*INTO.*SELECT.*)":"insert_select",        
+    sql_species = {"(^INSERT\s*INTO.*SELECT.*)":"insert_select",
                "(^INSERT\s*INTO.*)":"insert",  # \s匹配任何空白字符
                "(^UPDATE.*)":"update",#   . 匹配任意字符(除了换行符)
                "(^DELETE.*)":"delete"}#   * 匹配0个或多个的表达式
@@ -49,7 +49,7 @@ class DmlAudit():
                 sqltype="other"
         #print sqltype
 
-         
+
         #语法
         if sqltype=='other':
             grammar='invalid'
@@ -73,8 +73,8 @@ class DmlAudit():
         rowaffact=0
         exetime=''
         if grammar=='valid':
-            re_sqlplan=self.connection.execsql("select * from table(dbms_xplan.display)") 
-            #select * from table(dbms_xplan.display('','','OUTLINE')); 
+            re_sqlplan=self.connection.execsql("select * from table(dbms_xplan.display)")
+            #select * from table(dbms_xplan.display('','','OUTLINE'));
             for item in re_sqlplan:
                 sqlplan.append(item[0])
 
@@ -121,7 +121,7 @@ class DmlAudit():
                     rowaffact=int(self.connection.execsql(sqlchange)[0][0])#可能异常不返回数字的str
                 except:
                     rowaffact=evaluate_rows
-                
+
 
         #print rowaffact
         #print exetime
@@ -173,7 +173,7 @@ class DmlAudit():
                 if list_uppersqltext[i]=='WHERE':
                     list_position_where.append(i)
             #print list_position_where
-    
+
             position_where=None
             for i in list_position_where:
                 tmpstr=' '.join(list_uppersqltext[0:i])
@@ -212,7 +212,7 @@ class DmlAudit():
         list_sqltext=sqltext.split(" ")
         delete_position=list_uppersqltext.index("DELETE")
         #print list_uppersqltext[delete_position:]
-        
+
         for item in list_uppersqltext[delete_position:]:
             if item=="FROM":
                 position_from=list_uppersqltext.index("FROM")
@@ -253,10 +253,10 @@ class DmlAudit():
 
     @staticmethod
     def insert_change(sqltext):
-        return "select 1 from dual"  
+        return "select 1 from dual"
 
     def execsql(self,sqltext):
-        return self.connection.execsql(sqltext) 
+        return self.connection.execsql(sqltext)
 
 
 
@@ -274,5 +274,5 @@ if __name__ == '__main__':
 
         auditobject.close_commit()
 
-    
+
 

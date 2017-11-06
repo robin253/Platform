@@ -3,18 +3,19 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 
 import cmdb
-import datetime
+import datetime,time
 from common import seq_generator
 from ddlaudit import ddlaudit_oracle
 from ddlaudit import constant
 from ddlaudit import models
 import chardet
 
+
 @login_required(login_url="/")
 def audit(request):
     if request.method=="GET":
         return render(request,'ddlaudit/audit.html')
-    
+
     if request.method=="POST":
         db_type=request.POST.get('db_type','')
         db_name=request.POST.get('db_name','')
@@ -29,7 +30,7 @@ def audit(request):
         else:
             pass
 
- 
+
         try:
             filesqltext=request.FILES['filesqltext']
         except:
@@ -62,7 +63,7 @@ def audit(request):
                 'app_name':app_name
                              }
                 return render(request,'ddlaudit/audit.html', audit_info)
-        
+
         #如果输入框文本为空
         if not allsqltext:
             audit_info = {
@@ -75,11 +76,9 @@ def audit(request):
             return render(request,'ddlaudit/audit.html', audit_info)
 
 
-
-
-
+    release_date = int(time.time())
     audit_user=request.user.username#审核人
-    audit_batch=seq_generator.ddlaudit_batch(db_type)
+    audit_batch=seq_generator.ddlaudit_batch(db_type,str(release_date),skema)
 
     #配置文件
     dict_config=constant.dict_config
@@ -91,21 +90,21 @@ def audit(request):
         if data_tbs:
             dict_config['data_tbs']=data_tbs
         if ind_tbs:
-            dict_config['ind_tbs']=ind_tbs 
+            dict_config['ind_tbs']=ind_tbs
 
     #开始审核
     if db_type=='oracle':
         result=ddlaudit_oracle.process_sqlfile(allsqltext,dict_config,onedbinfo.privilege_flag,onedbinfo.username,onedbinfo.password,\
-               onedbinfo.ipadress,onedbinfo.port,onedbinfo.servicename)  
+               onedbinfo.ipadress,onedbinfo.port,onedbinfo.servicename)
     elif db_type=='mysql':
     	pass#ddlaudit_mysql.process_sqlfile(allsqltext)
     else:
     	pass
-    
-    #print result  result是一个list  {'type':'createtab','content':"sqlstr",'results':[(0,"blabla"),(1,"blabla")]}
-    
 
-    #批次状态 
+    #print result  result是一个list  {'type':'createtab','content':"sqlstr",'results':[(0,"blabla"),(1,"blabla")]}
+
+
+    #批次状态
     dict_batch_status={'qualified':0,'semi-qualified':0,'unqualified':0}
     #统计DDL的数量
     sqlamount=0
@@ -129,7 +128,7 @@ def audit(request):
                 #continue
             else:
                 dict_batch_status['qualified']+=1
-   
+
 
     if dict_batch_status['unqualified']>0:
         batch_status='unqualified'
@@ -142,9 +141,9 @@ def audit(request):
         execute_status="init"
 
 
-    # 记录到数据模型 T_DDLAUDIT_BATCH_INFO 中    
+    # 记录到数据模型 T_DDLAUDIT_BATCH_INFO 中
     model_batch_info_insert=models.T_DDLAUDIT_BATCH_INFO(audit_user=audit_user,audit_batch=audit_batch,app_name=app_name,\
-    release_date=20700506,db_type=db_type,allsqltext=allsqltext,sqlamount=sqlamount,batch_status=batch_status,execute_status=execute_status)
+    release_date=release_date,db_type=db_type,allsqltext=allsqltext,sqlamount=sqlamount,batch_status=batch_status,execute_status=execute_status)
     model_batch_info_insert.save()
 
 
@@ -152,7 +151,7 @@ def audit(request):
 
     #记录到T_DDLAUDIT_BATCH_DETAIL表中
     i=1
-    for item in result: 
+    for item in result:
         audit_status= 0  #"qualified"
         for subitem in item['results']:
             if subitem[0]==2:
@@ -172,11 +171,11 @@ def audit(request):
         model_batch_detail_insert.save()
 
         item['num']=i #给字典添加一个编号
-        i=i+1     
+        i=i+1
 
-        
 
- 
+
+
     audit_info = {
         'audit_user': audit_user,
         'audit_batch': audit_batch,

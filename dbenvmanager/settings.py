@@ -51,7 +51,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'bootstrap_pagination',
     'usercontrol',
     'common',
     'cmdb',
@@ -62,6 +61,7 @@ INSTALLED_APPS = [
     'runanalysis',
     'djcelery',
     'newbee',
+    'bootstrap_pagination',
     'kombu.transport.django',#django自带的celery broker
 ]
 

@@ -12,7 +12,6 @@ from vanilla import ListView, CreateView, UpdateView, DeleteView,FormView
 from django.http import HttpResponse
 from django.core.urlresolvers import reverse_lazy
 import json
-import forms
 from django.shortcuts import render_to_response
 import pprint
 
@@ -99,7 +98,7 @@ class Exe_groupViewSet(ListView):
 class Host_exe_groupViewSet(ListView):
     # Host_exe_group.objects.all().count()
     model = Host_exe_group
-    template_name = 'host_exe_group.html'
+    template_name = 'newbee/host_exe_group.html'
     paginate_by = 10
     hostlist=[]
     exe_groupname=[]
